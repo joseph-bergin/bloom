@@ -12,9 +12,8 @@ Godot 4, GDScript, statically typed. Built from `BLOOM-spec-simple.md`.
 /Applications/Godot.app/Contents/MacOS/Godot --path .
 ```
 
-The title screen is the field: a bloom breathing in the dark with things
-drifting at the edge of its light, never quite arriving. It states the game
-without a word before you press anything.
+The title screen is the field: one bloom breathing in the dark, with the
+same darkness shader closing in around it.
 
 **Aim with the mouse.** The turret fires on its own whenever anything is
 inside its range, but it fires where you point — so choosing what to kill

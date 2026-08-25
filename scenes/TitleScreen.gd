@@ -33,17 +33,18 @@ func _place() -> void:
 	_placed_for = vp
 	# The bloom sits above centre so the wordmark and menu have the lower
 	# half to themselves.
-	art.position = Vector2(vp.x * 0.5, vp.y * 0.255)
+	art.position = Vector2(round(vp.x * 0.5), round(vp.y * 0.20))
 	art.scale = Vector2.ONE * minf(vp.x / 1280.0, vp.y / 800.0)
 	darkness.position = art.position - Vector2(COVER, COVER) * art.scale.x
 	darkness.size = Vector2(COVER, COVER) * 2.0 * art.scale.x
 	if _menu_col != null:
 		# Directly under the bloom, with room for its glow.
-		_menu_col.size = Vector2(340.0, 0.0)
+		_menu_col.size = Vector2(COL_W, 0.0)
 		# Clear of the pool at its widest, so the wordmark sits in the dark
 		# below the light rather than inside it.
-		_menu_col.position = Vector2(vp.x * 0.5 - 170.0,
-			art.position.y + (art.sight_max() + 34.0) * art.scale.x)
+		_menu_col.position = Vector2(
+			round(vp.x * 0.5 - COL_W * 0.5),
+			round(art.position.y + (art.sight_max() + 24.0) * art.scale.x))
 
 func _process(_delta: float) -> void:
 	# Self-correcting: the viewport is not always sized when _ready runs,
@@ -56,62 +57,72 @@ func _process(_delta: float) -> void:
 	_mat.set_shader_parameter("sight_uv", art.sight / (COVER * 2.0))
 	_mat.set_shader_parameter("feather", 0.030)
 
+## One column, one width. Every label centres inside it and every button
+## fills it, so nothing can drift out of alignment as the wording changes.
+const COL_W := 480.0
+const BTN_H := 46.0
+
 func _build_menu() -> void:
 	var col := VBoxContainer.new()
-	col.custom_minimum_size = Vector2(340, 0)
+	col.custom_minimum_size = Vector2(COL_W, 0.0)
 	col.add_theme_constant_override("separation", 6)
-	# Positioned absolutely from _place() rather than anchored. Presets kept
-	# resolving against a parent that had no size yet, which pinned the
-	# whole menu to the left edge.
+	col.alignment = BoxContainer.ALIGNMENT_BEGIN
+	# Positioned absolutely from _place(). Anchor presets kept resolving
+	# against a parent that had no size yet and pinned this to the left.
 	add_child(col)
 	_menu_col = col
 
-	var word := UITheme.label("BLOOM", UITheme.LUM, UITheme.TITLE)
-	word.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
-	col.add_child(word)
-	var tag := UITheme.label("every upgrade makes you brighter",
-		UITheme.TEXT_DIM, UITheme.TINY)
-	tag.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
-	col.add_child(tag)
-	var tag2 := UITheme.label("brightness is what finds you",
-		UITheme.TEXT_FAINT, UITheme.TINY)
-	tag2.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
-	col.add_child(tag2)
+	col.add_child(_centred("BLOOM", UITheme.LUM, UITheme.TITLE))
+	col.add_child(_spacer(10))
+	col.add_child(_centred("as you get stronger, you get brighter",
+		UITheme.TEXT_DIM, UITheme.TINY))
+	col.add_child(_centred("as you get brighter, more can find you",
+		UITheme.TEXT_FAINT, UITheme.TINY))
+	col.add_child(_spacer(28))
 
-	col.add_child(_spacer(26))
 	_menu = VBoxContainer.new()
-	_menu.add_theme_constant_override("separation", 7)
+	_menu.add_theme_constant_override("separation", 8)
 	col.add_child(_menu)
 
 	var s: GameStateData = GameState.s
 	var resumable: bool = SaveManager.has_save() and not s.run_over and s.level > 1
 	if resumable:
-		_continue = UITheme.cta("CONTINUE  LEVEL %d" % s.level, UITheme.GOOD)
-		_continue.custom_minimum_size = Vector2(0, 44)
+		_continue = _action("CONTINUE  LEVEL %d" % s.level, UITheme.GOOD, true)
 		_continue.pressed.connect(_resume)
 		_menu.add_child(_continue)
 
-	var start := UITheme.cta("NEW RUN" if resumable else "BEGIN", UITheme.LUM)
-	start.custom_minimum_size = Vector2(0, 44)
+	var start := _action("NEW RUN" if resumable else "BEGIN", UITheme.LUM, not resumable)
 	start.pressed.connect(_begin)
 	_menu.add_child(start)
 
-	var opts := UITheme.button("OPTIONS", UITheme.TEXT_DIM)
-	opts.custom_minimum_size = Vector2(0, 34)
+	var opts := _action("OPTIONS", UITheme.TEXT_DIM, false)
 	opts.pressed.connect(func(): settings.toggle())
 	_menu.add_child(opts)
 
-	var quit := UITheme.button("QUIT", UITheme.TEXT_FAINT)
-	quit.custom_minimum_size = Vector2(0, 34)
+	var quit := _action("QUIT", UITheme.TEXT_FAINT, false)
 	quit.pressed.connect(func(): get_tree().quit())
 	_menu.add_child(quit)
 
-	col.add_child(_spacer(14))
-	_best = UITheme.label("", UITheme.TEXT_FAINT, UITheme.TINY)
-	_best.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	col.add_child(_spacer(16))
+	_best = _centred("", UITheme.TEXT_FAINT, UITheme.TINY)
 	col.add_child(_best)
 	if s.best_level > 1:
 		_best.text = "BEST  LEVEL %d" % s.best_level
+
+## Every button is the same height and fills the column; only the primary
+## one is emphasised, so the block reads as one stack.
+func _action(text: String, col: Color, primary: bool) -> Button:
+	var b: Button = UITheme.cta(text, col) if primary else UITheme.button(text, col)
+	b.custom_minimum_size = Vector2(COL_W, BTN_H)
+	b.size_flags_horizontal = Control.SIZE_FILL
+	return b
+
+func _centred(text: String, col: Color, size: int) -> Label:
+	var l := UITheme.label(text, col, size)
+	l.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	l.custom_minimum_size = Vector2(COL_W, 0.0)
+	l.size_flags_horizontal = Control.SIZE_FILL
+	return l
 
 func _spacer(h: int) -> Control:
 	var c := Control.new()

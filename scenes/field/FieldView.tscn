@@ -1,11 +1,13 @@
-[gd_scene load_steps=10 format=3]
+[gd_scene load_steps=12 format=3]
 
 [ext_resource type="Script" path="res://scenes/field/FieldView.gd" id="1_fv"]
 [ext_resource type="Script" path="res://scenes/field/GlowRig.gd" id="2_glow"]
 [ext_resource type="Script" path="res://scenes/field/BackdropLayer.gd" id="3_back"]
 [ext_resource type="Script" path="res://scenes/field/ContactLayer.gd" id="4_contact"]
 [ext_resource type="Script" path="res://scenes/field/ProjectileLayer.gd" id="5_proj"]
-[ext_resource type="Script" path="res://scenes/field/PlayerBloom.gd" id="6_bloom"]
+[ext_resource type="Script" path="res://scenes/field/DarknessLayer.gd" id="6_dark"]
+[ext_resource type="Script" path="res://scenes/field/ForegroundLayer.gd" id="6b_fore"]
+[ext_resource type="Script" path="res://scenes/field/PlayerBloom.gd" id="6c_bloom"]
 [ext_resource type="Script" path="res://scenes/field/ImpactLayer.gd" id="7_impact"]
 [ext_resource type="Script" path="res://scenes/field/ReticleLayer.gd" id="8_reticle"]
 [ext_resource type="Script" path="res://scenes/field/OverlayLayer.gd" id="9_overlay"]
@@ -27,8 +29,14 @@ script = ExtResource("4_contact")
 [node name="ProjectileLayer" type="Node2D" parent="."]
 script = ExtResource("5_proj")
 
+[node name="DarknessLayer" type="Node2D" parent="."]
+script = ExtResource("6_dark")
+
+[node name="ForegroundLayer" type="Node2D" parent="."]
+script = ExtResource("6b_fore")
+
 [node name="PlayerBloom" type="Node2D" parent="."]
-script = ExtResource("6_bloom")
+script = ExtResource("6c_bloom")
 
 [node name="ImpactLayer" type="Node2D" parent="."]
 script = ExtResource("7_impact")

@@ -14,8 +14,13 @@ extends RefCounted
 ## only tells you what is coming.
 
 static func radius(s: GameStateData) -> float:
-	return Constants.VISION_BASE + sqrt(maxf(s.effective_luminance(), 0.0)) \
-		* Constants.VISION_LUM_SCALE + Stats.vision_add
+	var r: float = Constants.VISION_BASE \
+		+ sqrt(maxf(s.effective_luminance(), 0.0)) * Constants.VISION_LUM_SCALE \
+		+ Stats.vision_add
+	# Hiding pulls the light in hard. Safe and blind are the same act.
+	if s.is_dousing():
+		r *= Constants.DOUSE_SIGHT_MULT
+	return r
 
 ## The distance at which the turret can actually engage: the nearer of the
 ## two. Displayed in the HUD so the player can see which one is binding.

@@ -78,15 +78,21 @@ func _draw() -> void:
 	# A faint inner glow just inside the rim, so the edge reads as an edge.
 	draw_arc(Vector2.ZERO, R - 5.0, 0.0, TAU, 96, Color(0.09, 0.15, 0.19), 3.0, false)
 
-	# --- what your light reaches: the edge of what you can fight ---
-	var sight: float = Sight.radius(GameState.s)
-	var steps: int = 10
+	# --- the pool of light you actually see by ---
+	var s: GameStateData = GameState.s
+	var sight: float = Sight.radius(s)
+	var hidden: bool = s.is_dousing()
+	# Warm when you are burning, cold when you have pulled the light in.
+	var tint: Color = Color(0.30, 0.44, 0.72) if hidden else Color(1.0, 0.74, 0.34)
+	var steps: int = 16
 	for i in range(steps):
 		var t: float = float(i) / float(steps)
-		draw_arc(Vector2.ZERO, sight * (0.55 + t * 0.45), 0.0, TAU, 64,
-			Color(0.15, 0.13, 0.09, 0.055 * (1.0 - t)),
-			(sight * 0.45) / float(steps) + 2.0, false)
-	draw_arc(Vector2.ZERO, sight, 0.0, TAU, 96, Color(0.52, 0.42, 0.22), 1.6, true)
+		# Brightest at the middle, falling away to nothing at the edge.
+		var a: float = 0.055 * pow(1.0 - t, 1.7)
+		draw_arc(Vector2.ZERO, sight * (0.06 + t * 0.94), 0.0, TAU, 56,
+			Color(tint.r, tint.g, tint.b, a),
+			(sight * 0.94) / float(steps) + 2.0, false)
+	draw_arc(Vector2.ZERO, sight, 0.0, TAU, 96, tint * 0.55, 1.4, true)
 
 	# --- turret reach: the promise the player aims inside of ---
 	var reach: float = Stats.turret_range

@@ -18,17 +18,11 @@ func _draw() -> void:
 	var bars := PackedVector2Array()
 	var bar_cols := PackedColorArray()
 
-	var boss: Contact = null
-	var unseen := PackedVector2Array()
-	var unseen_cols := PackedColorArray()
 	for c in s.contacts:
-		if c.is_boss:
-			boss = c
-			continue
-		if not Sight.can_see(s, c):
-			# Out past the light: you know something is there and nothing
-			# more. No tier, no health, and the turret will not take it.
-			_add_silhouette(unseen, unseen_cols, c)
+		# The boss draws above the darkness, on its own layer. Everything
+		# past the light simply is not drawn — an outline out there told
+		# the player exactly what the dark was supposed to be hiding.
+		if c.is_boss or not Sight.can_see(s, c):
 			continue
 		var col: Color = UITheme.tier_colour(c.tier)
 		var hurt: float = c.hp / maxf(c.max_hp, 0.001)
@@ -50,48 +44,6 @@ func _draw() -> void:
 		RenderingServer.canvas_item_add_triangle_array(get_canvas_item(), idx, pts, cols)
 	if not bars.is_empty():
 		draw_multiline_colors(bars, bar_cols, 2.0)
-	if not unseen.is_empty():
-		draw_multiline_colors(unseen, unseen_cols, 1.6)
-	if boss != null:
-		_draw_boss(boss)
-
-## The boss must be unmistakable at a glance: bigger, rotating, ringed.
-func _draw_boss(c: Contact) -> void:
-	var hurt: float = c.hp / maxf(c.max_hp, 0.001)
-	var col: Color = UITheme.tier_colour(c.tier) * (0.70 + hurt * 0.55)
-	if c.flash > 0.0:
-		col = col.lerp(Color(1.0, 0.98, 0.9), c.flash * 0.6) * (1.0 + c.flash * 0.7)
-	var r: float = c.radius
-	var body := PackedVector2Array()
-	for i in range(4):
-		var a: float = _t * 0.6 + float(i) * PI * 0.5 + PI * 0.25
-		body.append(c.pos + Vector2(cos(a), sin(a)) * r)
-	draw_colored_polygon(body, col)
-	body.append(body[0])
-	draw_polyline(body, Color(1.0, 0.72, 0.45) * 1.15, 2.4, true)
-
-	var pulse: float = 1.0 + 0.06 * sin(_t * 4.0)
-	var ring: float = r * 1.5 * pulse
-	draw_arc(c.pos, ring, 0.0, TAU, 40, Color(0.5, 0.16, 0.14), 2.0, true)
-	# Its own health ring, so progress is readable without the top bar.
-	draw_arc(c.pos, ring, -PI * 0.5, -PI * 0.5 + TAU * hurt, 40,
-		Color(1.0, 0.55, 0.35) * 1.25, 3.0, true)
-
-## An unseen contact is drawn as an open bracket rather than a filled
-## square: the same footprint, none of the information.
-func _add_silhouette(pts: PackedVector2Array, cols: PackedColorArray, c: Contact) -> void:
-	var r: float = c.radius
-	var col := Color(0.34, 0.30, 0.34)
-	var corners: Array[Vector2] = [
-		Vector2(-r, -r), Vector2(r, -r), Vector2(r, r), Vector2(-r, r)]
-	for i in range(4):
-		var a: Vector2 = c.pos + corners[i]
-		var b: Vector2 = c.pos + corners[(i + 1) % 4]
-		var d: Vector2 = (b - a) * 0.34
-		pts.append(a); pts.append(a + d)
-		cols.append(col)
-		pts.append(b - d); pts.append(b)
-		cols.append(col)
 
 func _add_square(pts: PackedVector2Array, cols: PackedColorArray,
 		idx: PackedInt32Array, centre: Vector2, r: float, col: Color) -> void:

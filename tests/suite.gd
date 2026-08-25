@@ -238,6 +238,18 @@ func test_shroud_buys_sight_without_emitting() -> void:
 	ok(Sight.radius(s) > before, "dark adaptation extends sight")
 	near(s.luminance, 0.0, 0.001, "and emits nothing doing it")
 
+## Being safe and being blind are the same act.
+func test_hiding_pulls_the_light_in() -> void:
+	var s := fresh()
+	GameState.s = s
+	own(s, &"burn_entry", 6)
+	Luminance.tick(s, 0.0)
+	var open_sight: float = Sight.radius(s)
+	s.dousing = true
+	s.douse_meter = 1.0
+	ok(Sight.radius(s) < open_sight * 0.6,
+		"hiding costs most of your sight, not a trim")
+
 # --- turret --------------------------------------------------------------
 
 func test_turret_targets_the_nearest_contact_in_range() -> void:

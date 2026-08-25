@@ -18,8 +18,8 @@ next is the active decision. An assist cone steers shots onto whatever you
 are pointing near, and Reach nodes widen it. Point at empty dark and you
 miss. The HUD says `ON TARGET` when the trigger has something.
 
-**Hold Space to hide.** Light drops to 10%, spawning slows fivefold, and you
-earn nothing while you hold it. The meter is your breath: run it to empty
+**Hold Space to hide.** Light drops to 10%, spawning slows fivefold, your
+sight collapses to 40%, and you earn nothing while you hold it. The meter is your breath: run it to empty
 and it is spent until it has refilled most of the way back, so you cannot
 mash the key at zero.
 
@@ -33,8 +33,18 @@ something you do mid-fight. **Esc** settings.
 Two radii matter and they come from different places. *Sight* is bought with
 light — brightness is literally how far you can see. *Range* is bought with
 Reach. The turret needs both: it will not lock, and its shots will not
-touch, anything outside your light. Contacts out there draw as hollow
-brackets — you know something is coming, not what.
+touch, anything outside your light.
+
+**Past the light there is nothing to see.** A shader lays real darkness over
+the field with a feathered hole where your light reaches, and contacts out
+there are not drawn at all. An earlier pass drew them as hollow outlines,
+which only relabelled the information — the player still knew exactly where
+everything was, so the dark cost them nothing. The arena boundary and its
+four cardinals stay faintly visible above the darkness: blacking out enemy
+positions is the point, blacking out the walls is just disorienting.
+
+**Hiding pulls the light in to 40%.** Being safe and being blind are the
+same act. Before this, Douse cost you income and nothing else.
 
 That makes brightness a two-sided trade rather than a straight cost. Bright
 means more enemies and the ability to fight them; dark means fewer enemies
@@ -295,7 +305,7 @@ scenes/     Main, FieldView and its draw layers
 ui/         HUD, TreeView, modals
 data/tree/  130 nodes across 4 branches
 tools/      sim_runner, gen_tree.py, dev/Shot
-tests/      250 assertions
+tests/      251 assertions
 ```
 
 The previous, much larger version of this game is on the `main` branch.

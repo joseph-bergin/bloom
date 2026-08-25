@@ -35,6 +35,10 @@ var DOUSE_SPAWN_MULT: float = 5.0
 ## far. Without it, holding the key at zero flickers in and out every frame.
 var DOUSE_RECOVER: float = 0.45
 
+## Hiding pulls the light in around you. Being safe and being blind are the
+## same act — without this, Douse had almost no cost beyond lost income.
+var DOUSE_SIGHT_MULT: float = 0.40
+
 var DOUSE_FACTOR: float = 0.10
 var DOUSE_DRAIN: float = 0.20        # meter per second held
 var DOUSE_REFILL: float = 0.06

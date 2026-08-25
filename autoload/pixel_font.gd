@@ -17,7 +17,18 @@ func _ready() -> void:
 	# every requested size — the font was loading correctly all along and
 	# simply never growing. Integer-only keeps the pixels square.
 	font.fixed_size_scale_mode = TextServer.FIXED_SIZE_SCALE_INTEGER_ONLY
+	# default_font alone does not reach every control type — tooltips,
+	# buttons, spin boxes and sliders each look up their own "font" entry
+	# first. Set it on all of them explicitly.
 	var theme := Theme.new()
 	theme.default_font = font
 	theme.default_font_size = UITheme.BODY
+	for type in ["Label", "Button", "CheckBox", "CheckButton", "OptionButton",
+			"LineEdit", "SpinBox", "TooltipLabel", "RichTextLabel",
+			"PopupMenu", "ProgressBar", "MenuButton", "TabBar"]:
+		theme.set_font("font", type, font)
+		theme.set_font_size("font_size", type, UITheme.BODY)
 	get_tree().root.theme = theme
+	theme_applied.emit()
+
+signal theme_applied()

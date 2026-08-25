@@ -9,6 +9,8 @@ static func spawn_interval(l: float) -> float:
 		if l < Constants.CINDER_THRESHOLD:
 			return INF
 		base /= Constants.CINDER_SPAWN_MULT
+	if GameState.s.is_dousing():
+		base *= Constants.DOUSE_SPAWN_MULT
 	return base / maxf(Stats.spawn_rate_mult
 		* Levels.spawn_scalar(GameState.s.level), 0.01)
 

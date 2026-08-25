@@ -150,6 +150,9 @@ func _process(delta: float) -> void:
 	_tree_btn.disabled = not shopping
 
 	_breath.value = s.douse_meter
+	var fill: StyleBoxFlat = _breath.get_theme_stylebox("fill")
+	fill.bg_color = UITheme.BAD if s.douse_spent else (
+		UITheme.TEXT_BRIGHT if s.is_dousing() else UITheme.COOL)
 	_hint_until = maxf(_hint_until - REFRESH, 0.0)
 	_hint.text = "HOLD SPACE TO HIDE" if _hint_until > 0.0 else ""
 

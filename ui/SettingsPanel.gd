@@ -14,7 +14,7 @@ func _ready() -> void:
 	var col: VBoxContainer = pair[1]
 	col.add_theme_constant_override("separation", 6)
 
-	col.add_child(UITheme.label("Master volume", UITheme.TEXT_DIM, 11))
+	col.add_child(UITheme.label("Master volume", UITheme.TEXT_DIM, UITheme.TINY))
 	var vol := HSlider.new()
 	vol.min_value = -40.0
 	vol.max_value = 6.0

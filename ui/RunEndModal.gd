@@ -26,10 +26,10 @@ func open_modal(reason: String) -> void:
 	visible = true
 	var s: GameStateData = GameState.s
 
-	_body.add_child(UITheme.label(reason, UITheme.TEXT, 14))
+	_body.add_child(UITheme.label(reason, UITheme.TEXT, UITheme.BODY))
 	_body.add_child(UITheme.rule())
 
-	var reached := UITheme.label("You reached level %d" % s.level, UITheme.TEXT_BRIGHT, 30)
+	var reached := UITheme.label("You reached level %d" % s.level, UITheme.TEXT_BRIGHT, UITheme.HUGE)
 	reached.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	_body.add_child(reached)
 	var best: int = maxi(s.best_level, s.level)
@@ -44,14 +44,14 @@ func open_modal(reason: String) -> void:
 	grid.columns = 2
 	grid.add_theme_constant_override("h_separation", 40)
 	_body.add_child(grid)
-	grid.add_child(UITheme.label("Time played", UITheme.TEXT_DIM, 12))
-	grid.add_child(UITheme.label(UITheme.fmt_time(s.t), UITheme.TEXT, 12))
-	grid.add_child(UITheme.label("Motes earned", UITheme.TEXT_DIM, 12))
-	grid.add_child(UITheme.label(UITheme.fmt(s.total_motes_this_run), UITheme.MOTES, 12))
-	grid.add_child(UITheme.label("Peak luminance", UITheme.TEXT_DIM, 12))
-	grid.add_child(UITheme.label(UITheme.fmt(s.luminance), UITheme.LUM, 12))
-	grid.add_child(UITheme.label("Nodes built", UITheme.TEXT_DIM, 12))
-	grid.add_child(UITheme.label("%d" % s.purchased.size(), UITheme.TEXT, 12))
+	grid.add_child(UITheme.label("Time played", UITheme.TEXT_DIM, UITheme.TINY))
+	grid.add_child(UITheme.label(UITheme.fmt_time(s.t), UITheme.TEXT, UITheme.TINY))
+	grid.add_child(UITheme.label("Motes earned", UITheme.TEXT_DIM, UITheme.TINY))
+	grid.add_child(UITheme.label(UITheme.fmt(s.total_motes_this_run), UITheme.MOTES, UITheme.TINY))
+	grid.add_child(UITheme.label("Peak luminance", UITheme.TEXT_DIM, UITheme.TINY))
+	grid.add_child(UITheme.label(UITheme.fmt(s.luminance), UITheme.LUM, UITheme.TINY))
+	grid.add_child(UITheme.label("Nodes built", UITheme.TEXT_DIM, UITheme.TINY))
+	grid.add_child(UITheme.label("%d" % s.purchased.size(), UITheme.TEXT, UITheme.TINY))
 
 	_body.add_child(UITheme.rule())
 	_body.add_child(UITheme.wrapped(

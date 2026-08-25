@@ -21,7 +21,7 @@ func _ready() -> void:
 	var bc := VBoxContainer.new()
 	bc.add_theme_constant_override("separation", 3)
 	_boss_box.add_child(bc)
-	_boss_name = UITheme.label("", UITheme.BAD, 15)
+	_boss_name = UITheme.label("", UITheme.BAD, UITheme.BODY)
 	_boss_name.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	bc.add_child(_boss_name)
 	_boss_bar = UITheme.meter(UITheme.BAD, 12)
@@ -35,10 +35,10 @@ func _ready() -> void:
 	_banner.add_theme_constant_override("separation", 4)
 	_banner.visible = false
 	add_child(_banner)
-	_banner_title = UITheme.label("", UITheme.GOOD, 34)
+	_banner_title = UITheme.label("", UITheme.GOOD, UITheme.HUGE)
 	_banner_title.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	_banner.add_child(_banner_title)
-	_banner_sub = UITheme.label("", UITheme.MOTES, 16)
+	_banner_sub = UITheme.label("", UITheme.MOTES, UITheme.BODY)
 	_banner_sub.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	_banner.add_child(_banner_sub)
 

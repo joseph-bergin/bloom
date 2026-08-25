@@ -5,13 +5,13 @@ extends RefCounted
 
 ## The font is a 5x7 bitmap, so sizes are integer multiples of the cell.
 ## Anything else resamples and the pixels stop being pixels.
-const CELL := 7
+const CELL := 8
 ## 1:1 is too small to read on a 1280x800 screen, so the smallest the UI
 ## goes is 2x. Every size is still an integer multiple of the cell.
-const TINY := CELL * 2     # 14 — captions
-const BODY := CELL * 2     # 14 — everything normal
-const LARGE := CELL * 3    # 21 — emphasis
-const HUGE := CELL * 5     # 35 — headline
+const TINY := CELL * 2     # 16 — captions
+const BODY := CELL * 2     # 16 — everything normal
+const LARGE := CELL * 3    # 24 — emphasis
+const HUGE := CELL * 5     # 40 — headline
 
 # --- ground --------------------------------------------------------------
 const VOID := Color(0.020, 0.027, 0.040)
@@ -85,6 +85,7 @@ static func header(text: String, accent: Color = ACCENT) -> Control:
 	row.add_child(tick)
 	var l := Label.new()
 	l.text = text.to_upper()
+	l.add_theme_font_override("font", font())
 	l.add_theme_color_override("font_color", accent * 0.92)
 	l.add_theme_font_size_override("font_size", TINY)
 	l.add_theme_constant_override("outline_size", 0)
@@ -99,9 +100,10 @@ static func rule(col: Color = EDGE) -> Control:
 
 # --- atoms ---------------------------------------------------------------
 
-static func label(text: String, col: Color = TEXT, size: int = 13) -> Label:
+static func label(text: String, col: Color = TEXT, size: int = BODY) -> Label:
 	var l := Label.new()
 	l.text = text
+	l.add_theme_font_override("font", font())
 	l.add_theme_color_override("font_color", col)
 	l.add_theme_font_size_override("font_size", size)
 	return l
@@ -115,6 +117,7 @@ static func wrapped(text: String, col: Color, size: int, width: float) -> Label:
 static func button(text: String, col: Color = TEXT) -> Button:
 	var b := Button.new()
 	b.text = text
+	b.add_theme_font_override("font", font())
 	b.add_theme_color_override("font_color", col)
 	b.add_theme_color_override("font_hover_color", TEXT_BRIGHT)
 	b.add_theme_color_override("font_pressed_color", TEXT_BRIGHT)

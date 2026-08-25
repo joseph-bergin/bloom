@@ -8,6 +8,9 @@ var luminance: float = 0.0
 var dousing: bool = false
 var douse_meter: float = 1.0
 var was_dousing: bool = false
+## True from the moment the meter empties until it recovers. Holding the
+## key while exhausted does nothing at all.
+var douse_spent: bool = false
 var contacts: Array[Contact] = []
 var projectiles: Array[Projectile] = []
 var purchased: Dictionary = {}          # node_id -> rank
@@ -55,7 +58,7 @@ func boss() -> Contact:
 	return null
 
 func is_dousing() -> bool:
-	return dousing and douse_meter > 0.0
+	return dousing and not douse_spent and douse_meter > 0.0
 
 func effective_luminance() -> float:
 	return Luminance.effective(self)

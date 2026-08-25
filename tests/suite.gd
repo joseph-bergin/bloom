@@ -97,13 +97,36 @@ func test_douse_cuts_luminance_to_a_tenth_and_drains() -> void:
 	Luminance.tick(s, 1.0)
 	ok(s.douse_meter > before - Stats.douse_drain, "and refills when released")
 
-func test_douse_releases_when_the_meter_empties() -> void:
+## Holding the key at empty used to flicker on and off every frame, firing
+## the start/end events over and over. It is spent until it recovers.
+func test_an_empty_meter_spends_the_douse_until_it_recovers() -> void:
 	var s := fresh()
 	s.dousing = true
 	s.douse_meter = 0.01
 	Luminance.tick(s, 1.0)
-	ok(not s.dousing, "an empty meter stops the douse")
-	ok(not s.is_dousing(), "and it stops counting")
+	ok(s.douse_spent, "the meter is spent")
+	ok(not s.is_dousing(), "and holding the key does nothing")
+
+	# Still held, still spent, no chattering.
+	for _i in range(20):
+		Luminance.tick(s, 0.05)
+		ok(not s.is_dousing(), "stays spent while it refills")
+	ok(s.douse_meter > 0.0, "and it does refill while held")
+
+	while s.douse_meter < Constants.DOUSE_RECOVER:
+		Luminance.tick(s, 0.5)
+	Luminance.tick(s, 0.01)
+	ok(not s.douse_spent, "past the recovery mark it can be used again")
+	ok(s.is_dousing(), "and the held key takes effect")
+
+func test_hiding_slows_spawning_hard() -> void:
+	var s := fresh()
+	GameState.s = s
+	var open_rate: float = Spawning.spawn_interval(60.0)
+	s.dousing = true
+	s.douse_meter = 1.0
+	ok(Spawning.spawn_interval(60.0) > open_rate * 3.0,
+		"hiding has to actually slow the field, not trim it")
 
 # --- spawning ------------------------------------------------------------
 

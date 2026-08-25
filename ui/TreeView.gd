@@ -84,7 +84,7 @@ func _build() -> void:
 	top.position = Vector2(16, 12)
 	top.add_theme_constant_override("separation", 10)
 	add_child(top)
-	top.add_child(UITheme.label("THE TREE", UITheme.TEXT_BRIGHT, 18))
+	top.add_child(UITheme.label("THE TREE", UITheme.TEXT_BRIGHT, UITheme.LARGE))
 	var close := UITheme.button("Close  [T]", UITheme.TEXT)
 	close.custom_minimum_size = Vector2(100, 26)
 	close.pressed.connect(close_view)
@@ -132,7 +132,7 @@ func _build() -> void:
 	var nb := VBoxContainer.new()
 	nb.add_theme_constant_override("separation", 3)
 	_next_box.add_child(nb)
-	_next_label = UITheme.label("", UITheme.GOOD, 13)
+	_next_label = UITheme.label("", UITheme.GOOD, UITheme.BODY)
 	_next_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	nb.add_child(_next_label)
 	_next_btn = UITheme.button("", UITheme.TEXT_BRIGHT)
@@ -279,30 +279,30 @@ func _render_detail() -> void:
 	var n: TreeNode = TreeDB.get_node_def(id)
 	var s: GameStateData = GameState.s
 	if n == null:
-		_detail.add_child(UITheme.label("hover a node to read it", UITheme.TEXT_DIM, 12))
+		_detail.add_child(UITheme.label("hover a node to read it", UITheme.TEXT_DIM, UITheme.TINY))
 		_detail.add_child(UITheme.wrapped(
 			"Everything you build adds light, and light is what makes the "
 			+ "field spawn faster and stronger. Shroud is the only branch "
 			+ "that costs none.", UITheme.TEXT_FAINT, UITheme.TINY, 268))
 		return
 	var rank: int = int(s.purchased.get(String(n.id), 0))
-	_detail.add_child(UITheme.label(n.display_name, UITheme.branch_colour(n.branch), 16))
+	_detail.add_child(UITheme.label(n.display_name, UITheme.branch_colour(n.branch), UITheme.BODY))
 	_detail.add_child(UITheme.label("%s%s   rank %d/%s" % [String(n.branch),
 		"   KEYSTONE" if n.keystone else "", rank,
 		"inf" if n.is_infinite() else str(n.max_rank)], UITheme.TEXT_DIM, 11))
-	var d := UITheme.label(n.desc, UITheme.TEXT, 12)
+	var d := UITheme.label(n.desc, UITheme.TEXT, UITheme.TINY)
 	d.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	d.custom_minimum_size = Vector2(266, 0)
 	_detail.add_child(d)
 
 	if n.lum > 0.0:
-		_detail.add_child(UITheme.label("+%.1f light per rank" % n.lum, UITheme.LUM, 12))
+		_detail.add_child(UITheme.label("+%.1f light per rank" % n.lum, UITheme.LUM, UITheme.TINY))
 	else:
-		_detail.add_child(UITheme.label("no light", UITheme.GOOD, 12))
+		_detail.add_child(UITheme.label("no light", UITheme.GOOD, UITheme.TINY))
 
 	var maxed: bool = not n.is_infinite() and rank >= n.max_rank
 	if maxed:
-		_detail.add_child(UITheme.label("fully built", UITheme.GOOD, 13))
+		_detail.add_child(UITheme.label("fully built", UITheme.GOOD, UITheme.BODY))
 	else:
 		var cost: float = GameState.next_cost(n)
 		_detail.add_child(UITheme.label("%s motes" % UITheme.fmt(cost),
@@ -313,7 +313,7 @@ func _render_detail() -> void:
 		for r in n.requires:
 			var rn: TreeNode = TreeDB.get_node_def(r)
 			req.append(rn.display_name if rn != null else String(r))
-		_detail.add_child(UITheme.label("needs: " + ", ".join(req), UITheme.TEXT_DIM, 11))
+		_detail.add_child(UITheme.label("needs: " + ", ".join(req), UITheme.TEXT_DIM, UITheme.TINY))
 
 	var buy := UITheme.button("Build", UITheme.TEXT_BRIGHT)
 	buy.custom_minimum_size = Vector2(0, 28)

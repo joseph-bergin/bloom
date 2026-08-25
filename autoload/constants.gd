@@ -28,6 +28,13 @@ var RADIUS_BASE: float = 11.0
 var RADIUS_TIER_STEP: float = 3.5
 
 var SHROUD_CAP: float = 0.80
+## Hiding is supposed to slow spawning hard. Cutting luminance alone only
+## trimmed the rate by about a third, which did not read as doing anything.
+var DOUSE_SPAWN_MULT: float = 5.0
+## Once the meter empties you cannot hide again until it has refilled this
+## far. Without it, holding the key at zero flickers in and out every frame.
+var DOUSE_RECOVER: float = 0.45
+
 var DOUSE_FACTOR: float = 0.10
 var DOUSE_DRAIN: float = 0.20        # meter per second held
 var DOUSE_REFILL: float = 0.06

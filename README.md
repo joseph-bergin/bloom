@@ -18,9 +18,10 @@ next is the active decision. An assist cone steers shots onto whatever you
 are pointing near, and Reach nodes widen it. Point at empty dark and you
 miss. The HUD says `ON TARGET` when the trigger has something.
 
-**Hold Space to hide.** Luminance drops to 10%, spawning nearly stops, and
-you earn nothing while you hold it. It is the panic button and the greed
-dial at once.
+**Hold Space to hide.** Light drops to 10%, spawning slows fivefold, and you
+earn nothing while you hold it. The meter is your breath: run it to empty
+and it is spent until it has refilled most of the way back, so you cannot
+mash the key at zero.
 
 **T** opens the tree — **between levels only.** Upgrades are a phase, not
 something you do mid-fight. **Esc** settings.
@@ -51,8 +52,10 @@ Three shields gone ends the run. The level you reached is the score.
 
 **The typeface is a 5x7 bitmap font**, authored glyph by glyph in
 `tools/gen_font.py` and emitted as a BMFont page Godot loads directly. No
-external asset, the same as the audio. Sizes are integer multiples of the
-cell, canvas filtering is nearest, and the font's
+external asset, the same as the audio. The cell is 5x8 rather than 5x7 —
+that eighth row is below the baseline, and without it there is nowhere for
+a descender to go, so `g` reads as `a` and `p` as `P`. Sizes are integer
+multiples of the cell, canvas filtering is nearest, and the font's
 `fixed_size_scale_mode` is set to `INTEGER_ONLY` — without that last one a
 fixed-size bitmap font renders at its native 7px at every requested size,
 which looks like the font never loaded at all.
@@ -72,7 +75,8 @@ design.
 **Impacts answer back.** A landed shot throws sparks along the shot line
 and flashes the contact white; a kill throws shards and an expanding ring
 in the contact's tier colour, with a tick on hit and a brighter one on a
-crit. Going dark drops a cold veil over the field, pulls the boundary
+crit; the boss arrives on a low two-note horn and a cleared level answers
+with a rising one. Going dark drops a cold veil over the field, pulls the boundary
 inward, throws a ripple outward and ducks the whole mix — Douse used to be
 a number changing in a panel.
 

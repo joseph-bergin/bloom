@@ -100,6 +100,37 @@ static func purchase() -> AudioStreamWAV:
 		buf[i] = v * _env(i, n, 0.002, 0.96)
 	return _wav(buf)
 
+## The boss arriving: a low two-note horn. Long enough to stop what you
+## are doing and look up.
+static func boss() -> AudioStreamWAV:
+	var n: int = int(RATE * 1.5)
+	var buf := PackedFloat32Array(); buf.resize(n)
+	for i in range(n):
+		var x: float = float(i) / float(n)
+		# Drops to a second, lower note a third of the way through.
+		var f: float = 116.0 if x < 0.34 else 87.0
+		var p: float = TAU * f * float(i) / RATE
+		var v: float = sin(p) * 0.55 + sin(p * 2.0) * 0.22 + sin(p * 3.0) * 0.10
+		# A slow beat between two detuned voices, so it wavers.
+		v *= 0.78 + 0.22 * sin(TAU * 5.5 * float(i) / RATE)
+		var env: float = _env(i, n, 0.03, 0.99)
+		if x >= 0.30 and x < 0.36:
+			env *= 0.25   # a breath between the notes
+		buf[i] = v * env
+	return _wav(buf)
+
+## A level clearing: a short rising figure. The counterpart to the horn.
+static func cleared() -> AudioStreamWAV:
+	var n: int = int(RATE * 0.75)
+	var buf := PackedFloat32Array(); buf.resize(n)
+	var steps: Array[float] = [392.0, 523.0, 659.0]
+	for i in range(n):
+		var x: float = float(i) / float(n)
+		var f: float = steps[clampi(int(x * 3.0), 0, 2)]
+		var p: float = TAU * f * float(i) / RATE
+		buf[i] = (sin(p) * 0.42 + sin(p * 2.0) * 0.14) * _env(i, n, 0.01, 0.98)
+	return _wav(buf)
+
 ## Shield breach. The floor coming out.
 static func breach() -> AudioStreamWAV:
 	var n: int = int(RATE * 1.0)

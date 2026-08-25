@@ -27,6 +27,8 @@ func _ready() -> void:
 	_streams["douse_in"] = Synth.douse_in()
 	_streams["douse_out"] = Synth.douse_out()
 	_streams["breach"] = Synth.breach()
+	_streams["boss"] = Synth.boss()
+	_streams["cleared"] = Synth.cleared()
 	_streams["click"] = Synth.click()
 	for t in range(Constants.MAX_TIER + 1):
 		_kill_streams.append(Synth.kill(t))
@@ -59,6 +61,8 @@ func _ready() -> void:
 		play("douse_out", -8.0)
 		_set_hidden(false))
 	EventBus.node_purchased.connect(func(_id: StringName, _r: int): play("purchase", -3.0))
+	EventBus.boss_spawned.connect(func(_c: Contact, _l: int): play("boss", -1.0))
+	EventBus.level_cleared.connect(func(_l: int, _b: float): play("cleared", -4.0))
 	EventBus.shield_breached.connect(func(_r: int):
 		play("breach", 0.0)
 		duck(Constants.BREACH_DUCK))

@@ -26,42 +26,36 @@ dial at once.
 
 ## Levels
 
-A run is a ladder of levels, not an open-ended survival timer.
+A run is a ladder of levels. Each level is a kill quota, then a **boss**.
+The quota is set from how fast the field is currently spawning, so a level
+is always about the same stretch of time however bright you are — being
+brighter means more to kill, not a shorter level. If you dawdle, the boss
+arrives on schedule anyway.
 
-Each level is a kill quota, then a **boss**. The quota is set from how fast
-the field is currently spawning, so a level is always about the same stretch
-of time however bright you are — being brighter means more to kill, not a
-shorter level. If you dawdle the boss arrives on schedule anyway.
-
-The boss is a wall. Nothing else spawns while it lives, it has its own health
-bar, and killing it clears the level, empties the field and pays a bonus. If
-it reaches you it costs a shield and **comes straight back** — the level does
-not advance. That is deliberate: when a breaching boss advanced the level, a
+The boss is a wall. Nothing else spawns while it lives, it has its own
+health bar, and killing it clears the level and pays a bonus. If it reaches
+you it costs a shield and **comes straight back** — the level does not
+advance. That is deliberate: when a breaching boss advanced the level, a
 build with no damage at all could walk the whole ladder by paying shields,
 and damage bought nothing.
 
-Three shields gone ends the run. The level you reached is your score, and it
-feeds the ember payout directly, so getting deeper is worth as much as
-banking motes.
+**Clearing a level hands control back to you.** The field empties, the
+banner lands, and the tree opens so you can spend what the level paid.
+Nothing resumes until you press *Begin level N*. That is the rhythm the
+game runs on: fight, clear, spend, go again.
 
-### Headless tools
+Three shields gone ends the run. The level you reached is the score.
 
-```bash
-# build comparison — mixed must beat every extreme
-godot --headless --script res://tools/sim_runner.gd -- --minutes=45 --runs=4
+## No prestige
 
-# a full campaign: successive runs, banking embers between them
-godot --headless --script res://tools/sim_runner.gd -- --cycles=12 --retire=25 --build=mixed
+There is no meta-currency and no cross-run carry. A run is the whole game:
+climb as far as you can, and the tree unbuilds when you start again. The
+only thing that persists is your best level.
 
-# sweep any tuning value without editing the file
-godot --headless --script res://tools/sim_runner.gd -- --set=HP_TIER_MULT=2.6
-
-# 221 assertions
-godot --headless --script res://tests/test_runner.gd
-
-# regenerate the tree from templates
-python3 tools/gen_tree.py
-```
+This is a deliberate simplification from an earlier version that had an
+"ember" prestige layer. It removes the multi-hour arc the spec described —
+the game is now a single escalating run scored by depth, closer to an
+arcade high-score loop than a long incremental.
 
 ## Acceptance criteria
 
@@ -104,32 +98,30 @@ scale down — that is the actual zoom.
 
 ## Open balance item
 
-§10 asks that a mixed build beat both extremes. Over an eight-run campaign
-the runner gives:
+The tree has to be worth its luminance. It now is, but only for a build that
+commits. Over a single run (four seeds averaged, score is level reached):
 
-| build | embers banked | ember nodes |
-|---|---|---|
-| burn + reach | 234.6 | 15/24 |
-| reach | 218.2 | 15/24 |
-| root | 217.8 | 16/24 |
-| shroud + root | 180.4 | 13/24 |
-| burn | 164.7 | 13/24 |
-| all four evenly | 147.4 | 14/24 |
-| shroud | 145.9 | 11/24 |
-| burn + shroud | 145.9 | 11/24 |
+| build | level | motes | dps |
+|---|---|---|---|
+| burn + reach | 8.8 | 32K | 226 |
+| mixed (all four) | 6.0 | 4.5K | 18 |
+| root | 6.0 | 9.9K | 8 |
+| shroud | 6.0 | 3.7K | 8 |
+| **buy nothing** | **6.0** | **3.7K** | **8** |
+| burn | 5.8 | 3.8K | 37 |
 
-So a mixed build does win — **burn + reach** beats every pure branch. But two
-things are wrong with that picture. Spreading evenly across all four is
-near the bottom, because the tree's power is in depth and an even spread
-never reaches it. And **Shroud is a trap**: burn + shroud earns less than
-burn alone, which is the exact failure §10 names. Shroud has to pay for
-itself by letting you carry more Burn than you otherwise could, and right
-now it does not pay enough.
+`burn + reach` clearly beats doing nothing — nearly three levels deeper and
+eight times the income. But most single branches merely *tie* with buying
+nothing, and pure Burn is worse than it: its luminance costs more than its
+damage returns unless Reach is there to give the turret time to use it.
+Shroud still does not pay for itself.
 
-Reproduce with:
+So the shape is right — commitment beats dabbling beats idling — but the
+floor is too high and two of the four branches are not carrying their
+weight. Reproduce with:
 
 ```bash
-godot --headless --script res://tools/sim_runner.gd -- --cycles=8 --retire=30 --build=burnshroud
+godot --headless --script res://tools/sim_runner.gd -- --minutes=45 --runs=4
 ```
 
 ## Balance, and how it got there
@@ -142,7 +134,13 @@ to expect. Three changed:
   health has to outrun damage growth or brightness costs you nothing. At 2.2
   a pure-Burn run dies at 20 minutes and a mixed run at 30, which is the
   spec's 15–30 minute window.
-- **`EMBER_DIVISOR` 1000 → 80.** At 1000 the campaign flatlined: 2 embers per
+- **`MOTE_TIER_MULT` 1.9 → 2.6.** The single most important number here.
+  Health scaled at 2.2 per tier while motes scaled at 1.9, which meant a
+  higher-tier contact paid *less per point of health* than a low one — so
+  being brighter was strictly a mistake and the entire tree was a trap.
+  Rewards now outrun costs per tier, which is what makes growth worth its
+  exposure. There is a test asserting the inequality holds.
+- **`EMBER_DIVISOR` 1000 → 80** (since removed with prestige). At 1000 the campaign flatlined: 2 embers per
   run forever, 4 of 24 ember nodes after four hours, luminance pinned at 82
   every cycle. Ember upgrades are the only thing that raises the ceiling
   between runs, so if they never accumulate nothing escalates. At 80 the
@@ -210,9 +208,9 @@ sim/        contact, projectile, game_state_data, tree_node
             systems/ luminance, spawning, turret, field
 scenes/     Main, FieldView and its draw layers
 ui/         HUD, TreeView, modals
-data/tree/  130 base nodes across 4 branches + 24 ember nodes
+data/tree/  130 nodes across 4 branches
 tools/      sim_runner, gen_tree.py, dev/Shot
-tests/      221 assertions
+tests/      212 assertions
 ```
 
 The previous, much larger version of this game is on the `main` branch.

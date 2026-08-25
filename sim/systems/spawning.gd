@@ -9,13 +9,8 @@ static func spawn_interval(l: float) -> float:
 		if l < Constants.CINDER_THRESHOLD:
 			return INF
 		base /= Constants.CINDER_SPAWN_MULT
-	return base / maxf(Stats.spawn_rate_mult * density()
+	return base / maxf(Stats.spawn_rate_mult
 		* Levels.spawn_scalar(GameState.s.level), 0.01)
-
-## Every ember cycle makes the field denser. This is what keeps mote income
-## — and therefore ember income — climbing across a campaign.
-static func density() -> float:
-	return 1.0 + float(GameState.s.ember_count) * Constants.PRESTIGE_DENSITY
 
 static func max_tier(l: float) -> int:
 	return clampi(int(floor(l / Constants.TIER_LUM_STEP)), 0, Constants.MAX_TIER)

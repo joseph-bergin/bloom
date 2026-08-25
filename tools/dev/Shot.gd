@@ -93,6 +93,7 @@ func _seed() -> void:
 			b.hp = b.max_hp * 0.62
 			_aim_target = b.pos
 	if force_cleared:
+		s.motes = 2400.0
 		s.phase = GameStateData.Phase.BOSS
 		s.boss_id = 0
 		Levels.tick(s, 0.016)

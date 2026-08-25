@@ -54,10 +54,8 @@ static func tick(s: GameStateData, delta: float) -> void:
 		GameStateData.Phase.BOSS:
 			if s.boss() == null:
 				_clear_level(s)
-		GameStateData.Phase.CLEARED:
-			s.clear_timer -= delta
-			if s.clear_timer <= 0.0:
-				_begin_level(s)
+		GameStateData.Phase.UPGRADING:
+			pass  # waits for the player, not a timer
 
 static func on_kill(s: GameStateData, c: Contact) -> void:
 	if c.is_boss:
@@ -83,15 +81,22 @@ static func _summon_boss(s: GameStateData) -> void:
 
 static func _clear_level(s: GameStateData) -> void:
 	s.boss_id = 0
-	s.phase = GameStateData.Phase.CLEARED
-	s.clear_timer = Constants.LEVEL_CLEAR_PAUSE
+	s.phase = GameStateData.Phase.UPGRADING
 	var bonus: float = clear_bonus(s)
+	s.last_clear_bonus = bonus
 	s.motes += bonus
 	s.total_motes_this_run += bonus
 	# The field empties for the breather, so the win is legible.
 	s.contacts.clear()
 	s.projectiles.clear()
 	EventBus.level_cleared.emit(s.level, bonus)
+
+## Called when the player is done shopping and asks for the next level.
+static func begin_next(s: GameStateData) -> bool:
+	if s.phase != GameStateData.Phase.UPGRADING:
+		return false
+	_begin_level(s)
+	return true
 
 static func _begin_level(s: GameStateData) -> void:
 	s.level += 1

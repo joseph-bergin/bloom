@@ -11,7 +11,7 @@ var _unlocked: Dictionary = {}
 const ACHIEVEMENTS := {
 	"FIRST_KILL": "The first thing out of the dark",
 	"FIRST_NODE": "Brighter already",
-	"FIRST_EMBER": "Banked",
+	"LEVEL_TEN": "Ten deep",
 	"TIER_SEVEN": "Something very large",
 	"WILDFIRE": "It never stops growing",
 	"CINDER": "Almost nothing",
@@ -46,7 +46,9 @@ func _wire() -> void:
 			unlock("WILDFIRE")
 		elif id == &"shroud_cinder":
 			unlock("CINDER"))
-	EventBus.ember_banked.connect(func(_g: float, _c: int): unlock("FIRST_EMBER"))
+	EventBus.level_cleared.connect(func(level: int, _b: float):
+		if level >= 10:
+			unlock("LEVEL_TEN"))
 
 func unlock(id: String) -> void:
 	if _unlocked.has(id):

@@ -6,7 +6,8 @@ extends SceneTree
 ##   --minutes=N   simulated minutes per run (default 30)
 ##   --seed=N      RNG seed (default 1234)
 ##   --runs=N      runs per build, averaged (default 1)
-##   --build=NAME  mixed | burn | shroud | reach | root | none | all
+##   --build=NAME  mixed | burn | shroud | reach | root | none |
+##                 burnshroud | burnreach | burnroot | shroudroot | all
 ##   --out=PATH    CSV destination (default user://sweep.csv)
 ##   --set=KEY=VAL override any value in Constants for this run
 ##

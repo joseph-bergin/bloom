@@ -104,7 +104,7 @@ func validate() -> PackedStringArray:
 		if n2.keystone:
 			keystones[n2.branch] = true
 	for b in by_branch.keys():
-		if b != &"ember" and not keystones.has(b):
+		if not keystones.has(b):
 			out.append("branch '%s' has no keystone" % b)
 	return out
 

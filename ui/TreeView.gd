@@ -25,6 +25,9 @@ var _dirty: bool = true
 var _last_cam: Vector2 = Vector2(NAN, NAN)
 var _last_zoom: float = -1.0
 var _refresh: float = 0.0
+var _next_box: PanelContainer
+var _next_label: Label
+var _next_btn: Button
 
 func _ready() -> void:
 	visible = false
@@ -32,9 +35,7 @@ func _ready() -> void:
 	_compute_bounds()
 	EventBus.node_purchased.connect(func(_i: StringName, _r: int): _dirty = true)
 	EventBus.respec_performed.connect(func(): _dirty = true)
-	EventBus.section_unlocked.connect(func(_s: StringName):
-		_compute_bounds()
-		_dirty = true)
+	EventBus.level_cleared.connect(func(_l: int, _b: float): _dirty = true)
 
 func _build() -> void:
 	var bg := ColorRect.new()
@@ -122,6 +123,25 @@ func _build() -> void:
 	help.position = Vector2(16, -26)
 	add_child(help)
 
+	_next_box = UITheme.make_panel()
+	_next_box.set_anchors_preset(Control.PRESET_CENTER_BOTTOM)
+	_next_box.position = Vector2(-190, -92)
+	_next_box.custom_minimum_size = Vector2(380, 0)
+	_next_box.visible = false
+	add_child(_next_box)
+	var nb := VBoxContainer.new()
+	nb.add_theme_constant_override("separation", 3)
+	_next_box.add_child(nb)
+	_next_label = UITheme.label("", UITheme.GOOD, 13)
+	_next_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	nb.add_child(_next_label)
+	_next_btn = UITheme.button("", UITheme.TEXT_BRIGHT)
+	_next_btn.custom_minimum_size = Vector2(0, 38)
+	_next_btn.pressed.connect(func():
+		if GameState.begin_next_level():
+			close_view())
+	nb.add_child(_next_btn)
+
 func _build_filters() -> void:
 	for c in _filters.get_children():
 		c.queue_free()
@@ -130,13 +150,6 @@ func _build_filters() -> void:
 	all.pressed.connect(func(): _focus(Vector2.ZERO))
 	_filters.add_child(all)
 	for b in TreeDB.branches:
-		var nodes: Array = TreeDB.branch_nodes(b)
-		var live: int = 0
-		for n in nodes:
-			if n.section == &"base" or GameState.s.unlocked_sections.has(String(n.section)):
-				live += 1
-		if live == 0:
-			continue
 		var btn := UITheme.button(String(b), UITheme.branch_colour(b))
 		btn.custom_minimum_size = Vector2(0, 22)
 		var bb: StringName = b
@@ -157,8 +170,6 @@ func _compute_bounds() -> void:
 	var first: bool = true
 	for key in TreeDB.nodes.keys():
 		var n: TreeNode = TreeDB.nodes[key]
-		if n.section != &"base" and not GameState.s.unlocked_sections.has(String(n.section)):
-			continue
 		if first:
 			_bounds = Rect2(n.pos, Vector2.ZERO)
 			first = false
@@ -207,6 +218,11 @@ func _set_zoom(z: float) -> void:
 func _process(delta: float) -> void:
 	if not visible:
 		return
+	var upgrading: bool = GameState.upgrading()
+	_next_box.visible = upgrading
+	if upgrading:
+		_next_label.text = "Level %d cleared — spend what it paid" % GameState.s.level
+		_next_btn.text = "Begin level %d" % (GameState.s.level + 1)
 	var view := Rect2(_cam.position - _vp.size * 0.5 / _zoom, _vp.size / _zoom)
 	_edges.visible_rect = view
 	_minimap.view_rect = view
@@ -228,8 +244,6 @@ func _rebind(view: Rect2) -> void:
 	var i: int = 0
 	for key in TreeDB.nodes.keys():
 		var n: TreeNode = TreeDB.nodes[key]
-		if n.section != &"base" and not s.unlocked_sections.has(String(n.section)):
-			continue
 		if not cull.has_point(n.pos) or i >= _pool.size():
 			continue
 		var rank: int = int(s.purchased.get(String(n.id), 0))

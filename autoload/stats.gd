@@ -23,7 +23,6 @@ var aim_assist: float = Constants.AIM_ASSIST_CONE
 # --- root ---
 var max_shields: int = Constants.START_SHIELDS
 var mote_mult: float = 1.0
-var ember_mult: float = 1.0
 
 # --- shroud ---
 var douse_drain: float = Constants.DOUSE_DRAIN
@@ -95,7 +94,6 @@ func _resolve() -> void:
 	# Capped nodes multiply; uncapped sinks add. Mixing the two lets a sink
 	# compound without limit.
 	mote_mult = _g("mote_mult", 1.0) * (1.0 + _g("mote_add", 0.0))
-	ember_mult = _g("ember_mult", 1.0) * (1.0 + _g("ember_add", 0.0))
 
 	douse_drain = maxf(Constants.DOUSE_DRAIN * (1.0 - _g("douse_efficiency", 0.0)), 0.02)
 	douse_refill = Constants.DOUSE_REFILL * (1.0 + _g("douse_refill", 0.0))

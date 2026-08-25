@@ -19,7 +19,6 @@ const BRANCH := {
 	&"shroud": Color(0.46, 0.56, 0.82),
 	&"reach": Color(0.42, 0.88, 0.78),
 	&"root": Color(0.56, 0.92, 0.38),
-	&"ember": Color(1.0, 0.45, 0.55),
 }
 
 static func branch_colour(b: StringName) -> Color:

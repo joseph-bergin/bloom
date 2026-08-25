@@ -11,7 +11,7 @@ func _ready() -> void:
 	s.shields = Stats.max_shields
 
 func _physics_process(delta: float) -> void:
-	if paused or s.run_over:
+	if paused or s.run_over or s.phase == GameStateData.Phase.UPGRADING:
 		return
 	if _hitstop > 0.0:
 		_hitstop -= delta
@@ -51,8 +51,6 @@ func next_cost(n: TreeNode) -> float:
 
 func can_purchase(n: TreeNode) -> bool:
 	if n == null or s.run_over:
-		return false
-	if n.section != &"base" and not s.unlocked_sections.has(String(n.section)):
 		return false
 	if not n.is_infinite() and rank_of(n.id) >= n.max_rank:
 		return false
@@ -95,62 +93,24 @@ func respec() -> void:
 	Stats.recompute(s)
 	EventBus.respec_performed.emit()
 
-# --- prestige ------------------------------------------------------------
+# --- run lifecycle -------------------------------------------------------
 
-## Embers come from what you banked and how deep you got. Depth is in here
-## so that damage — which is what buys depth — is worth something at the
-## end of a run, instead of economy being the only thing that scores.
-func embers_for(total: float, level: int = 1) -> float:
-	var banked: float = sqrt(total / Constants.EMBER_DIVISOR)
-	var depth: float = 1.0 + float(maxi(level - 1, 0)) * Constants.EMBER_LEVEL_BONUS
-	return floor(banked * depth) * Stats.ember_mult
+## Called when the player is done shopping between levels.
+func begin_next_level() -> bool:
+	return Levels.begin_next(s)
 
-func embers_on_death() -> float:
-	return embers_for(s.total_motes_this_run, s.level)
+func upgrading() -> bool:
+	return s.phase == GameStateData.Phase.UPGRADING
 
-## Retiring early must always beat dying — strictly, at every point on the
-## curve. Rounding alone lets the bonus vanish at small payouts, so the
-## result is floored at one more than the death payout.
-func embers_on_retire() -> float:
-	var died: float = embers_on_death()
-	return maxf(floor(died * (1.0 + Constants.RETIRE_BONUS)), died + 1.0)
-
-const SECTIONS: Array[StringName] = [&"ember_1", &"ember_2", &"ember_3", &"ember_4"]
-
-func next_section() -> StringName:
-	for sec in SECTIONS:
-		if not s.unlocked_sections.has(String(sec)):
-			return sec
-	return &""
-
-func bank_embers(retired: bool) -> Dictionary:
-	var gained: float = embers_on_retire() if retired else embers_on_death()
-	var section: StringName = next_section()
-	var report: Dictionary = {
-		"gained": gained, "cycle": s.ember_count + 1,
-		"section": String(section), "retired": retired,
-		"total_motes": s.total_motes_this_run, "time": s.t,
-	}
-
-	s.embers += gained
-	s.ember_count += 1
-	if section != &"":
-		s.unlocked_sections.append(String(section))
-		EventBus.section_unlocked.emit(section)
-
-	# Ember nodes persist; everything else resets.
-	var kept: Dictionary = {}
-	for key in s.purchased.keys():
-		var n: TreeNode = TreeDB.get_node_def(StringName(str(key)))
-		if n != null and n.branch == &"ember":
-			kept[key] = s.purchased[key]
-	s.purchased = kept
-
-	s.t = 0.0
+## A fresh run: the tree unbuilds and the ladder starts over. Nothing carries
+## except the best level reached, which is the score.
+func restart_run() -> void:
+	var best: int = maxi(s.best_level, s.level)
+	s.purchased.clear()
 	s.motes = 0.0
 	s.total_motes_this_run = 0.0
-	s.contacts = []
-	s.projectiles = []
+	s.contacts = [] as Array[Contact]
+	s.projectiles = [] as Array[Projectile]
 	s.wildfire_lum = 0.0
 	s.spawn_timer = 0.0
 	s.fire_timer = 0.0
@@ -158,18 +118,15 @@ func bank_embers(retired: bool) -> Dictionary:
 	s.dousing = false
 	s.run_over = false
 	s.run_end_reason = ""
+	s.t = 0.0
+	s.aim_auto = true
 	Levels.reset(s)
+	s.best_level = best
 	s.purchase_version += 1
 	Stats.recompute(s)
 	s.shields = Stats.max_shields
-
-	EventBus.ember_banked.emit(gained, s.ember_count)
-	EventBus.run_started.emit()
 	SaveManager.save_game()
-	return report
-
-func retire() -> Dictionary:
-	return bank_embers(true)
+	EventBus.run_started.emit()
 
 # --- feel ----------------------------------------------------------------
 

@@ -12,8 +12,6 @@ func _draw() -> void:
 	var cols := PackedColorArray()
 	for key in TreeDB.nodes.keys():
 		var n: TreeNode = TreeDB.nodes[key]
-		if n.section != &"base" and not s.unlocked_sections.has(String(n.section)):
-			continue
 		for r in n.requires:
 			var p: TreeNode = TreeDB.get_node_def(r)
 			if p == null or not _visible(p.pos, n.pos):

@@ -4,7 +4,7 @@ extends Control
 ## player connecting those two by minute four.
 
 signal tree_pressed()
-signal retire_pressed()
+signal next_level_pressed()
 signal settings_pressed()
 
 const REFRESH := 1.0 / 15.0
@@ -15,7 +15,7 @@ var _level_sub: Label
 var _lum: Label
 var _cause: Label
 var _motes: Label
-var _embers: Label
+var _best: Label
 var _shields: Label
 var _dps: Label
 var _aim: Label
@@ -25,7 +25,7 @@ var _douse_label: Label
 var _douse_sub: Label
 var _hint: Label
 var _hint_until: float = 0.0
-var _retire: Button
+var _next: Button
 var _refresh: float = 0.0
 
 func _ready() -> void:
@@ -81,19 +81,14 @@ func _ready() -> void:
 	right.add_child(rc)
 	_clock = UITheme.label("0s", UITheme.TEXT_DIM, 12)
 	rc.add_child(_clock)
-	_embers = UITheme.label("0 embers", UITheme.EMBERS, 14)
-	rc.add_child(_embers)
-	var ex := UITheme.label(
-		"EMBERS buy permanent upgrades that carry into every future run. "
-		+ "You bank them when a run ends.", UITheme.TEXT_DIM, 10)
-	ex.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
-	ex.custom_minimum_size = Vector2(226, 0)
-	rc.add_child(ex)
-	_retire = UITheme.button("End run  +0 embers", UITheme.EMBERS)
-	_retire.custom_minimum_size = Vector2(0, 30)
-	_retire.tooltip_text = "End this run now and bank your embers. Always pays more than dying does."
-	_retire.pressed.connect(func(): retire_pressed.emit())
-	rc.add_child(_retire)
+	_best = UITheme.label("best: level 1", UITheme.TEXT_DIM, 13)
+	rc.add_child(_best)
+	# Only appears between levels, which is the moment to spend.
+	_next = UITheme.button("Begin level 2", UITheme.GOOD)
+	_next.custom_minimum_size = Vector2(0, 34)
+	_next.visible = false
+	_next.pressed.connect(func(): next_level_pressed.emit())
+	rc.add_child(_next)
 
 	# Douse meter, bottom centre, where a panic button belongs.
 	var douse := UITheme.make_panel()
@@ -158,9 +153,9 @@ func _process(delta: float) -> void:
 			_level_bar.value = 1.0
 			_level_sub.text = "boss — kill it to finish the level"
 			_level_sub.add_theme_color_override("font_color", UITheme.BAD)
-		GameStateData.Phase.CLEARED:
+		GameStateData.Phase.UPGRADING:
 			_level_bar.value = 1.0
-			_level_sub.text = "cleared"
+			_level_sub.text = "cleared — spend, then begin level %d" % (s.level + 1)
 			_level_sub.add_theme_color_override("font_color", UITheme.GOOD)
 		_:
 			_level_bar.value = Levels.progress(s)
@@ -201,10 +196,10 @@ func _process(delta: float) -> void:
 		_aim.text = "nothing in range"
 		_aim.add_theme_color_override("font_color", UITheme.TEXT_DIM)
 
-	_clock.text = "best: level %d%s" % [s.best_level,
-		"   run %d" % (s.ember_count + 1) if s.ember_count > 0 else ""]
-	_embers.text = "%s embers" % UITheme.fmt(s.embers)
-	_retire.text = "End run  +%s embers" % UITheme.fmt(GameState.embers_on_retire())
+	_clock.text = UITheme.fmt_time(s.t)
+	_best.text = "best: level %d" % maxi(s.best_level, s.level)
+	_next.visible = GameState.upgrading()
+	_next.text = "Begin level %d" % (s.level + 1)
 
 	_douse_bar.value = s.douse_meter
 	if s.is_dousing():

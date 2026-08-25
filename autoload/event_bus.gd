@@ -17,6 +17,4 @@ signal node_purchased(id: StringName, rank: int)
 signal respec_performed()
 signal stats_recomputed()
 
-signal ember_banked(gained: float, cycle: int)
-signal section_unlocked(section: StringName)
 signal game_loaded()

@@ -23,12 +23,10 @@ func _draw() -> void:
 	var off: Vector2 = Vector2(pad, pad) + (inner - bounds.size * sc) * 0.5
 	for key in TreeDB.nodes.keys():
 		var n: TreeNode = TreeDB.nodes[key]
-		if n.section != &"base" and not s.unlocked_sections.has(String(n.section)):
-			continue
 		var p: Vector2 = off + (n.pos - bounds.position) * sc
 		var owned: bool = int(s.purchased.get(String(n.id), 0)) > 0
-		draw_circle(p, 2.0 if owned else 1.1,
-			UITheme.branch_colour(n.branch) * (2.0 if owned else 0.34))
+		draw_circle(p, 2.2 if owned else 1.6,
+			UITheme.branch_colour(n.branch) * (2.0 if owned else 0.55))
 	if view_rect.size != Vector2.ZERO:
 		draw_rect(Rect2(off + (view_rect.position - bounds.position) * sc,
 			view_rect.size * sc), Color(0.85, 0.95, 1.0, 0.75), false, 1.0)

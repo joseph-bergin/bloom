@@ -201,64 +201,11 @@ for bi, b in enumerate(BRANCHES):
         cost_growth=1.0, lum=klum, requires=[parent["id"]], effects=keffects,
         pos=pos, keystone=True)
 
-# --- ember branch: persists across runs, unlocks in chunks -----------------
-EMBER = [
- ("ember_1", [
-   ("spark","Everburn","+12% damage per rank. Persists across runs.",
-    [eff("damage_mult",0.12)],5,1,1.5),
-   ("hearth","Hearth","+1 starting shield per rank.",[eff("shields",1.0)],2,2,1.0),
-   ("glean","Glean","+15% mote yield per rank.",[eff("mote_mult",0.15,"mul")],5,1,0.8),
-   ("dusk","Dusk","Luminance reduced 3% per rank.",[eff("shroud",0.03)],5,1,0.0),
-   ("wider","Wider","+10% turret range per rank.",[eff("range_mult",0.10)],5,1,0.5),
- ]),
- ("ember_2", [
-   ("breath","Long Breath","Douse drains 12% slower per rank.",
-    [eff("douse_efficiency",0.12)],5,3,0.0),
-   ("stride","Stride","+12% fire rate per rank.",[eff("fire_rate_mult",0.12)],5,3,1.2),
-   ("cull","Cull","+4% critical chance per rank.",[eff("crit_chance",0.04)],5,3,1.0),
-   ("carry","Carry","+15% embers banked per rank.",[eff("ember_mult",0.15,"mul")],5,4,0.6),
-   ("thorn","Thorn","Projectiles pierce +1 per rank.",[eff("pierce",1.0)],2,5,1.0),
- ]),
- ("ember_3", [
-   ("volley","Volley","+1 projectile per rank.",[eff("projectiles",1.0)],2,8,2.0),
-   ("umbra","Umbra","Luminance reduced 4% per rank.",[eff("shroud",0.04)],5,7,0.0),
-   ("gild","Gild","+20% mote yield per rank.",[eff("mote_mult",0.20,"mul")],5,8,1.0),
-   ("arc","Arc","Projectiles chain +1 per rank.",[eff("chain",1.0)],2,9,1.2),
-   ("bulwark","Bulwark","+1 starting shield per rank.",[eff("shields",1.0)],2,10,1.4),
- ]),
- ("ember_4", [
-   ("forever","Forever","+1% damage. No cap.",[eff("damage_mult",0.01)],-1,6,0.2),
-   ("deeper","Deeper","Luminance reduced 0.5%. No cap.",[eff("shroud",0.005)],-1,7,0.0),
-   ("richer","Richer","+1% mote yield. No cap.",[eff("mote_add",0.01)],-1,7,0.1),
-   ("longer","Longer","+1% range. No cap.",[eff("range_mult",0.01)],-1,7,0.1),
-   ("brighter","Kindling","+18% embers banked per rank.",
-    [eff("ember_mult",0.18,"mul")],5,13,0.4),
- ]),
-]
-
-prev_entry = None
-for si, (section, items) in enumerate(EMBER):
-    entry_id = f"ember_{section}_entry"
-    ex, ey = -1150.0 - si * 40.0, -560.0 + si * 300.0
-    add(id=entry_id, branch="ember", name=f"Ember {si + 1}",
-        desc="A section of the tree that survives the dark between runs.",
-        max_rank=1, cost=1 + si * 3, cost_growth=1.0, lum=0.0,
-        requires=[prev_entry] if prev_entry else [],
-        effects=[], pos={"x": ex, "y": ey}, section=section)
-    prev_entry = entry_id
-    for j, (suf, name, desc, effects, mr, cost, lum) in enumerate(items):
-        add(id=f"ember_{suf}", branch="ember", name=name, desc=desc,
-            max_rank=mr, cost=cost, cost_growth=1.15 if mr > 0 else 1.08,
-            lum=lum, requires=[entry_id], effects=effects,
-            pos={"x": round(ex - 210.0 - (j % 2) * 150.0, 1),
-                 "y": round(ey - 110.0 + j * 55.0, 1)},
-            section=section)
-
 # --- emit ------------------------------------------------------------------
 os.makedirs(OUT, exist_ok=True)
 buckets = {}
 for n in nodes:
-    fname = "ember.json" if n["branch"] == "ember" else f"{n['branch']}.json"
+    fname = f"{n['branch']}.json"
     buckets.setdefault(fname, []).append(n)
 for fname, items in buckets.items():
     with open(os.path.join(OUT, fname), "w") as f:

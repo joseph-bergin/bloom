@@ -23,7 +23,7 @@ var DRIFT_LUM_SCALE: float = 0.1719
 var HP_BASE: float = 10.0
 var HP_TIER_MULT: float = 2.2
 var MOTE_BASE: float = 3.0
-var MOTE_TIER_MULT: float = 1.9
+var MOTE_TIER_MULT: float = 2.6
 var RADIUS_BASE: float = 11.0
 var RADIUS_TIER_STEP: float = 3.5
 
@@ -32,10 +32,6 @@ var DOUSE_FACTOR: float = 0.10
 var DOUSE_DRAIN: float = 0.20        # meter per second held
 var DOUSE_REFILL: float = 0.06
 
-## Each prestige starts you in a darker, denser field. Without this the
-## field never escalates across runs, mote income stays flat, and ember
-## income with it — the whole campaign plateaus on the first cycle.
-var PRESTIGE_DENSITY: float = 0.04
 
 # --- levels ---------------------------------------------------------------
 ## A level is a kill quota, then a boss. Clearing the boss ends the level.
@@ -74,12 +70,6 @@ var BOSS_RADIUS_MULT: float = 2.6
 var BOSS_TIER_STEP: float = 0.55
 
 var START_SHIELDS: int = 3
-var EMBER_DIVISOR: float = 80.0
-## How far you got matters, not just what you banked. Without this the score
-## is pure economy and the damage branches buy nothing that counts.
-var EMBER_LEVEL_BONUS: float = 0.22
-## Retiring early must always beat dying.
-var RETIRE_BONUS: float = 0.25
 
 ## How wide a cone the turret will steer a shot into. Aiming is target
 ## selection, not a twitch test — the assist makes pointing near a contact

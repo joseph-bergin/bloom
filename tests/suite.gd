@@ -290,13 +290,11 @@ func test_tree_validates() -> void:
 	ok(errs.is_empty(), "tree validation:\n" + "\n".join(errs))
 
 func test_tree_is_the_right_size() -> void:
-	var base: int = 0
-	for id in TreeDB.all_ids():
-		if (TreeDB.get_node_def(id) as TreeNode).branch != &"ember":
-			base += 1
-	ok(base >= 125 and base <= 140, "~130 base nodes (got %d)" % base)
-	ok(TreeDB.branch_nodes(&"ember").size() >= 18,
-		"~20 ember nodes (got %d)" % TreeDB.branch_nodes(&"ember").size())
+	var n: int = TreeDB.nodes.size()
+	ok(n >= 125 and n <= 140, "~130 nodes (got %d)" % n)
+	for b in TreeDB.branches:
+		ok(b in [&"burn", &"shroud", &"reach", &"root"],
+			"no branch outside the four (found '%s')" % b)
 
 func test_every_branch_has_a_keystone_and_a_sink() -> void:
 	for b in [&"burn", &"shroud", &"reach", &"root"]:
@@ -340,8 +338,6 @@ func test_no_affordability_wall() -> void:
 		var cheapest: float = INF
 		for id in TreeDB.all_ids():
 			var n: TreeNode = TreeDB.get_node_def(id)
-			if n.section != &"base":
-				continue
 			var rank: int = int(s.purchased.get(String(id), 0))
 			if not n.is_infinite() and rank >= n.max_rank:
 				continue
@@ -437,10 +433,10 @@ func test_nothing_new_spawns_during_a_boss_or_the_breather() -> void:
 	for _i in range(600):
 		Spawning.tick(s, 0.1)
 	ok(s.contacts.is_empty(), "the boss fight is not diluted with adds")
-	s.phase = GameStateData.Phase.CLEARED
+	s.phase = GameStateData.Phase.UPGRADING
 	for _i in range(600):
 		Spawning.tick(s, 0.1)
-	ok(s.contacts.is_empty(), "and the breather stays quiet")
+	ok(s.contacts.is_empty(), "and nothing creeps in while the tree is open")
 
 func test_killing_the_boss_clears_the_level_and_pays() -> void:
 	var s := fresh()
@@ -448,11 +444,11 @@ func test_killing_the_boss_clears_the_level_and_pays() -> void:
 	s.boss_id = 0
 	var before: float = s.motes
 	Levels.tick(s, 0.016)
-	ok(s.phase == GameStateData.Phase.CLEARED, "the level is over and says so")
+	ok(s.phase == GameStateData.Phase.UPGRADING, "the level is over and says so")
 	ok(s.motes > before, "clearing pays a bonus")
 	near(s.motes - before, Levels.clear_bonus(s), 1e-4, "the level clear bonus")
 	ok(s.level_quota >= int(Constants.LEVEL_QUOTA_MIN), "the next quota is set")
-	Levels.tick(s, Constants.LEVEL_CLEAR_PAUSE + 0.1)
+	ok(GameState.begin_next_level(), "and the player starts the next one")
 	ok(s.level == 2 and s.phase == GameStateData.Phase.FIGHTING, "then level 2 begins")
 	ok(s.level_kills == 0, "with a fresh quota")
 
@@ -546,86 +542,77 @@ func test_boss_tier_rises_with_level_and_light() -> void:
 	ok(Levels.boss_tier(s) > low, "deeper levels field bigger bosses")
 	ok(Levels.boss_tier(s) <= Constants.MAX_TIER, "and stay inside the tier cap")
 
-func test_a_new_run_starts_at_level_one() -> void:
+# --- run lifecycle and saves ---------------------------------------------
+
+## The upgrade step is the whole rhythm now: fight, clear, spend, go again.
+func test_clearing_a_level_hands_control_back_to_the_player() -> void:
 	var s := fresh()
-	s.level = 9
-	s.level_kills = 5
 	s.phase = GameStateData.Phase.BOSS
-	s.total_motes_this_run = 5000.0
-	GameState.bank_embers(true)
-	ok(s.level == 1 and s.level_kills == 0, "a new run starts over")
-	ok(s.phase == GameStateData.Phase.FIGHTING, "in the fighting phase")
-	ok(s.best_level >= 9, "but the best level reached is remembered")
+	s.boss_id = 0
+	Levels.tick(s, 0.016)
+	ok(s.phase == GameStateData.Phase.UPGRADING, "clearing hands control back")
+	for _i in range(600):
+		Levels.tick(s, 1.0)
+	ok(s.phase == GameStateData.Phase.UPGRADING and s.level == 1,
+		"and no amount of waiting starts the next level on its own")
 
-# --- prestige and saves --------------------------------------------------
-
-func test_ember_payout_formula() -> void:
+func test_begin_next_only_works_while_upgrading() -> void:
 	var s := fresh()
-	near(GameState.embers_for(0.0), 0.0, 1e-6, "nothing earned, nothing banked")
-	near(GameState.embers_for(Constants.EMBER_DIVISOR * 9.0), 3.0, 1e-6,
-		"floor(sqrt(motes / divisor)) at level 1")
-	ok(GameState.embers_for(Constants.EMBER_DIVISOR * 9.0, 10)
-		> GameState.embers_for(Constants.EMBER_DIVISOR * 9.0, 1),
-		"getting deeper pays more for the same motes")
+	s.phase = GameStateData.Phase.FIGHTING
+	ok(not GameState.begin_next_level(), "cannot skip a level mid-fight")
 
-## Retiring early must always beat dying.
-func test_retiring_always_beats_dying() -> void:
+func test_restarting_unbuilds_everything_and_keeps_the_best() -> void:
 	var s := fresh()
-	for motes in [0.0, 500.0, 5000.0, 50000.0, 500000.0, 5.0e6]:
-		s.total_motes_this_run = motes
-		ok(GameState.embers_on_retire() > GameState.embers_on_death()
-			or GameState.embers_on_death() == 0.0 and GameState.embers_on_retire() > 0.0,
-			"retire beats death at %s motes (%s vs %s)" % [motes,
-				GameState.embers_on_retire(), GameState.embers_on_death()])
-
-func test_banking_resets_the_run_but_keeps_ember_nodes() -> void:
-	var s := fresh()
-	s.total_motes_this_run = 100000.0
-	s.motes = 500.0
-	own(s, &"burn_entry", 3)
-	s.unlocked_sections.append("ember_1")
-	s.purchased["ember_spark"] = 2
-	var report: Dictionary = GameState.bank_embers(true)
-	ok(s.motes == 0.0, "run currency clears")
-	ok(not s.purchased.has("burn_entry"), "the base tree unbuilds")
-	ok(int(s.purchased.get("ember_spark", 0)) == 2, "ember nodes persist")
-	ok(s.ember_count == 1 and s.embers > 0.0, "embers bank")
+	s.level = 11
+	s.motes = 900.0
+	s.purchased["burn_entry"] = 3
+	s.contacts.append(Contact.make(0, Vector2(300, 0), 0.0))
+	s.run_over = true
+	GameState.restart_run()
+	ok(s.level == 1 and s.phase == GameStateData.Phase.FIGHTING, "back to level 1")
+	ok(s.purchased.is_empty() and s.motes == 0.0, "the tree unbuilds")
+	ok(s.contacts.is_empty() and not s.run_over, "and the field is clear")
+	ok(s.best_level >= 11, "the best level reached is the score, and it stays")
 	ok(s.shields == Stats.max_shields, "shields come back")
-	ok(float(report["gained"]) > 0.0, "report is populated")
 
-func test_each_prestige_unlocks_a_new_section() -> void:
-	var s := fresh()
-	var seen: Dictionary = {}
-	for _i in range(4):
-		var sec: StringName = GameState.next_section()
-		ok(sec != &"" and not seen.has(sec), "a fresh section each cycle")
-		seen[sec] = true
-		s.unlocked_sections.append(String(sec))
+## Higher tiers must pay better than they cost, or being bright is strictly
+## a mistake and the whole tree is a trap.
+func test_brightness_pays_for_itself() -> void:
+	ok(Constants.MOTE_TIER_MULT > Constants.HP_TIER_MULT,
+		"motes per tier (%.2f) must outrun health per tier (%.2f)"
+		% [Constants.MOTE_TIER_MULT, Constants.HP_TIER_MULT])
+	var lo := Contact.make(0, Vector2(400, 0), 0.0)
+	var hi := Contact.make(4, Vector2(400, 0), 0.0)
+	ok(hi.motes() / hi.max_hp > lo.motes() / lo.max_hp,
+		"a bigger contact is worth more per point of health")
 
-func test_field_gets_denser_each_cycle() -> void:
+## Tied to the boss, which caps at MAX_TIER, so it cannot run away with the
+## level counter the way an exponential in `level` did.
+func test_the_clear_bonus_is_bounded() -> void:
 	var s := fresh()
-	var first: float = Spawning.spawn_interval(50.0)
-	s.ember_count = 5
-	ok(Spawning.spawn_interval(50.0) < first, "a darker, denser field each time")
+	s.level = 1
+	var low: float = Levels.clear_bonus(s)
+	s.level = 60
+	var high: float = Levels.clear_bonus(s)
+	ok(high > low, "deeper levels pay more")
+	s.level = 400
+	near(Levels.clear_bonus(s), high, high * 0.01, "but the bonus is bounded")
+
+# --- saves ---------------------------------------------------------------
 
 func test_save_round_trip_preserves_state() -> void:
 	var s := fresh()
 	s.motes = 1234.5
-	s.embers = 9.0
-	s.ember_count = 2
 	s.t = 456.0
 	s.shields = 2
 	s.purchased["burn_entry"] = 4
 	s.level = 6
 	s.best_level = 9
-	s.unlocked_sections = PackedStringArray(["ember_1"])
 	s.contacts.append(Contact.make(3, Vector2(200.0, 100.0), 20.0))
 
 	var restored := GameStateData.new()
 	SaveManager.deserialize(SaveManager.serialize(s), restored)
 	near(restored.motes, 1234.5, 1e-4, "motes")
-	near(restored.embers, 9.0, 1e-4, "embers")
-	ok(restored.ember_count == 2, "cycle count")
 	ok(restored.shields == 2, "shields")
 	ok(int(restored.purchased["burn_entry"]) == 4, "purchases")
 	ok(restored.contacts.size() == 1 and restored.contacts[0].tier == 3, "contacts")
@@ -637,15 +624,13 @@ func test_migration_from_version_one() -> void:
 	s.purchased["shroud_entry"] = 2
 	var v1: Dictionary = SaveManager.serialize(s)
 	v1["version"] = 1
-	v1.erase("unlocked_sections")
 	v1.erase("wildfire_lum")
 	v1.erase("level")
 	v1.erase("level_kills")
 	v1.erase("best_level")
 	var migrated: Dictionary = SaveManager.migrate(v1)
 	ok(int(migrated["version"]) == Constants.SAVE_VERSION, "migrated to current")
-	ok(migrated.has("unlocked_sections") and migrated.has("wildfire_lum"),
-		"v1 -> v2 filled the new fields")
+	ok(migrated.has("wildfire_lum"), "v1 -> v2 filled the new fields")
 	ok(migrated.has("level") and migrated.has("best_level"),
 		"v2 -> v3 filled in levels")
 	var restored := GameStateData.new()

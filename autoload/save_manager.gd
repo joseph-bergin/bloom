@@ -24,13 +24,11 @@ func serialize(s: GameStateData) -> Dictionary:
 		contacts.append(c.to_dict())
 	return {
 		"version": Constants.SAVE_VERSION,
-		"t": s.t, "motes": s.motes, "embers": s.embers,
-		"ember_count": s.ember_count, "shields": s.shields,
+		"t": s.t, "motes": s.motes, "shields": s.shields,
 		"luminance": s.luminance, "douse_meter": s.douse_meter,
 		"contacts": contacts, "purchased": s.purchased.duplicate(),
 		"total_motes_this_run": s.total_motes_this_run,
 		"wildfire_lum": s.wildfire_lum,
-		"unlocked_sections": Array(s.unlocked_sections),
 		"run_over": s.run_over, "run_end_reason": s.run_end_reason,
 		"level": s.level, "level_kills": s.level_kills, "best_level": s.best_level,
 		"level_quota": s.level_quota, "level_time": s.level_time,
@@ -39,8 +37,6 @@ func serialize(s: GameStateData) -> Dictionary:
 func deserialize(raw: Dictionary, s: GameStateData) -> void:
 	s.t = float(raw.get("t", 0.0))
 	s.motes = float(raw.get("motes", 0.0))
-	s.embers = float(raw.get("embers", 0.0))
-	s.ember_count = int(raw.get("ember_count", 0))
 	s.shields = int(raw.get("shields", Constants.START_SHIELDS))
 	s.luminance = float(raw.get("luminance", 0.0))
 	s.douse_meter = float(raw.get("douse_meter", 1.0))
@@ -51,7 +47,6 @@ func deserialize(raw: Dictionary, s: GameStateData) -> void:
 	s.purchased = (raw.get("purchased", {}) as Dictionary).duplicate()
 	s.total_motes_this_run = float(raw.get("total_motes_this_run", 0.0))
 	s.wildfire_lum = float(raw.get("wildfire_lum", 0.0))
-	s.unlocked_sections = PackedStringArray(raw.get("unlocked_sections", []))
 	s.run_over = bool(raw.get("run_over", false))
 	s.run_end_reason = str(raw.get("run_end_reason", ""))
 	s.level = int(raw.get("level", 1))
@@ -61,6 +56,7 @@ func deserialize(raw: Dictionary, s: GameStateData) -> void:
 	s.best_level = int(raw.get("best_level", 1))
 	# A boss in flight does not survive a reload; restart its level cleanly.
 	s.phase = GameStateData.Phase.FIGHTING
+	s.level_time = 0.0
 	s.boss_id = 0
 	s.purchase_version += 1
 
@@ -71,8 +67,7 @@ func migrate(raw: Dictionary) -> Dictionary:
 	while v < Constants.SAVE_VERSION:
 		match v:
 			1:
-				# v1 -> v2: ember sections and the Wildfire accumulator.
-				out["unlocked_sections"] = out.get("unlocked_sections", [])
+				# v1 -> v2: the Wildfire accumulator.
 				out["wildfire_lum"] = out.get("wildfire_lum", 0.0)
 			2:
 				# v2 -> v3: levels and bosses.

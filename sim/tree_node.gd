@@ -13,7 +13,6 @@ var requires: Array[StringName] = []
 var effects: Array = []
 var pos: Vector2 = Vector2.ZERO
 var keystone: bool = false
-var section: StringName = &"base"   # base, or an ember section
 
 static func from_dict(d: Dictionary) -> TreeNode:
 	var n := TreeNode.new()
@@ -31,7 +30,6 @@ static func from_dict(d: Dictionary) -> TreeNode:
 	var p: Dictionary = d.get("pos", {})
 	n.pos = Vector2(float(p.get("x", 0.0)), float(p.get("y", 0.0)))
 	n.keystone = bool(d.get("keystone", false))
-	n.section = StringName(str(d.get("section", "base")))
 	return n
 
 func is_infinite() -> bool:

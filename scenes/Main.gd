@@ -10,23 +10,36 @@ extends Node
 func _ready() -> void:
 	hud.tree_pressed.connect(func(): tree_view.toggle())
 	hud.settings_pressed.connect(func(): settings.toggle())
-	EventBus.run_started.connect(func(): field.set_aiming(true))
-	hud.retire_pressed.connect(func():
-		GameState.paused = true
-		run_end.open_modal(false))
+	hud.next_level_pressed.connect(func(): GameState.begin_next_level())
 
-	# The modal opens for a death or a voluntary retire; run_over tells
-	# them apart, and retiring must pay better.
-	run_end.confirmed.connect(func():
-		GameState.bank_embers(not GameState.s.run_over)
-		GameState.paused = false)
+	run_end.restart_pressed.connect(func(): GameState.restart_run())
 
 	EventBus.run_ended.connect(func(reason: String):
-		run_end.open_modal(true, reason))
+		tree_view.close_view()
+		run_end.open_modal(reason))
+
+	# Clearing a level opens the tree, so the chance to spend what the level
+	# paid is unmissable rather than something the player has to know about.
+	EventBus.level_cleared.connect(_on_level_cleared)
+
 	EventBus.contact_killed.connect(func(tier: int, _at: Vector2, _m: float):
 		GameState.hitstop(tier))
 
-func _process(_delta: float) -> void:
+## Let the LEVEL N CLEARED banner land, then put the tree in front of the
+## player so the chance to spend is impossible to miss.
+var _open_tree_in: float = -1.0
+
+func _on_level_cleared(_level: int, _bonus: float) -> void:
+	_open_tree_in = Constants.LEVEL_CLEAR_PAUSE
+
+func _process(delta: float) -> void:
+	if _open_tree_in > 0.0:
+		_open_tree_in -= delta
+		if _open_tree_in <= 0.0:
+			_open_tree_in = -1.0
+			if GameState.upgrading() and not GameState.s.run_over:
+				tree_view.open_view()
+
 	# Aiming only applies while the player is looking at the field.
 	field.set_aiming(not tree_view.visible and not run_end.visible
 		and not settings.visible and not GameState.s.run_over)

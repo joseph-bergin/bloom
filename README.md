@@ -23,8 +23,8 @@ the project for you on first open.
 ### From the command line
 
 ```bash
-git clone -b simple https://github.com/joseph-bergin/node_buster_type.git
-cd node_buster_type
+git clone -b simple https://github.com/joseph-bergin/bloom.git
+cd bloom
 ```
 
 Import once, then run:
@@ -47,7 +47,7 @@ If `godot` is not on your PATH, use the binary directly:
 | Linux | `./Godot_v4.3-stable_linux.x86_64` |
 | Windows | `Godot_v4.3-stable_win64.exe` |
 
-To run from outside the project directory, add `--path /path/to/node_buster_type`.
+To run from outside the project directory, add `--path /path/to/bloom`.
 
 ## Playing it
 

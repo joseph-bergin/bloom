@@ -6,6 +6,8 @@ extends RefCounted
 static func move_contacts(s: GameStateData, delta: float) -> void:
 	for c in s.contacts:
 		c.pos += c.vel * delta
+		if c.flash > 0.0:
+			c.flash = maxf(c.flash - delta * 6.0, 0.0)
 
 static func check_breaches(s: GameStateData) -> void:
 	if s.contacts.is_empty():

@@ -111,7 +111,7 @@ static func _collide(s: GameStateData, p: Projectile) -> bool:
 		if p.pos.distance_squared_to(c.pos) > c.radius * c.radius:
 			continue
 		p.hit_ids.append(id)
-		_damage(s, c, p.damage)
+		_damage(s, c, p.damage, p.vel.normalized(), p.crit)
 		if p.chain > 0:
 			p.chain -= 1
 			var next: Contact = _nearest_other(s, c.pos, p.hit_ids)
@@ -136,8 +136,11 @@ static func _nearest_other(s: GameStateData, from: Vector2, exclude: Array[int])
 			best = c
 	return best
 
-static func _damage(s: GameStateData, c: Contact, amount: float) -> void:
+static func _damage(s: GameStateData, c: Contact, amount: float,
+		dir: Vector2 = Vector2.RIGHT, crit: bool = false) -> void:
 	c.hp -= amount
+	c.flash = 1.0
+	EventBus.contact_hit.emit(c.pos, dir, crit, c.hp <= 0.0)
 	if c.hp > 0.0:
 		return
 	var gained: float = c.motes()

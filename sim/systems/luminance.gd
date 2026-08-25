@@ -10,12 +10,21 @@ static func tick(s: GameStateData, delta: float) -> void:
 
 	s.luminance = (Stats.lum_from_tree + s.wildfire_lum) * (1.0 - Stats.shroud)
 
+	var was_hidden: bool = s.was_dousing
 	if s.dousing and s.douse_meter > 0.0:
 		s.douse_meter = maxf(s.douse_meter - Stats.douse_drain * delta, 0.0)
 		if s.douse_meter <= 0.0:
 			s.dousing = false
 	else:
 		s.douse_meter = minf(s.douse_meter + Stats.douse_refill * delta, 1.0)
+
+	var hidden: bool = s.is_dousing()
+	if hidden != was_hidden:
+		s.was_dousing = hidden
+		if hidden:
+			EventBus.douse_started.emit()
+		else:
+			EventBus.douse_ended.emit()
 
 static func effective(s: GameStateData) -> float:
 	return s.luminance * (Constants.DOUSE_FACTOR if s.is_dousing() else 1.0)

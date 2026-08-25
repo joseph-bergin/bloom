@@ -125,7 +125,7 @@ func _draw() -> void:
 		var pulse: float = 1.0 + 0.06 * sin(_t * 6.0)
 		draw_polyline(_closed(_hex(c, (R + 7.0) * pulse)), Color(1, 1, 1) * 1.5, 1.4, true)
 
-	var f: Font = ThemeDB.fallback_font
+	var f: Font = UITheme.font()
 	var col: Color = UITheme.TEXT_BRIGHT if state == 3 else (
 		UITheme.TEXT if affordable else UITheme.TEXT_FAINT)
 	var txt: String = node_def.display_name
@@ -138,7 +138,7 @@ func _draw() -> void:
 func _draw_rank(c: Vector2, base: Color) -> void:
 	if node_def.is_infinite():
 		if rank > 0:
-			var f: Font = ThemeDB.fallback_font
+			var f: Font = UITheme.font()
 			var t: String = "x%d" % rank
 			var w: float = f.get_string_size(t, HORIZONTAL_ALIGNMENT_LEFT, -1, UITheme.TINY).x
 			draw_string(f, Vector2(HIT - w * 0.5, HIT + R + 32.0), t,

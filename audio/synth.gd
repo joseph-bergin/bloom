@@ -39,6 +39,55 @@ static func kill(tier: int) -> AudioStreamWAV:
 			+ sin(TAU * f * 2.0 * float(i) / RATE) * 0.18) * _env(i, n, 0.003, 0.97)
 	return _wav(buf)
 
+## A dry tick on every landed shot. Tiny, or a fast turret becomes a drill.
+static func hit() -> AudioStreamWAV:
+	var n: int = int(RATE * 0.045)
+	var buf := PackedFloat32Array(); buf.resize(n)
+	var rng := RandomNumberGenerator.new()
+	rng.seed = 771
+	for i in range(n):
+		var x: float = float(i) / float(n)
+		var f: float = lerpf(1500.0, 700.0, x)
+		buf[i] = (sin(TAU * f * float(i) / RATE) * 0.45
+			+ rng.randf_range(-1.0, 1.0) * 0.22) * _env(i, n, 0.002, 0.98)
+	return _wav(buf)
+
+## Brighter and longer, for a critical.
+static func crit() -> AudioStreamWAV:
+	var n: int = int(RATE * 0.10)
+	var buf := PackedFloat32Array(); buf.resize(n)
+	for i in range(n):
+		var x: float = float(i) / float(n)
+		var f: float = lerpf(2100.0, 900.0, pow(x, 0.6))
+		buf[i] = (sin(TAU * f * float(i) / RATE) * 0.42
+			+ sin(TAU * f * 1.5 * float(i) / RATE) * 0.20) * _env(i, n, 0.002, 0.97)
+	return _wav(buf)
+
+## Going dark: a downward swallow, air being pulled in.
+static func douse_in() -> AudioStreamWAV:
+	var n: int = int(RATE * 0.42)
+	var buf := PackedFloat32Array(); buf.resize(n)
+	var rng := RandomNumberGenerator.new()
+	rng.seed = 5150
+	var lp: float = 0.0
+	for i in range(n):
+		var x: float = float(i) / float(n)
+		var f: float = lerpf(520.0, 70.0, pow(x, 0.55))
+		lp = lerpf(lp, rng.randf_range(-1.0, 1.0), 0.10)
+		buf[i] = (sin(TAU * f * float(i) / RATE) * 0.55 + lp * 0.28 * (1.0 - x)) \
+			* _env(i, n, 0.01, 0.96)
+	return _wav(buf)
+
+## Coming back up: the reverse, and brighter.
+static func douse_out() -> AudioStreamWAV:
+	var n: int = int(RATE * 0.32)
+	var buf := PackedFloat32Array(); buf.resize(n)
+	for i in range(n):
+		var x: float = float(i) / float(n)
+		var f: float = lerpf(90.0, 620.0, pow(x, 0.7))
+		buf[i] = sin(TAU * f * float(i) / RATE) * 0.45 * _env(i, n, 0.02, 0.95)
+	return _wav(buf)
+
 ## The purchase chunk. Low, short, satisfying — this one matters most.
 static func purchase() -> AudioStreamWAV:
 	var n: int = int(RATE * 0.18)

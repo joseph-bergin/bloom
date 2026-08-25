@@ -7,6 +7,7 @@ var shields: int = Constants.START_SHIELDS
 var luminance: float = 0.0
 var dousing: bool = false
 var douse_meter: float = 1.0
+var was_dousing: bool = false
 var contacts: Array[Contact] = []
 var projectiles: Array[Projectile] = []
 var purchased: Dictionary = {}          # node_id -> rank

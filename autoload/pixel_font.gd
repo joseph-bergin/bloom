@@ -13,6 +13,10 @@ func _ready() -> void:
 		push_error("PixelFont: could not load pixel.fnt (%d)" % err)
 		font = null
 		return
+	# Without this a fixed-size bitmap font renders at its native 7px at
+	# every requested size — the font was loading correctly all along and
+	# simply never growing. Integer-only keeps the pixels square.
+	font.fixed_size_scale_mode = TextServer.FIXED_SIZE_SCALE_INTEGER_ONLY
 	var theme := Theme.new()
 	theme.default_font = font
 	theme.default_font_size = UITheme.BODY

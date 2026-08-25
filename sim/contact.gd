@@ -9,6 +9,7 @@ var max_hp: float = 0.0
 var tier: int = 0
 var radius: float = 6.0
 var is_boss: bool = false
+var flash: float = 0.0
 
 static func make(tier_v: int, at: Vector2, speed: float) -> Contact:
 	var c := Contact.new()

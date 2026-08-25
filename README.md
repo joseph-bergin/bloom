@@ -52,8 +52,10 @@ Three shields gone ends the run. The level you reached is the score.
 **The typeface is a 5x7 bitmap font**, authored glyph by glyph in
 `tools/gen_font.py` and emitted as a BMFont page Godot loads directly. No
 external asset, the same as the audio. Sizes are integer multiples of the
-cell — anything else resamples and the pixels stop being pixels — and
-canvas filtering is set to nearest so they stay crisp.
+cell, canvas filtering is nearest, and the font's
+`fixed_size_scale_mode` is set to `INTEGER_ONLY` — without that last one a
+fixed-size bitmap font renders at its native 7px at every requested size,
+which looks like the font never loaded at all.
 
 One frame shape, used everywhere: a chamfered panel with corner ticks and
 an accent rule down the left edge, drawn by `ui/ChamferBox.gd`. Every panel,
@@ -66,6 +68,13 @@ blue is Douse.
 you lose a shield, and never again. The one line of prose that earns its
 place is what your light is doing to the field, because that is the whole
 design.
+
+**Impacts answer back.** A landed shot throws sparks along the shot line
+and flashes the contact white; a kill throws shards and an expanding ring
+in the contact's tier colour, with a tick on hit and a brighter one on a
+crit. Going dark drops a cold veil over the field, pulls the boundary
+inward, throws a ripple outward and ducks the whole mix — Douse used to be
+a number changing in a panel.
 
 The field sits in a drifting three-layer starfield with a polar grid that
 echoes the radial shape of the game, a machined turret-reach ring, and a

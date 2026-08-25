@@ -2,11 +2,6 @@ extends Node2D
 ## Red squares that move inward. One layer, one batched draw — no node per
 ## contact, which is what lets a few hundred of them stay cheap.
 
-const TIER_COLOUR: Array[Color] = [
-	Color(0.85, 0.32, 0.30), Color(0.90, 0.42, 0.28), Color(0.94, 0.55, 0.26),
-	Color(0.96, 0.36, 0.42), Color(0.92, 0.28, 0.55), Color(0.80, 0.30, 0.75),
-	Color(0.62, 0.36, 0.92), Color(0.45, 0.50, 1.00)]
-
 var _t: float = 0.0
 
 func _process(delta: float) -> void:
@@ -28,12 +23,15 @@ func _draw() -> void:
 		if c.is_boss:
 			boss = c
 			continue
-		var col: Color = TIER_COLOUR[clampi(c.tier, 0, 7)]
+		var col: Color = UITheme.tier_colour(c.tier)
 		var hurt: float = c.hp / maxf(c.max_hp, 0.001)
 		# Brightness falls as it takes damage, so you can read the field
 		# without reading any numbers. Kept near 1.0 so the tier colour
 		# survives the bloom instead of clipping to a white core.
-		_add_square(pts, cols, idx, c.pos, c.radius, col * (0.62 + hurt * 0.48))
+		var shade: Color = col * (0.62 + hurt * 0.48)
+		if c.flash > 0.0:
+			shade = shade.lerp(Color(1.0, 0.98, 0.9), c.flash * 0.75) * (1.0 + c.flash * 0.9)
+		_add_square(pts, cols, idx, c.pos, c.radius, shade)
 		if hurt < 0.999:
 			var w: float = c.radius * 1.6
 			var y: float = c.pos.y - c.radius - 5.0
@@ -51,7 +49,9 @@ func _draw() -> void:
 ## The boss must be unmistakable at a glance: bigger, rotating, ringed.
 func _draw_boss(c: Contact) -> void:
 	var hurt: float = c.hp / maxf(c.max_hp, 0.001)
-	var col: Color = TIER_COLOUR[clampi(c.tier, 0, 7)] * (0.70 + hurt * 0.55)
+	var col: Color = UITheme.tier_colour(c.tier) * (0.70 + hurt * 0.55)
+	if c.flash > 0.0:
+		col = col.lerp(Color(1.0, 0.98, 0.9), c.flash * 0.6) * (1.0 + c.flash * 0.7)
 	var r: float = c.radius
 	var body := PackedVector2Array()
 	for i in range(4):

@@ -3,6 +3,7 @@ extends Node
 
 const POOL := 12
 const STREAK_WINDOW := 1.2
+const HIT_GAP := 0.055
 
 var master_db: float = 0.0
 var reduced_motion: bool = false
@@ -16,10 +17,15 @@ var _douse: AudioStreamPlayer
 var _duck_until: float = 0.0
 var _streak: int = 0
 var _last_kill: float = -99.0
+var _last_hit: float = -99.0
 
 func _ready() -> void:
 	_buses()
 	_streams["purchase"] = Synth.purchase()
+	_streams["hit"] = Synth.hit()
+	_streams["crit"] = Synth.crit()
+	_streams["douse_in"] = Synth.douse_in()
+	_streams["douse_out"] = Synth.douse_out()
 	_streams["breach"] = Synth.breach()
 	_streams["click"] = Synth.click()
 	for t in range(Constants.MAX_TIER + 1):
@@ -42,7 +48,16 @@ func _ready() -> void:
 	_douse.volume_db = -10.0
 	add_child(_douse)
 
+	EventBus.contact_hit.connect(_on_hit)
 	EventBus.contact_killed.connect(_on_kill)
+	EventBus.douse_started.connect(func():
+		play("douse_in", -4.0)
+		# Everything else ducks while you are hiding, so the world going
+		# quiet is the feedback that it worked.
+		_set_hidden(true))
+	EventBus.douse_ended.connect(func():
+		play("douse_out", -8.0)
+		_set_hidden(false))
 	EventBus.node_purchased.connect(func(_id: StringName, _r: int): play("purchase", -3.0))
 	EventBus.shield_breached.connect(func(_r: int):
 		play("breach", 0.0)
@@ -70,6 +85,26 @@ func _emit(stream: AudioStream, db: float, pitch: float) -> void:
 	p.volume_db = db
 	p.pitch_scale = pitch
 	p.play()
+
+## Landed shots tick. Throttled, because a fast turret would otherwise
+## produce a continuous drill rather than a rhythm.
+func _on_hit(_at: Vector2, _dir: Vector2, crit: bool, lethal: bool) -> void:
+	if lethal:
+		return
+	var now: float = float(Time.get_ticks_msec()) / 1000.0
+	if now - _last_hit < HIT_GAP and not crit:
+		return
+	_last_hit = now
+	play("crit" if crit else "hit", -16.0 if crit else -22.0,
+		randf_range(0.94, 1.06))
+
+## While hidden the mix pulls back, so going dark is audible as well as
+## visible. Not silence — that is reserved for a shield breaking.
+func _set_hidden(on: bool) -> void:
+	var sfx: int = AudioServer.get_bus_index(&"SFX")
+	var amb: int = AudioServer.get_bus_index(&"Ambient")
+	AudioServer.set_bus_volume_db(sfx, -13.0 if on else 0.0)
+	AudioServer.set_bus_volume_db(amb, -22.0 if on else -12.0)
 
 ## Rising pitch on kill streaks.
 func _on_kill(tier: int, _at: Vector2, _motes: float) -> void:

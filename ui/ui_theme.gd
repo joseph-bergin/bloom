@@ -41,6 +41,16 @@ const BRANCH := {
 	&"root": Color(0.56, 0.92, 0.38),
 }
 
+## Contact colour by tier. Shared by the field, the impact sparks and
+## anything else that has to agree on what a tier-4 looks like.
+const TIER: Array[Color] = [
+	Color(0.85, 0.32, 0.30), Color(0.90, 0.42, 0.28), Color(0.94, 0.55, 0.26),
+	Color(0.96, 0.36, 0.42), Color(0.92, 0.28, 0.55), Color(0.80, 0.30, 0.75),
+	Color(0.62, 0.36, 0.92), Color(0.45, 0.50, 1.00)]
+
+static func tier_colour(t: int) -> Color:
+	return TIER[clampi(t, 0, 7)]
+
 static func branch_colour(b: StringName) -> Color:
 	return BRANCH.get(b, Color(0.7, 0.75, 0.8))
 
@@ -160,6 +170,10 @@ static func meter(col: Color, height: int = 6) -> ProgressBar:
 	bg.set_corner_radius_all(0)
 	bar.add_theme_stylebox_override("background", bg)
 	return bar
+
+## For _draw() callers: ThemeDB.fallback_font is Godot's default, not ours.
+static func font() -> Font:
+	return PixelFont.font if PixelFont.font != null else ThemeDB.fallback_font
 
 # --- numbers -------------------------------------------------------------
 

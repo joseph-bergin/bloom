@@ -9,6 +9,8 @@ var lum: float = 0.0
 var open_tree: bool = false
 var force_boss: bool = false
 var force_cleared: bool = false
+var force_hide: bool = false
+var track_nearest: bool = false
 var start_level: int = 1
 var _n: int = 0
 var _seeded: bool = false
@@ -28,6 +30,8 @@ func _ready() -> void:
 			"tree": open_tree = int(kv[1]) != 0
 			"boss": force_boss = int(kv[1]) != 0
 			"cleared": force_cleared = int(kv[1]) != 0
+			"hide": force_hide = int(kv[1]) != 0
+			"track": track_nearest = int(kv[1]) != 0
 			"level": start_level = int(kv[1])
 	# Measure real headroom, not the refresh rate.
 	DisplayServer.window_set_vsync_mode(DisplayServer.VSYNC_DISABLED)
@@ -39,12 +43,21 @@ func _process(_delta: float) -> void:
 	if not _seeded and _n == 4:
 		_seeded = true
 		_seed()
-	if _aim_target != Vector2.ZERO and _n % 20 == 0:
+	if track_nearest and _n > 6:
+		var best: Contact = null
+		for c in GameState.s.contacts:
+			if best == null or c.pos.length() < best.pos.length():
+				best = c
+		if best != null:
+			_aim_target = best.pos
+	if _aim_target != Vector2.ZERO and _n % 4 == 0:
 		var fv: Node2D = get_node("Main/FieldView")
 		var xf: Transform2D = fv.get_viewport().get_canvas_transform()
 		get_viewport().warp_mouse(xf * _aim_target)
 	if _n > 50:
 		_fps.append(Engine.get_frames_per_second())
+	if force_hide:
+		GameState.s.dousing = true
 	if _n >= frames:
 		var img: Image = get_viewport().get_texture().get_image()
 		img.save_png(out_path)

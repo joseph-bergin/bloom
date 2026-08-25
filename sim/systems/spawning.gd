@@ -9,7 +9,8 @@ static func spawn_interval(l: float) -> float:
 		if l < Constants.CINDER_THRESHOLD:
 			return INF
 		base /= Constants.CINDER_SPAWN_MULT
-	return base / maxf(Stats.spawn_rate_mult * density(), 0.01)
+	return base / maxf(Stats.spawn_rate_mult * density()
+		* Levels.spawn_scalar(GameState.s.level), 0.01)
 
 ## Every ember cycle makes the field denser. This is what keeps mote income
 ## — and therefore ember income — climbing across a campaign.
@@ -31,6 +32,10 @@ static func spawn_pressure(l: float) -> float:
 	return Constants.SPAWN_INTERVAL_BASE / iv
 
 static func tick(s: GameStateData, delta: float) -> void:
+	# The boss fight and the breather after it are the level's punctuation;
+	# nothing new wanders in during either.
+	if s.phase != GameStateData.Phase.FIGHTING:
+		return
 	var l: float = Luminance.effective(s)
 	var iv: float = spawn_interval(l)
 	if is_inf(iv):
@@ -39,6 +44,8 @@ static func tick(s: GameStateData, delta: float) -> void:
 	if s.spawn_timer > 0.0:
 		return
 	s.spawn_timer += iv
+	if s.contacts.size() >= Constants.MAX_CONTACTS:
+		return
 	spawn_one(s, l)
 
 static func spawn_one(s: GameStateData, l: float) -> Contact:

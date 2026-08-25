@@ -7,6 +7,9 @@ var out_path: String = "user://shot.png"
 var contacts: int = 0
 var lum: float = 0.0
 var open_tree: bool = false
+var force_boss: bool = false
+var force_cleared: bool = false
+var start_level: int = 1
 var _n: int = 0
 var _seeded: bool = false
 var _fps: Array[float] = []
@@ -23,6 +26,9 @@ func _ready() -> void:
 			"contacts": contacts = int(kv[1])
 			"lum": lum = float(kv[1])
 			"tree": open_tree = int(kv[1]) != 0
+			"boss": force_boss = int(kv[1]) != 0
+			"cleared": force_cleared = int(kv[1]) != 0
+			"level": start_level = int(kv[1])
 	# Measure real headroom, not the refresh rate.
 	DisplayServer.window_set_vsync_mode(DisplayServer.VSYNC_DISABLED)
 	Engine.max_fps = 0
@@ -73,6 +79,23 @@ func _seed() -> void:
 				break
 			GameState.purchase(best.id)
 		s.motes = 800.0
+	if start_level > 1:
+		s.level = start_level
+		s.best_level = start_level
+		s.level_quota = Levels.compute_quota(s)
+	if force_boss:
+		# Jump straight to the boss so the bar and bracket are on screen.
+		s.level_kills = Levels.quota(s)
+		Levels.tick(s, 0.016)
+		var b: Contact = s.boss()
+		if b != null:
+			b.pos = b.pos.normalized() * (Constants.FIELD_RADIUS * 0.42)
+			b.hp = b.max_hp * 0.62
+			_aim_target = b.pos
+	if force_cleared:
+		s.phase = GameStateData.Phase.BOSS
+		s.boss_id = 0
+		Levels.tick(s, 0.016)
 	for _i in range(contacts):
 		Spawning.spawn_one(s, s.effective_luminance())
 		s.contacts[-1].pos *= randf_range(0.30, 1.0)

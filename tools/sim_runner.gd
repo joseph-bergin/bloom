@@ -23,7 +23,14 @@ func _initialize() -> void:
 			# --set=KEY=VALUE
 			args["set:" + kv[1]] = kv[2]
 	var started: int = Time.get_ticks_usec()
-	var worker: Object = load("res://tools/sim_worker.gd").new()
+	var script: Variant = load("res://tools/sim_worker.gd")
+	if script == null or not (script is GDScript):
+		# Without this the SceneTree just keeps running and the whole thing
+		# looks like a hang instead of the compile error it is.
+		printerr("sim_worker.gd failed to load — see the parse errors above")
+		quit(1)
+		return
+	var worker: Object = (script as GDScript).new()
 	worker.call("run", args)
 	print("elapsed: %.0f ms" % (float(Time.get_ticks_usec() - started) / 1000.0))
 	quit()

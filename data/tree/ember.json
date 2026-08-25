@@ -533,8 +533,8 @@
   ],
   "effects": [
    {
-    "stat": "mote_mult",
-    "op": "mul",
+    "stat": "mote_add",
+    "op": "add",
     "value": 0.01
    }
   ],

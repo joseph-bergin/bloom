@@ -10,15 +10,23 @@ static func tick(s: GameStateData, delta: float) -> void:
 	if target != null:
 		s.locked_id = target.get_instance_id()
 
+	# Both of these walk the whole contact list, so they are answered once
+	# per tick rather than once per shot. At a few hundred contacts and a
+	# high fire rate the difference is the whole frame.
+	var has_target: bool = target != null or anything_in_range(s)
 	s.fire_timer -= delta
+	if not has_target:
+		s.fire_timer = maxf(s.fire_timer, 0.0)
+		return
 	var interval: float = 1.0 / maxf(Stats.fire_rate, 0.01)
-	while s.fire_timer <= 0.0:
+	# A pathological fire rate must not spin here for thousands of shots.
+	var budget: int = 24
+	while s.fire_timer <= 0.0 and budget > 0:
+		budget -= 1
 		s.fire_timer += interval
-		if not _fire(s, target):
-			# Nothing in range: hold the trigger rather than banking shots
-			# against an empty field.
-			s.fire_timer = maxf(s.fire_timer, 0.0)
-			return
+		_fire(s, target)
+	if budget <= 0:
+		s.fire_timer = maxf(s.fire_timer, 0.0)
 
 ## The contact the turret will steer onto: nearest to the aim line, within
 ## the assist cone and within range. Pointing at empty dark hits nothing.
@@ -65,11 +73,9 @@ static func anything_in_range(s: GameStateData) -> bool:
 			return true
 	return false
 
-static func _fire(s: GameStateData, target: Contact) -> bool:
-	# The turret only spends a shot when something is actually out there,
-	# but it fires where the player points, hit or miss.
-	if not anything_in_range(s):
-		return false
+## Caller guarantees something is in range. Fires where the player points,
+## hit or miss.
+static func _fire(s: GameStateData, target: Contact) -> void:
 	var base_dir: Vector2 = target.pos.normalized() if target != null else s.aim
 	if base_dir == Vector2.ZERO:
 		base_dir = Vector2.RIGHT
@@ -81,7 +87,6 @@ static func _fire(s: GameStateData, target: Contact) -> bool:
 		var is_crit: bool = s.rng.randf() < Stats.crit_chance
 		var dmg: float = Stats.damage * (Stats.crit_mult if is_crit else 1.0)
 		s.projectiles.append(Projectile.make(Vector2.ZERO, dir, dmg, is_crit))
-	return true
 
 static func move_projectiles(s: GameStateData, delta: float) -> void:
 	if s.projectiles.is_empty():
@@ -139,4 +144,5 @@ static func _damage(s: GameStateData, c: Contact, amount: float) -> void:
 	s.motes += gained
 	s.total_motes_this_run += gained
 	s.contacts.erase(c)
+	Levels.on_kill(s, c)
 	EventBus.contact_killed.emit(c.tier, c.pos, gained)

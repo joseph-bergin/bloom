@@ -19,8 +19,11 @@ static func check_breaches(s: GameStateData) -> void:
 		s.shields -= 1
 		EventBus.shield_breached.emit(maxi(s.shields, 0))
 		if s.shields <= 0:
-			end_run(s, "Something reached you.")
+			end_run(s, ("The level %d boss got through." % s.level) if c.is_boss
+				else "Something reached you at level %d." % s.level)
 			return
+		if c.is_boss:
+			Levels.boss_breached(s)
 
 static func end_run(s: GameStateData, reason: String) -> void:
 	if s.run_over:

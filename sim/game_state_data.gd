@@ -27,10 +27,31 @@ var aim: Vector2 = Vector2.RIGHT
 var aim_auto: bool = true
 var locked_id: int = 0
 
+## Level state. FIGHTING until the kill quota is met, BOSS while the boss
+## is alive, CLEARED for a beat afterwards so the player can read it.
+enum Phase { FIGHTING, BOSS, CLEARED }
+
+var level: int = 1
+var level_kills: int = 0
+var level_quota: int = 12
+var level_time: float = 0.0
+var phase: Phase = Phase.FIGHTING
+var clear_timer: float = 0.0
+var boss_id: int = 0
+var best_level: int = 1
+
 var run_over: bool = false
 var run_end_reason: String = ""
 var unlocked_sections: PackedStringArray = []
 var rng: RandomNumberGenerator = RandomNumberGenerator.new()
+
+func boss() -> Contact:
+	if boss_id == 0:
+		return null
+	for c in contacts:
+		if c.get_instance_id() == boss_id:
+			return c
+	return null
 
 func is_dousing() -> bool:
 	return dousing and douse_meter > 0.0

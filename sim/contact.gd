@@ -8,6 +8,7 @@ var hp: float = 0.0
 var max_hp: float = 0.0
 var tier: int = 0
 var radius: float = 6.0
+var is_boss: bool = false
 
 static func make(tier_v: int, at: Vector2, speed: float) -> Contact:
 	var c := Contact.new()
@@ -20,11 +21,21 @@ static func make(tier_v: int, at: Vector2, speed: float) -> Contact:
 	return c
 
 func motes() -> float:
-	return Constants.MOTE_BASE * pow(Constants.MOTE_TIER_MULT, float(tier)) * Stats.mote_mult
+	var base: float = Constants.MOTE_BASE * pow(Constants.MOTE_TIER_MULT, float(tier))
+	return base * Stats.mote_mult * (Constants.BOSS_MOTE_MULT if is_boss else 1.0)
+
+static func make_boss(tier_v: int, at: Vector2, speed: float) -> Contact:
+	var c := make(tier_v, at, speed * Constants.BOSS_DRIFT_MULT)
+	c.is_boss = true
+	c.max_hp *= Constants.BOSS_HP_MULT
+	c.hp = c.max_hp
+	c.radius *= Constants.BOSS_RADIUS_MULT
+	return c
 
 func to_dict() -> Dictionary:
 	return {"x": pos.x, "y": pos.y, "vx": vel.x, "vy": vel.y,
-		"hp": hp, "max_hp": max_hp, "tier": tier, "radius": radius}
+		"hp": hp, "max_hp": max_hp, "tier": tier, "radius": radius,
+		"is_boss": is_boss}
 
 static func from_dict(d: Dictionary) -> Contact:
 	var c := Contact.new()
@@ -34,4 +45,5 @@ static func from_dict(d: Dictionary) -> Contact:
 	c.max_hp = float(d.get("max_hp", 1.0))
 	c.tier = int(d.get("tier", 0))
 	c.radius = float(d.get("radius", 6.0))
+	c.is_boss = bool(d.get("is_boss", false))
 	return c

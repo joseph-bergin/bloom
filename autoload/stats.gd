@@ -92,8 +92,10 @@ func _resolve() -> void:
 	aim_assist = Constants.AIM_ASSIST_CONE * (1.0 + _g("aim_assist", 0.0))
 
 	max_shields = Constants.START_SHIELDS + int(_g("shields", 0.0))
-	mote_mult = _g("mote_mult", 1.0)
-	ember_mult = _g("ember_mult", 1.0)
+	# Capped nodes multiply; uncapped sinks add. Mixing the two lets a sink
+	# compound without limit.
+	mote_mult = _g("mote_mult", 1.0) * (1.0 + _g("mote_add", 0.0))
+	ember_mult = _g("ember_mult", 1.0) * (1.0 + _g("ember_add", 0.0))
 
 	douse_drain = maxf(Constants.DOUSE_DRAIN * (1.0 - _g("douse_efficiency", 0.0)), 0.02)
 	douse_refill = Constants.DOUSE_REFILL * (1.0 + _g("douse_refill", 0.0))

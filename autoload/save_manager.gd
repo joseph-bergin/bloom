@@ -32,6 +32,8 @@ func serialize(s: GameStateData) -> Dictionary:
 		"wildfire_lum": s.wildfire_lum,
 		"unlocked_sections": Array(s.unlocked_sections),
 		"run_over": s.run_over, "run_end_reason": s.run_end_reason,
+		"level": s.level, "level_kills": s.level_kills, "best_level": s.best_level,
+		"level_quota": s.level_quota, "level_time": s.level_time,
 	}
 
 func deserialize(raw: Dictionary, s: GameStateData) -> void:
@@ -52,6 +54,14 @@ func deserialize(raw: Dictionary, s: GameStateData) -> void:
 	s.unlocked_sections = PackedStringArray(raw.get("unlocked_sections", []))
 	s.run_over = bool(raw.get("run_over", false))
 	s.run_end_reason = str(raw.get("run_end_reason", ""))
+	s.level = int(raw.get("level", 1))
+	s.level_kills = int(raw.get("level_kills", 0))
+	s.level_quota = int(raw.get("level_quota", 12))
+	s.level_time = float(raw.get("level_time", 0.0))
+	s.best_level = int(raw.get("best_level", 1))
+	# A boss in flight does not survive a reload; restart its level cleanly.
+	s.phase = GameStateData.Phase.FIGHTING
+	s.boss_id = 0
 	s.purchase_version += 1
 
 ## Written from version 1 before shipping version 1. Never break a save.
@@ -64,6 +74,11 @@ func migrate(raw: Dictionary) -> Dictionary:
 				# v1 -> v2: ember sections and the Wildfire accumulator.
 				out["unlocked_sections"] = out.get("unlocked_sections", [])
 				out["wildfire_lum"] = out.get("wildfire_lum", 0.0)
+			2:
+				# v2 -> v3: levels and bosses.
+				out["level"] = out.get("level", 1)
+				out["level_kills"] = out.get("level_kills", 0)
+				out["best_level"] = out.get("best_level", 1)
 			_:
 				pass
 		v += 1

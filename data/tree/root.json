@@ -79,7 +79,7 @@
   "id": "root_bank",
   "branch": "root",
   "name": "Bank",
-  "desc": "+10% embers banked per rank.",
+  "desc": "+5% embers banked per rank.",
   "max_rank": 6,
   "cost": 600,
   "cost_growth": 1.15,
@@ -91,7 +91,7 @@
    {
     "stat": "ember_mult",
     "op": "mul",
-    "value": 0.1
+    "value": 0.05
    }
   ],
   "pos": {
@@ -183,7 +183,7 @@
   "id": "root_deepbank",
   "branch": "root",
   "name": "Deep Bank",
-  "desc": "+12% embers banked per rank.",
+  "desc": "+6% embers banked per rank.",
   "max_rank": 6,
   "cost": 2400,
   "cost_growth": 1.15,
@@ -195,7 +195,7 @@
    {
     "stat": "ember_mult",
     "op": "mul",
-    "value": 0.12
+    "value": 0.06
    }
   ],
   "pos": {

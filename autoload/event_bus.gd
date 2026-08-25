@@ -8,6 +8,11 @@ signal shield_breached(remaining: int)
 signal run_ended(reason: String)
 signal run_started()
 
+signal level_started(level: int)
+signal level_cleared(level: int, bonus: float)
+signal boss_spawned(c: Contact, level: int)
+signal boss_breached(level: int)
+
 signal node_purchased(id: StringName, rank: int)
 signal respec_performed()
 signal stats_recomputed()

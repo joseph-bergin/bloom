@@ -1,9 +1,10 @@
-[gd_scene load_steps=7 format=3]
+[gd_scene load_steps=8 format=3]
 
 [ext_resource type="Script" path="res://scenes/Main.gd" id="1_main"]
 [ext_resource type="PackedScene" path="res://scenes/field/FieldView.tscn" id="2_field"]
 [ext_resource type="Script" path="res://ui/HUD.gd" id="3_hud"]
-[ext_resource type="Script" path="res://ui/TreeView.gd" id="4_tree"]
+[ext_resource type="Script" path="res://ui/LevelBanner.gd" id="4_banner"]
+[ext_resource type="Script" path="res://ui/TreeView.gd" id="5_tree"]
 [ext_resource type="Script" path="res://ui/RunEndModal.gd" id="5_end"]
 [ext_resource type="Script" path="res://ui/SettingsPanel.gd" id="6_settings"]
 
@@ -21,11 +22,18 @@ anchor_bottom = 1.0
 mouse_filter = 2
 script = ExtResource("3_hud")
 
+[node name="LevelBanner" type="Control" parent="UILayer"]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+mouse_filter = 2
+script = ExtResource("4_banner")
+
 [node name="TreeView" type="Control" parent="UILayer"]
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
-script = ExtResource("4_tree")
+script = ExtResource("5_tree")
 
 [node name="Modals" type="Control" parent="UILayer"]
 anchors_preset = 15

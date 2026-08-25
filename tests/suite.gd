@@ -404,13 +404,169 @@ func test_diaspora_trades_income_for_shields() -> void:
 	ok(Stats.max_shields == sh + Constants.DIASPORA_SHIELDS, "+3 shields")
 	near(Stats.mote_mult / income, Constants.DIASPORA_INCOME_MULT, 0.01, "income -40%")
 
+# --- levels and bosses ---------------------------------------------------
+
+func test_level_quota_grows_and_kills_advance_it() -> void:
+	var s := fresh()
+	s.level_quota = Levels.compute_quota(s)
+	var early: int = s.level_quota
+	s.level = 12
+	ok(Levels.compute_quota(s) > early, "later levels ask for more")
+	s.level = 1
+	near(Levels.progress(s), 0.0, 1e-6, "a fresh level is at zero")
+	for _i in range(Levels.quota(s)):
+		Levels.on_kill(s, Contact.make(0, Vector2(10, 0), 0.0))
+	near(Levels.progress(s), 1.0, 1e-6, "quota met")
+
+func test_meeting_the_quota_summons_a_boss() -> void:
+	var s := fresh()
+	s.level_quota = Levels.compute_quota(s)
+	for _i in range(Levels.quota(s)):
+		Levels.on_kill(s, Contact.make(0, Vector2(10, 0), 0.0))
+	Levels.tick(s, 0.016)
+	ok(s.phase == GameStateData.Phase.BOSS, "the level turns into a boss fight")
+	var b: Contact = s.boss()
+	ok(b != null and b.is_boss, "and a boss exists")
+	var plain := Contact.make(b.tier, Vector2(10, 0), 0.0)
+	ok(b.max_hp > plain.max_hp * 3.0, "the boss is a wall, not another contact")
+	ok(b.motes() > plain.motes(), "and worth killing")
+
+func test_nothing_new_spawns_during_a_boss_or_the_breather() -> void:
+	var s := fresh()
+	s.phase = GameStateData.Phase.BOSS
+	for _i in range(600):
+		Spawning.tick(s, 0.1)
+	ok(s.contacts.is_empty(), "the boss fight is not diluted with adds")
+	s.phase = GameStateData.Phase.CLEARED
+	for _i in range(600):
+		Spawning.tick(s, 0.1)
+	ok(s.contacts.is_empty(), "and the breather stays quiet")
+
+func test_killing_the_boss_clears_the_level_and_pays() -> void:
+	var s := fresh()
+	s.phase = GameStateData.Phase.BOSS
+	s.boss_id = 0
+	var before: float = s.motes
+	Levels.tick(s, 0.016)
+	ok(s.phase == GameStateData.Phase.CLEARED, "the level is over and says so")
+	ok(s.motes > before, "clearing pays a bonus")
+	near(s.motes - before, Levels.clear_bonus(s), 1e-4, "the level clear bonus")
+	ok(s.level_quota >= int(Constants.LEVEL_QUOTA_MIN), "the next quota is set")
+	Levels.tick(s, Constants.LEVEL_CLEAR_PAUSE + 0.1)
+	ok(s.level == 2 and s.phase == GameStateData.Phase.FIGHTING, "then level 2 begins")
+	ok(s.level_kills == 0, "with a fresh quota")
+
+func test_the_field_empties_when_a_level_is_cleared() -> void:
+	var s := fresh()
+	s.phase = GameStateData.Phase.BOSS
+	for _i in range(6):
+		s.contacts.append(Contact.make(0, Vector2(200, 0), 0.0))
+	Levels.tick(s, 0.016)
+	ok(s.contacts.is_empty(), "the win is legible — the field clears")
+
+## The boss is the gate. Failing it costs a shield and does not advance the
+## level — otherwise a build with no damage walks through by paying shields.
+func test_a_boss_that_reaches_you_costs_a_shield_and_comes_back() -> void:
+	var s := fresh()
+	s.shields = 3
+	s.level = 4
+	s.phase = GameStateData.Phase.BOSS
+	var b := Contact.make_boss(2, Vector2(4.0, 0.0), 10.0)
+	s.contacts.append(b)
+	s.boss_id = b.get_instance_id()
+	Field.check_breaches(s)
+	ok(s.shields == 2, "it costs a shield")
+	ok(s.level == 4, "the level does not advance")
+	ok(s.phase == GameStateData.Phase.BOSS, "you are still in the boss fight")
+	var again: Contact = s.boss()
+	ok(again != null and again != b, "and it comes straight back")
+	near(again.hp, again.max_hp, 1e-6, "at full health")
+
+func test_a_boss_breach_with_no_shields_left_ends_the_run() -> void:
+	var s := fresh()
+	s.shields = 1
+	s.phase = GameStateData.Phase.BOSS
+	var b := Contact.make_boss(2, Vector2(3.0, 0.0), 10.0)
+	s.contacts.append(b)
+	s.boss_id = b.get_instance_id()
+	Field.check_breaches(s)
+	ok(s.run_over, "the run ends")
+	ok(s.run_end_reason.contains("boss"), "and says the boss did it")
+
+## Otherwise a slow, dark build takes as long as it likes over every level.
+func test_the_boss_arrives_on_time_even_without_the_quota() -> void:
+	var s := fresh()
+	s.level_quota = 9999
+	ok(s.phase == GameStateData.Phase.FIGHTING, "starts fighting")
+	Levels.tick(s, Levels.time_limit() * 0.5)
+	ok(s.phase == GameStateData.Phase.FIGHTING, "not yet")
+	Levels.tick(s, Levels.time_limit() * 0.6)
+	ok(s.phase == GameStateData.Phase.BOSS, "the boss comes anyway")
+
+func test_boss_kills_do_not_count_toward_the_next_quota() -> void:
+	var s := fresh()
+	var b := Contact.make_boss(1, Vector2(100, 0), 10.0)
+	Levels.on_kill(s, b)
+	ok(s.level_kills == 0, "the boss is the level, not progress toward it")
+
+func test_levels_add_pressure_of_their_own() -> void:
+	ok(Levels.spawn_scalar(8) > Levels.spawn_scalar(1), "later levels are denser")
+	var s := fresh()
+	var early: float = Spawning.spawn_interval(60.0)
+	s.level = 10
+	ok(Spawning.spawn_interval(60.0) < early, "and spawn faster at the same light")
+
+func test_bosses_keep_growing_past_the_tier_cap() -> void:
+	var s := fresh()
+	s.phase = GameStateData.Phase.FIGHTING
+	s.level_quota = 1
+	s.level_kills = 1
+	Levels.tick(s, 0.016)
+	var early: float = s.boss().max_hp
+	var s2 := fresh()
+	s2.level = 30
+	s2.level_quota = 1
+	s2.level_kills = 1
+	Levels.tick(s2, 0.016)
+	ok(s2.boss().max_hp > early * 10.0,
+		"there is always a wall ahead, however strong the player gets")
+
+func test_the_field_is_capped() -> void:
+	var s := fresh()
+	for _i in range(Constants.MAX_CONTACTS):
+		s.contacts.append(Contact.make(0, Vector2(400, 0), 0.0))
+	for _i in range(400):
+		Spawning.tick(s, 1.0)
+	ok(s.contacts.size() <= Constants.MAX_CONTACTS, "the field has a hard ceiling")
+
+func test_boss_tier_rises_with_level_and_light() -> void:
+	var s := fresh()
+	var low: int = Levels.boss_tier(s)
+	s.level = 12
+	ok(Levels.boss_tier(s) > low, "deeper levels field bigger bosses")
+	ok(Levels.boss_tier(s) <= Constants.MAX_TIER, "and stay inside the tier cap")
+
+func test_a_new_run_starts_at_level_one() -> void:
+	var s := fresh()
+	s.level = 9
+	s.level_kills = 5
+	s.phase = GameStateData.Phase.BOSS
+	s.total_motes_this_run = 5000.0
+	GameState.bank_embers(true)
+	ok(s.level == 1 and s.level_kills == 0, "a new run starts over")
+	ok(s.phase == GameStateData.Phase.FIGHTING, "in the fighting phase")
+	ok(s.best_level >= 9, "but the best level reached is remembered")
+
 # --- prestige and saves --------------------------------------------------
 
 func test_ember_payout_formula() -> void:
 	var s := fresh()
 	near(GameState.embers_for(0.0), 0.0, 1e-6, "nothing earned, nothing banked")
 	near(GameState.embers_for(Constants.EMBER_DIVISOR * 9.0), 3.0, 1e-6,
-		"floor(sqrt(motes / divisor))")
+		"floor(sqrt(motes / divisor)) at level 1")
+	ok(GameState.embers_for(Constants.EMBER_DIVISOR * 9.0, 10)
+		> GameState.embers_for(Constants.EMBER_DIVISOR * 9.0, 1),
+		"getting deeper pays more for the same motes")
 
 ## Retiring early must always beat dying.
 func test_retiring_always_beats_dying() -> void:
@@ -460,6 +616,8 @@ func test_save_round_trip_preserves_state() -> void:
 	s.t = 456.0
 	s.shields = 2
 	s.purchased["burn_entry"] = 4
+	s.level = 6
+	s.best_level = 9
 	s.unlocked_sections = PackedStringArray(["ember_1"])
 	s.contacts.append(Contact.make(3, Vector2(200.0, 100.0), 20.0))
 
@@ -471,6 +629,7 @@ func test_save_round_trip_preserves_state() -> void:
 	ok(restored.shields == 2, "shields")
 	ok(int(restored.purchased["burn_entry"]) == 4, "purchases")
 	ok(restored.contacts.size() == 1 and restored.contacts[0].tier == 3, "contacts")
+	ok(restored.level == 6 and restored.best_level == 9, "level progress")
 
 func test_migration_from_version_one() -> void:
 	var s := fresh()
@@ -480,10 +639,15 @@ func test_migration_from_version_one() -> void:
 	v1["version"] = 1
 	v1.erase("unlocked_sections")
 	v1.erase("wildfire_lum")
+	v1.erase("level")
+	v1.erase("level_kills")
+	v1.erase("best_level")
 	var migrated: Dictionary = SaveManager.migrate(v1)
 	ok(int(migrated["version"]) == Constants.SAVE_VERSION, "migrated to current")
 	ok(migrated.has("unlocked_sections") and migrated.has("wildfire_lum"),
 		"v1 -> v2 filled the new fields")
+	ok(migrated.has("level") and migrated.has("best_level"),
+		"v2 -> v3 filled in levels")
 	var restored := GameStateData.new()
 	SaveManager.deserialize(migrated, restored)
 	near(restored.motes, 777.0, 1e-4, "no state lost")

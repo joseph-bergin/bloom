@@ -24,6 +24,26 @@ dial at once.
 
 **T** opens the tree, **Esc** settings.
 
+## Levels
+
+A run is a ladder of levels, not an open-ended survival timer.
+
+Each level is a kill quota, then a **boss**. The quota is set from how fast
+the field is currently spawning, so a level is always about the same stretch
+of time however bright you are — being brighter means more to kill, not a
+shorter level. If you dawdle the boss arrives on schedule anyway.
+
+The boss is a wall. Nothing else spawns while it lives, it has its own health
+bar, and killing it clears the level, empties the field and pays a bonus. If
+it reaches you it costs a shield and **comes straight back** — the level does
+not advance. That is deliberate: when a breaching boss advanced the level, a
+build with no damage at all could walk the whole ladder by paying shields,
+and damage bought nothing.
+
+Three shields gone ends the run. The level you reached is your score, and it
+feeds the ember payout directly, so getting deeper is worth as much as
+banking motes.
+
 ### Headless tools
 
 ```bash
@@ -36,7 +56,7 @@ godot --headless --script res://tools/sim_runner.gd -- --cycles=12 --retire=25 -
 # sweep any tuning value without editing the file
 godot --headless --script res://tools/sim_runner.gd -- --set=HP_TIER_MULT=2.6
 
-# 182 assertions
+# 221 assertions
 godot --headless --script res://tests/test_runner.gd
 
 # regenerate the tree from templates
@@ -53,6 +73,7 @@ python3 tools/gen_tree.py
 | 3 | Purchasing a node grows the bloom within one frame; validator passes | pass |
 | 4 | Retiring early beats dying at every point on the curve | pass — asserted across six orders of magnitude |
 | 5 | ~130 nodes + ~20 ember; never motes in hand with nothing to buy | pass — 130 + 24, next purchase never exceeds 2× wealth |
+| — | Levels end visibly, with a boss | pass — boss bar, clear banner, level readout |
 | 6 | Feel, audio, Steam no-op without Steam | pass |
 
 And the two checks from §10 "things that will kill this":
@@ -60,9 +81,8 @@ And the two checks from §10 "things that will kill this":
 - **Luminance must read as the difficulty.** The HUD line under the readout
   says `^ spawn x1.6  max tier 0  speed 26` and updates live. It turns red
   past 4× and inverts to a green "nothing is spawning" while Dousing.
-- **Shroud must not be a trap or an autobuy.** Verified in the runner: a
-  mixed build banks 10 embers against 6 for pure-Burn, 6 for Reach, 9 for
-  Root and 5 for pure-Shroud. Mixed beats every extreme.
+- **Shroud must not be a trap or an autobuy.** Currently it leans trap. See
+  the open item below.
 
 ## Aiming, and the field scale
 
@@ -82,6 +102,36 @@ same factor, which leaves the simulation identical in relative terms while
 drawing everything roughly 1.5x larger. Contact radii deliberately did not
 scale down — that is the actual zoom.
 
+## Open balance item
+
+§10 asks that a mixed build beat both extremes. Over an eight-run campaign
+the runner gives:
+
+| build | embers banked | ember nodes |
+|---|---|---|
+| burn + reach | 234.6 | 15/24 |
+| reach | 218.2 | 15/24 |
+| root | 217.8 | 16/24 |
+| shroud + root | 180.4 | 13/24 |
+| burn | 164.7 | 13/24 |
+| all four evenly | 147.4 | 14/24 |
+| shroud | 145.9 | 11/24 |
+| burn + shroud | 145.9 | 11/24 |
+
+So a mixed build does win — **burn + reach** beats every pure branch. But two
+things are wrong with that picture. Spreading evenly across all four is
+near the bottom, because the tree's power is in depth and an even spread
+never reaches it. And **Shroud is a trap**: burn + shroud earns less than
+burn alone, which is the exact failure §10 names. Shroud has to pay for
+itself by letting you carry more Burn than you otherwise could, and right
+now it does not pay enough.
+
+Reproduce with:
+
+```bash
+godot --headless --script res://tools/sim_runner.gd -- --cycles=8 --retire=30 --build=burnshroud
+```
+
 ## Balance, and how it got there
 
 The spec's starting values did not survive the runner, which is what §6 says
@@ -98,6 +148,15 @@ to expect. Three changed:
   between runs, so if they never accumulate nothing escalates. At 80 the
   ratchet engages — motes climb 5.4K → 27K, luminance 73 → 114, ember income
   10 → 36 per run.
+- **Levels rebalanced the whole economy.** Pausing spawns for boss fights
+  and breathers cut kill throughput about fourfold, so income moved onto the
+  level-clear bonus. That bonus is tied to what the level's boss is worth
+  rather than to the level number — an exponential in the level number ran
+  away to 10^19 the moment the player could clear levels quickly.
+- **Infinite sinks had to become additive.** Three of them multiplied, and
+  an uncapped multiplicative node is an exponential with no ceiling: a
+  thousand ranks of "+1% mote yield" compounded to 21,000x. Sinks exist so
+  there is always something cheap to click, not to become the build.
 - **`PRESTIGE_DENSITY`, new, 0.04.** §1 says each prestige starts you in a
   darker, denser field and nothing implemented it. Spawn rate now rises 4%
   per cycle. It wants to stay small: at 0.10 the field outran the player's
@@ -106,7 +165,7 @@ to expect. Three changed:
 A `--set=KEY=VALUE` flag on the runner sweeps any of these, which is why the
 values in `constants.gd` are `var` rather than `const`.
 
-## Two bugs the criteria caught
+## Bugs the criteria caught
 
 **Retiring could tie with dying.** `floor(embers × 1.25)` collapses to the
 same integer at small payouts — at 500 motes both paid 2. Phase 4 requires
@@ -118,6 +177,12 @@ poured everything into infinite sinks and luminance never moved. That was a
 bad model, not a bad game, but it hid the real pacing problem for several
 runs. It now buys the deepest affordable node and falls back to sinks only
 when nothing else is affordable — which is what the spec says sinks are for.
+
+**A compile error in the runner looked exactly like a hang.** `load()`
+returned a failed script, the `.new()` call errored, and the SceneTree just
+kept running instead of quitting — so the harness sat there forever and I
+spent a while optimising a sim that was never executing. The runner now
+checks the load and exits with the parse errors.
 
 ## Deviations
 
@@ -147,7 +212,7 @@ scenes/     Main, FieldView and its draw layers
 ui/         HUD, TreeView, modals
 data/tree/  130 base nodes across 4 branches + 24 ember nodes
 tools/      sim_runner, gen_tree.py, dev/Shot
-tests/      182 assertions
+tests/      221 assertions
 ```
 
 The previous, much larger version of this game is on the `main` branch.

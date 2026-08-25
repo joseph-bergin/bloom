@@ -9,6 +9,9 @@ signal settings_pressed()
 
 const REFRESH := 1.0 / 15.0
 
+var _level: Label
+var _level_bar: ProgressBar
+var _level_sub: Label
 var _lum: Label
 var _cause: Label
 var _motes: Label
@@ -36,6 +39,23 @@ func _ready() -> void:
 	col.add_theme_constant_override("separation", 3)
 	top.add_child(col)
 
+	_level = UITheme.label("LEVEL 1", UITheme.TEXT_BRIGHT, 24)
+	col.add_child(_level)
+	_level_bar = ProgressBar.new()
+	_level_bar.custom_minimum_size = Vector2(0, 7)
+	_level_bar.show_percentage = false
+	_level_bar.max_value = 1.0
+	var lfill := StyleBoxFlat.new()
+	lfill.bg_color = Color(0.55, 0.92, 0.68)
+	_level_bar.add_theme_stylebox_override("fill", lfill)
+	var lbg := StyleBoxFlat.new()
+	lbg.bg_color = Color(0.10, 0.14, 0.12)
+	_level_bar.add_theme_stylebox_override("background", lbg)
+	col.add_child(_level_bar)
+	_level_sub = UITheme.label("", UITheme.TEXT_DIM, 11)
+	col.add_child(_level_sub)
+	col.add_child(HSeparator.new())
+
 	_lum = UITheme.label("LUMINANCE 0", UITheme.LUM, 22)
 	col.add_child(_lum)
 	# The causation line. This is the most important text in the game.
@@ -53,8 +73,8 @@ func _ready() -> void:
 
 	var right := UITheme.make_panel()
 	right.set_anchors_preset(Control.PRESET_TOP_RIGHT)
-	right.position = Vector2(-206, 12)
-	right.custom_minimum_size = Vector2(192, 0)
+	right.position = Vector2(-262, 12)
+	right.custom_minimum_size = Vector2(248, 0)
 	add_child(right)
 	var rc := VBoxContainer.new()
 	rc.add_theme_constant_override("separation", 3)
@@ -63,9 +83,15 @@ func _ready() -> void:
 	rc.add_child(_clock)
 	_embers = UITheme.label("0 embers", UITheme.EMBERS, 14)
 	rc.add_child(_embers)
-	_retire = UITheme.button("Retire  +0", UITheme.EMBERS)
-	_retire.custom_minimum_size = Vector2(0, 28)
-	_retire.tooltip_text = "Bank embers now. Always worth more than dying."
+	var ex := UITheme.label(
+		"EMBERS buy permanent upgrades that carry into every future run. "
+		+ "You bank them when a run ends.", UITheme.TEXT_DIM, 10)
+	ex.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	ex.custom_minimum_size = Vector2(226, 0)
+	rc.add_child(ex)
+	_retire = UITheme.button("End run  +0 embers", UITheme.EMBERS)
+	_retire.custom_minimum_size = Vector2(0, 30)
+	_retire.tooltip_text = "End this run now and bank your embers. Always pays more than dying does."
 	_retire.pressed.connect(func(): retire_pressed.emit())
 	rc.add_child(_retire)
 
@@ -126,6 +152,24 @@ func _process(delta: float) -> void:
 	var s: GameStateData = GameState.s
 	var l: float = s.effective_luminance()
 
+	_level.text = "LEVEL %d" % s.level
+	match s.phase:
+		GameStateData.Phase.BOSS:
+			_level_bar.value = 1.0
+			_level_sub.text = "boss — kill it to finish the level"
+			_level_sub.add_theme_color_override("font_color", UITheme.BAD)
+		GameStateData.Phase.CLEARED:
+			_level_bar.value = 1.0
+			_level_sub.text = "cleared"
+			_level_sub.add_theme_color_override("font_color", UITheme.GOOD)
+		_:
+			_level_bar.value = Levels.progress(s)
+			var left: float = Levels.time_left(s)
+			_level_sub.text = "%d / %d kills to the boss    boss in %ds" % [
+				s.level_kills, Levels.quota(s), int(left)]
+			_level_sub.add_theme_color_override("font_color",
+				UITheme.WARN if left < 10.0 else UITheme.TEXT_DIM)
+
 	_lum.text = "LUMINANCE %s" % UITheme.fmt(l)
 	_lum.add_theme_color_override("font_color",
 		Color(0.45, 0.65, 1.0) if s.is_dousing() else UITheme.LUM)
@@ -157,9 +201,10 @@ func _process(delta: float) -> void:
 		_aim.text = "nothing in range"
 		_aim.add_theme_color_override("font_color", UITheme.TEXT_DIM)
 
-	_clock.text = UITheme.fmt_time(s.t) + ("   cycle %d" % s.ember_count if s.ember_count > 0 else "")
+	_clock.text = "best: level %d%s" % [s.best_level,
+		"   run %d" % (s.ember_count + 1) if s.ember_count > 0 else ""]
 	_embers.text = "%s embers" % UITheme.fmt(s.embers)
-	_retire.text = "Retire  +%s" % UITheme.fmt(GameState.embers_on_retire())
+	_retire.text = "End run  +%s embers" % UITheme.fmt(GameState.embers_on_retire())
 
 	_douse_bar.value = s.douse_meter
 	if s.is_dousing():

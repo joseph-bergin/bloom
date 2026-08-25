@@ -26,6 +26,7 @@ func _physics_process(delta: float) -> void:
 	Turret.tick(s, delta)
 	Turret.move_projectiles(s, delta)
 	Field.check_breaches(s)
+	Levels.tick(s, delta)
 
 func _unhandled_input(_event: InputEvent) -> void:
 	pass
@@ -96,11 +97,16 @@ func respec() -> void:
 
 # --- prestige ------------------------------------------------------------
 
-func embers_for(total: float) -> float:
-	return floor(sqrt(total / Constants.EMBER_DIVISOR)) * Stats.ember_mult
+## Embers come from what you banked and how deep you got. Depth is in here
+## so that damage — which is what buys depth — is worth something at the
+## end of a run, instead of economy being the only thing that scores.
+func embers_for(total: float, level: int = 1) -> float:
+	var banked: float = sqrt(total / Constants.EMBER_DIVISOR)
+	var depth: float = 1.0 + float(maxi(level - 1, 0)) * Constants.EMBER_LEVEL_BONUS
+	return floor(banked * depth) * Stats.ember_mult
 
 func embers_on_death() -> float:
-	return embers_for(s.total_motes_this_run)
+	return embers_for(s.total_motes_this_run, s.level)
 
 ## Retiring early must always beat dying — strictly, at every point on the
 ## curve. Rounding alone lets the bonus vanish at small payouts, so the
@@ -152,6 +158,7 @@ func bank_embers(retired: bool) -> Dictionary:
 	s.dousing = false
 	s.run_over = false
 	s.run_end_reason = ""
+	Levels.reset(s)
 	s.purchase_version += 1
 	Stats.recompute(s)
 	s.shields = Stats.max_shields

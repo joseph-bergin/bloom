@@ -11,6 +11,13 @@ const BUILDS := {
 	"reach":  {"reach": 1.0},
 	"root":   {"root": 1.0},
 	"none":   {},
+	# The pairing the design is actually built around: Shroud pays for the
+	# luminance that Burn generates, so you can take more Burn than you
+	# otherwise could afford to be seen carrying.
+	"burnshroud": {"burn": 1.0, "shroud": 1.0},
+	"burnreach":  {"burn": 1.0, "reach": 1.0},
+	"burnroot":   {"burn": 1.0, "root": 1.0},
+	"shroudroot": {"shroud": 1.0, "root": 1.0},
 }
 
 var minutes: float = 30.0
@@ -44,10 +51,10 @@ func run(args: Dictionary) -> void:
 		return
 
 	var names: Array = BUILDS.keys() if which == "all" else [which]
-	print("%-8s %9s %8s %8s %7s %6s %7s %7s %6s %6s %6s" %
-		["build", "survived", "motes", "peaklum", "embers", "nodes",
-		"spawns", "kills", "brchs", "live", "dps"])
-	var rows: Array[String] = ["build,run,survived_s,total_motes,peak_lum,embers,nodes"]
+	print("%-8s %6s %9s %8s %8s %7s %6s %7s %6s %6s" %
+		["build", "level", "survived", "motes", "peaklum", "embers", "nodes",
+		"kills", "brchs", "dps"])
+	var rows: Array[String] = ["build,run,level,survived_s,total_motes,peak_lum,embers,nodes"]
 	for name in names:
 		var surv: float = 0.0
 		var motes: float = 0.0
@@ -59,6 +66,7 @@ func run(args: Dictionary) -> void:
 		var sw: float = 0.0
 		var lv: float = 0.0
 		var dp: float = 0.0
+		var lvl: float = 0.0
 		for r in range(runs):
 			var res: Dictionary = _one(name, rng_seed + r)
 			surv += float(res["survived"])
@@ -71,13 +79,14 @@ func run(args: Dictionary) -> void:
 			sw += float(res["spawns"])
 			lv += float(res["max_live"])
 			dp += float(res["dps"])
-			rows.append("%s,%d,%.1f,%.0f,%.1f,%.0f,%d" % [name, r,
+			lvl += float(res["level"])
+			rows.append("%s,%d,%d,%.1f,%.0f,%.1f,%.0f,%d" % [name, r, res["level"],
 				res["survived"], res["motes"], res["lum"], res["embers"], res["nodes"]])
 		var n: float = float(runs)
-		print("%-8s %9s %8s %8s %7s %6d %7d %7d %6d %6d %6d" % [name,
-			UITheme.fmt_time(surv / n), UITheme.fmt(motes / n),
+		print("%-8s %6.1f %9s %8s %8s %7s %6d %7d %6d %6d" % [name,
+			lvl / n, UITheme.fmt_time(surv / n), UITheme.fmt(motes / n),
 			UITheme.fmt(lum / n), UITheme.fmt(emb / n), int(owned / n),
-			int(sw / n), int(kl / n), int(br / n), int(lv / n), int(dp / n)])
+			int(kl / n), int(br / n), int(dp / n)])
 
 	var f := FileAccess.open(out_path, FileAccess.WRITE)
 	if f != null:
@@ -119,6 +128,7 @@ func _one(build: String, seed_v: int) -> Dictionary:
 		Turret.tick(s, DT)
 		Turret.move_projectiles(s, DT)
 		Field.check_breaches(s)
+		Levels.tick(s, DT)
 		peak = maxf(peak, s.effective_luminance())
 		max_live = maxi(max_live, s.contacts.size())
 		if s.run_over:
@@ -133,19 +143,32 @@ func _one(build: String, seed_v: int) -> Dictionary:
 	EventBus.shield_breached.disconnect(bk)
 	EventBus.contact_spawned.disconnect(sp)
 	return {"survived": s.t, "motes": s.total_motes_this_run, "lum": peak,
-		"embers": GameState.embers_for(s.total_motes_this_run),
+		"embers": GameState.embers_for(s.total_motes_this_run, s.level),
 		"nodes": s.purchased.size(), "kills": kills[0], "breaches": breaches[0],
+		"level": s.level,
 		"spawns": spawns[0], "max_live": max_live, "dps": Stats.dps(),
 		"range": Stats.turret_range, "shields": s.shields}
 
-## Model a player pushing the tree outward: buy the deepest affordable node
-## in a preferred branch. Infinite sinks are the fallback when nothing else
-## is affordable, which is exactly what the spec says they are for.
+## Model a player pushing the tree outward: buy the deepest affordable node,
+## rotating between the branches they care about so a multi-branch build is
+## actually balanced rather than whichever branch happens to be cheapest.
+## Infinite sinks are the fallback when nothing else is affordable, which is
+## exactly what the spec says they are for.
+var _rotate: int = 0
+
 func _shop(s: GameStateData, prefs: Dictionary) -> void:
 	if prefs.is_empty():
 		return
+	var branches: Array = prefs.keys()
 	for _pass in range(8):
-		if not _buy_best(s, prefs, false) and not _buy_best(s, prefs, true):
+		var bought: bool = false
+		for i in range(branches.size()):
+			_rotate = (_rotate + 1) % branches.size()
+			var one: Dictionary = {branches[_rotate]: true}
+			if _buy_best(s, one, false):
+				bought = true
+				break
+		if not bought and not _buy_best(s, prefs, true):
 			return
 
 func _buy_best(s: GameStateData, prefs: Dictionary, sinks: bool) -> bool:
@@ -192,8 +215,8 @@ func _campaign(build: String, cycles: int) -> void:
 		_spend_embers(s)
 		print("seeded with %d embers -> %d ember nodes, dps %.0f, shields %d" %
 			[_seed_embers, _ember_nodes(s), Stats.dps(), Stats.max_shields])
-	print("%-6s %9s %9s %8s %9s %8s %7s %7s" %
-		["cycle", "survived", "motes", "peaklum", "embers", "banked", "ember_n", "clock"])
+	print("%-6s %6s %9s %9s %8s %9s %7s %7s" %
+		["run", "level", "survived", "motes", "peaklum", "embers", "ember_n", "clock"])
 	var clock: float = 0.0
 	var banked: float = 0.0
 	for c in range(cycles):
@@ -203,7 +226,7 @@ func _campaign(build: String, cycles: int) -> void:
 		# retire button; the campaign models a player who dies.
 		# Retiring pays the bonus; dying does not. That gap is the reason
 		# the retire button exists.
-		var gained: float = GameState.embers_for(s.total_motes_this_run)
+		var gained: float = GameState.embers_for(s.total_motes_this_run, s.level)
 		if bool(res.get("retired", false)):
 			gained = floor(gained * (1.0 + Constants.RETIRE_BONUS)) if gained > 0.0 else 1.0
 		banked += gained
@@ -214,9 +237,9 @@ func _campaign(build: String, cycles: int) -> void:
 			s.unlocked_sections.append(String(section))
 		_reset_run(s)
 		_spend_embers(s)
-		print("%-6d %9s %9s %8s %9s %8s %7d %7s" % [c + 1,
+		print("%-6d %6d %9s %9s %8s %9s %7d %7s" % [c + 1, int(res["level"]),
 			UITheme.fmt_time(float(res["survived"])), UITheme.fmt(float(res["motes"])),
-			UITheme.fmt(float(res["lum"])), UITheme.fmt(gained), UITheme.fmt(s.embers),
+			UITheme.fmt(float(res["lum"])), UITheme.fmt(gained),
 			_ember_nodes(s), UITheme.fmt_time(clock)])
 	print("total play: %s, embers banked: %s, ember nodes: %d/%d" %
 		[UITheme.fmt_time(clock), UITheme.fmt(banked), _ember_nodes(s), _ember_total()])
@@ -259,35 +282,41 @@ func _reset_run(s: GameStateData) -> void:
 	s.shields = Stats.max_shields
 
 func _spend_embers(s: GameStateData) -> void:
-	for _pass in range(40):
-		var best: TreeNode = null
-		var best_cost: float = -1.0
-		for id in TreeDB.all_ids():
-			var n: TreeNode = TreeDB.get_node_def(id)
-			if n.branch != &"ember":
-				continue
-			if n.section != &"base" and not s.unlocked_sections.has(String(n.section)):
-				continue
-			var rank: int = int(s.purchased.get(String(n.id), 0))
-			if not n.is_infinite() and rank >= n.max_rank:
-				continue
-			var met: bool = true
-			for r in n.requires:
-				if int(s.purchased.get(String(r), 0)) <= 0:
-					met = false
-					break
-			if not met:
-				continue
-			var c: float = n.cost_at(rank)
-			if c <= s.embers and c > best_cost:
-				best_cost = c
-				best = n
-		if best == null:
+	for _pass in range(60):
+		if not _buy_ember(s, false) and not _buy_ember(s, true):
 			return
-		s.embers -= best_cost
-		s.purchased[String(best.id)] = int(s.purchased.get(String(best.id), 0)) + 1
-		s.purchase_version += 1
-		Stats.recompute(s)
+
+## Depth first, sinks only as the fallback — same policy as the mote shop.
+func _buy_ember(s: GameStateData, sinks: bool) -> bool:
+	var best: TreeNode = null
+	var best_cost: float = -1.0
+	for id in TreeDB.all_ids():
+		var n: TreeNode = TreeDB.get_node_def(id)
+		if n.branch != &"ember" or n.is_infinite() != sinks:
+			continue
+		if n.section != &"base" and not s.unlocked_sections.has(String(n.section)):
+			continue
+		var rank: int = int(s.purchased.get(String(n.id), 0))
+		if not n.is_infinite() and rank >= n.max_rank:
+			continue
+		var met: bool = true
+		for r in n.requires:
+			if int(s.purchased.get(String(r), 0)) <= 0:
+				met = false
+				break
+		if not met:
+			continue
+		var c: float = n.cost_at(rank)
+		if c <= s.embers and c > best_cost:
+			best_cost = c
+			best = n
+	if best == null:
+		return false
+	s.embers -= best_cost
+	s.purchased[String(best.id)] = int(s.purchased.get(String(best.id), 0)) + 1
+	s.purchase_version += 1
+	Stats.recompute(s)
+	return true
 
 func _run_with(s: GameStateData, build: String) -> Dictionary:
 	# Spawning reads ember_count off the live GameState, so the runner's
@@ -307,6 +336,7 @@ func _run_with(s: GameStateData, build: String) -> Dictionary:
 		Turret.tick(s, DT)
 		Turret.move_projectiles(s, DT)
 		Field.check_breaches(s)
+		Levels.tick(s, DT)
 		peak = maxf(peak, s.effective_luminance())
 		if s.run_over or s.t >= retire_at:
 			break
@@ -315,4 +345,4 @@ func _run_with(s: GameStateData, build: String) -> Dictionary:
 			buy_timer = 2.0
 			_shop(s, prefs)
 	return {"survived": s.t, "motes": s.total_motes_this_run, "lum": peak,
-		"retired": not s.run_over}
+		"level": s.level, "retired": not s.run_over}

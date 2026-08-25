@@ -84,15 +84,9 @@ func _draw() -> void:
 	var hidden: bool = s.is_dousing()
 	# Warm when you are burning, cold when you have pulled the light in.
 	var tint: Color = Color(0.30, 0.44, 0.72) if hidden else Color(1.0, 0.74, 0.34)
-	var steps: int = 16
-	for i in range(steps):
-		var t: float = float(i) / float(steps)
-		# Brightest at the middle, falling away to nothing at the edge.
-		var a: float = 0.055 * pow(1.0 - t, 1.7)
-		draw_arc(Vector2.ZERO, sight * (0.06 + t * 0.94), 0.0, TAU, 56,
-			Color(tint.r, tint.g, tint.b, a),
-			(sight * 0.94) / float(steps) + 2.0, false)
-	draw_arc(Vector2.ZERO, sight, 0.0, TAU, 96, tint * 0.55, 1.4, true)
+	# The pool itself is drawn by the darkness shader as one smooth
+	# gradient; stacked arcs banded visibly. Only the rim is drawn here.
+	draw_arc(Vector2.ZERO, sight, 0.0, TAU, 96, tint * 0.7, 1.6, true)
 
 	# --- turret reach: the promise the player aims inside of ---
 	var reach: float = Stats.turret_range

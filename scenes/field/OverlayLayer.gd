@@ -70,16 +70,11 @@ func _draw_veil() -> void:
 	if _veil <= 0.001:
 		return
 	var R: float = Constants.FIELD_RADIUS
+	# Kept light. The sight collapse is what sells hiding now; a full-screen
+	# blue wash on top of it only lifted the darkness back up.
 	var r: float = R * 2.2
 	draw_rect(Rect2(-r, -r, r * 2.0, r * 2.0),
-		Color(0.05, 0.10, 0.20, 0.55 * _veil))
-	# And the boundary pulls inward, so the world feels smaller.
-	var steps: int = 8
-	for i in range(steps):
-		var t: float = float(i) / float(steps)
-		draw_arc(Vector2.ZERO, lerpf(R * 1.05, R * 0.55, t * _veil), 0.0, TAU, 64,
-			Color(0.30, 0.55, 0.95, 0.10 * _veil * (1.0 - t)),
-			(R * 0.5) / float(steps) + 2.0, false)
+		Color(0.04, 0.08, 0.16, 0.16 * _veil))
 
 ## Darkens the corners so the eye is pulled to the middle, where the game is.
 func _draw_vignette() -> void:

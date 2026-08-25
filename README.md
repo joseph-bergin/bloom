@@ -35,9 +35,10 @@ light — brightness is literally how far you can see. *Range* is bought with
 Reach. The turret needs both: it will not lock, and its shots will not
 touch, anything outside your light.
 
-**Past the light there is nothing to see.** A shader lays real darkness over
-the field with a feathered hole where your light reaches, and contacts out
-there are not drawn at all. An earlier pass drew them as hollow outlines,
+**Past the light there is nothing to see.** One shader draws both the pool
+and the dark as a single gradient: warm and brightest at the bloom, falling
+off smoothly to genuine black at the edge of your sight. Contacts out there
+are not drawn at all. An earlier pass drew them as hollow outlines,
 which only relabelled the information — the player still knew exactly where
 everything was, so the dark cost them nothing. The arena boundary and its
 four cardinals stay faintly visible above the darkness: blacking out enemy

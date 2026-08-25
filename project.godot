@@ -7,7 +7,7 @@ config_version=5
 
 config/name="BLOOM"
 config/description="Every upgrade you buy makes you brighter, and brightness is the thing that spawns the enemies."
-run/main_scene="res://scenes/Main.tscn"
+run/main_scene="res://scenes/TitleScreen.tscn"
 config/features=PackedStringArray("4.3", "Forward Plus")
 config/icon="res://icon.svg"
 

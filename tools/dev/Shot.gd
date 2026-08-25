@@ -11,6 +11,7 @@ var force_boss: bool = false
 var force_cleared: bool = false
 var force_hide: bool = false
 var track_nearest: bool = false
+var show_title: bool = false
 var start_level: int = 1
 var _n: int = 0
 var _seeded: bool = false
@@ -32,17 +33,20 @@ func _ready() -> void:
 			"cleared": force_cleared = int(kv[1]) != 0
 			"hide": force_hide = int(kv[1]) != 0
 			"track": track_nearest = int(kv[1]) != 0
+			"title": show_title = int(kv[1]) != 0
 			"level": start_level = int(kv[1])
 	# Measure real headroom, not the refresh rate.
 	DisplayServer.window_set_vsync_mode(DisplayServer.VSYNC_DISABLED)
 	Engine.max_fps = 0
-	add_child(load("res://scenes/Main.tscn").instantiate())
+	add_child(load("res://scenes/TitleScreen.tscn" if show_title
+		else "res://scenes/Main.tscn").instantiate())
 
 func _process(_delta: float) -> void:
 	_n += 1
 	if not _seeded and _n == 4:
 		_seeded = true
-		_seed()
+		if not show_title:
+			_seed()
 	if track_nearest and _n > 6:
 		var best: Contact = null
 		for c in GameState.s.contacts:

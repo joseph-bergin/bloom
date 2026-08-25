@@ -12,6 +12,10 @@ Godot 4, GDScript, statically typed. Built from `BLOOM-spec-simple.md`.
 /Applications/Godot.app/Contents/MacOS/Godot --path .
 ```
 
+The title screen is the field: a bloom breathing in the dark with things
+drifting at the edge of its light, never quite arriving. It states the game
+without a word before you press anything.
+
 **Aim with the mouse.** The turret fires on its own whenever anything is
 inside its range, but it fires where you point — so choosing what to kill
 next is the active decision. An assist cone steers shots onto whatever you
@@ -302,11 +306,11 @@ autoload/   constants, event_bus, tree_db, stats, game_state, save_manager,
             audio, steam_bridge
 sim/        contact, projectile, game_state_data, tree_node
             systems/ luminance, spawning, turret, field
-scenes/     Main, FieldView and its draw layers
+scenes/     TitleScreen, Main, FieldView and its draw layers
 ui/         HUD, TreeView, modals
 data/tree/  130 nodes across 4 branches
 tools/      sim_runner, gen_tree.py, dev/Shot
-tests/      251 assertions
+tests/      255 assertions
 ```
 
 The previous, much larger version of this game is on the `main` branch.

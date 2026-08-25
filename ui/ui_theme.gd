@@ -12,6 +12,7 @@ const TINY := CELL * 2     # 16 — captions
 const BODY := CELL * 2     # 16 — everything normal
 const LARGE := CELL * 3    # 24 — emphasis
 const HUGE := CELL * 5     # 40 — headline
+const TITLE := CELL * 9    # 72 — the wordmark, and nothing else
 
 # --- ground --------------------------------------------------------------
 const VOID := Color(0.020, 0.027, 0.040)

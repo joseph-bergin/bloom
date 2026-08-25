@@ -1,0 +1,35 @@
+[gd_scene load_steps=6 format=3]
+
+[ext_resource type="Script" path="res://scenes/TitleScreen.gd" id="1_title"]
+[ext_resource type="Script" path="res://scenes/TitleArt.gd" id="2_art"]
+[ext_resource type="Shader" path="res://scenes/field/shaders/darkness.gdshader" id="3_dark"]
+[ext_resource type="Script" path="res://ui/SettingsPanel.gd" id="4_settings"]
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_title"]
+shader = ExtResource("3_dark")
+shader_parameter/sight_uv = 0.14
+shader_parameter/feather = 0.03
+shader_parameter/dark = Color(0, 0, 0, 1)
+shader_parameter/warm = Color(1, 0.74, 0.34, 1)
+shader_parameter/warm_amount = 0.13
+shader_parameter/falloff = 1.6
+
+[node name="TitleScreen" type="Control"]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+script = ExtResource("1_title")
+
+[node name="Art" type="Node2D" parent="."]
+script = ExtResource("2_art")
+
+[node name="Darkness" type="ColorRect" parent="."]
+material = SubResource("ShaderMaterial_title")
+mouse_filter = 2
+
+[node name="Settings" type="Control" parent="."]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+mouse_filter = 2
+script = ExtResource("4_settings")

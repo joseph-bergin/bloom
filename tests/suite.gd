@@ -663,6 +663,21 @@ func test_begin_next_only_works_while_upgrading() -> void:
 	s.phase = GameStateData.Phase.FIGHTING
 	ok(not GameState.begin_next_level(), "cannot skip a level mid-fight")
 
+## Levels.reset used to write a field that no longer exists, which only
+## surfaced on the title screen's New Run path.
+func test_reset_clears_every_field_it_touches() -> void:
+	var s := fresh()
+	s.level = 7
+	s.level_kills = 4
+	s.phase = GameStateData.Phase.BOSS
+	s.boss_id = 99
+	s.level_time = 30.0
+	Levels.reset(s)
+	ok(s.level == 1 and s.level_kills == 0, "back to the first level")
+	ok(s.phase == GameStateData.Phase.FIGHTING, "and to the fighting phase")
+	ok(s.boss_id == 0 and s.level_time == 0.0, "with nothing left over")
+	ok(s.best_level >= 7, "but the best reached is kept")
+
 func test_restarting_unbuilds_everything_and_keeps_the_best() -> void:
 	var s := fresh()
 	s.level = 11

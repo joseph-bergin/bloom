@@ -129,7 +129,6 @@ static func reset(s: GameStateData) -> void:
 	s.level = 1
 	s.level_kills = 0
 	s.phase = GameStateData.Phase.FIGHTING
-	s.clear_timer = 0.0
 	s.boss_id = 0
 	s.level_time = 0.0
 	s.level_quota = compute_quota(s)

@@ -114,6 +114,10 @@ func _read(path: String) -> Dictionary:
 	var parsed: Variant = JSON.parse_string(FileAccess.get_file_as_string(path))
 	return parsed if typeof(parsed) == TYPE_DICTIONARY else {}
 
+## Used by the title screen to decide whether a run can be resumed.
+func has_save() -> bool:
+	return FileAccess.file_exists(Constants.SAVE_PATH)
+
 func wipe() -> void:
 	for p in [Constants.SAVE_PATH, Constants.SAVE_BACKUP_PATH]:
 		if FileAccess.file_exists(p):

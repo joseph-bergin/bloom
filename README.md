@@ -295,7 +295,7 @@ scenes/     Main, FieldView and its draw layers
 ui/         HUD, TreeView, modals
 data/tree/  130 nodes across 4 branches
 tools/      sim_runner, gen_tree.py, dev/Shot
-tests/      212 assertions
+tests/      250 assertions
 ```
 
 The previous, much larger version of this game is on the `main` branch.

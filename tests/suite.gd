@@ -388,6 +388,13 @@ func test_fog_reveals_neighbours_only() -> void:
 ## Thirteen Root nodes once granted a stat that had been removed with the
 ## prestige system. They still cost motes and light and did nothing at all.
 ## Nothing in the tree may reference a stat or rule the sim never reads.
+## PixelFont holds its own copy of the base size because an autoload cannot
+## reference a class_name on a cold checkout. Keep the two in step.
+func test_the_font_base_size_matches_the_type_scale() -> void:
+	ok(PixelFont.BASE_SIZE == UITheme.BODY,
+		"PixelFont.BASE_SIZE (%d) must equal UITheme.BODY (%d)"
+		% [PixelFont.BASE_SIZE, UITheme.BODY])
+
 func test_every_node_effect_is_actually_read() -> void:
 	var live: Dictionary = {}
 	for key in ["damage_mult", "damage_scale", "fire_rate_mult", "crit_chance",

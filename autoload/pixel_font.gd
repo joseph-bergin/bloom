@@ -3,7 +3,11 @@ extends Node
 ## Loaded once and applied as the window theme so every Control picks it up
 ## without each one asking.
 ##
-## The type scale lives in UITheme with the rest of the design tokens.
+## The base size the theme is installed at. UITheme owns the type scale, but
+## an autoload reaching into the UI layer for a number is the wrong
+## direction, and autoloads compile before Godot's global class cache is
+## built. A test keeps this in step with UITheme.BODY.
+const BASE_SIZE := 16
 var font: FontFile = null
 
 func _ready() -> void:
@@ -22,12 +26,12 @@ func _ready() -> void:
 	# first. Set it on all of them explicitly.
 	var theme := Theme.new()
 	theme.default_font = font
-	theme.default_font_size = UITheme.BODY
+	theme.default_font_size = BASE_SIZE
 	for type in ["Label", "Button", "CheckBox", "CheckButton", "OptionButton",
 			"LineEdit", "SpinBox", "TooltipLabel", "RichTextLabel",
 			"PopupMenu", "ProgressBar", "MenuButton", "TabBar"]:
 		theme.set_font("font", type, font)
-		theme.set_font_size("font_size", type, UITheme.BODY)
+		theme.set_font_size("font_size", type, BASE_SIZE)
 	get_tree().root.theme = theme
 	theme_applied.emit()
 

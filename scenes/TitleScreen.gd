@@ -74,10 +74,8 @@ func _build_menu() -> void:
 
 	col.add_child(_centred("BLOOM", UITheme.LUM, UITheme.TITLE))
 	col.add_child(_spacer(10))
-	col.add_child(_centred("as you get stronger, you get brighter",
+	col.add_child(_centred("as you get brighter more can find you",
 		UITheme.TEXT_DIM, UITheme.TINY))
-	col.add_child(_centred("as you get brighter, more can find you",
-		UITheme.TEXT_FAINT, UITheme.TINY))
 	col.add_child(_spacer(28))
 
 	_menu = VBoxContainer.new()

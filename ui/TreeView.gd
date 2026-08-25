@@ -75,8 +75,8 @@ func _build() -> void:
 
 	var header := ColorRect.new()
 	header.set_anchors_preset(Control.PRESET_TOP_WIDE)
-	header.custom_minimum_size = Vector2(0, 76)
-	header.color = Color(0.02, 0.025, 0.035, 0.94)
+	header.custom_minimum_size = Vector2(0, 82)
+	header.color = Color(UITheme.VOID.r, UITheme.VOID.g, UITheme.VOID.b, 0.96)
 	header.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	add_child(header)
 
@@ -101,14 +101,14 @@ func _build() -> void:
 	_filters.add_theme_constant_override("separation", 5)
 	add_child(_filters)
 
-	var side := UITheme.make_panel()
+	var pair: Array = UITheme.make_section("node", UITheme.ACCENT)
+	var side: PanelContainer = pair[0]
 	side.set_anchors_preset(Control.PRESET_TOP_RIGHT)
-	side.position = Vector2(-306, 84)
-	side.custom_minimum_size = Vector2(290, 0)
+	side.position = Vector2(-312, 88)
+	side.custom_minimum_size = Vector2(296, 210)
 	add_child(side)
-	_detail = VBoxContainer.new()
+	_detail = pair[1]
 	_detail.add_theme_constant_override("separation", 4)
-	side.add_child(_detail)
 
 	var mm := UITheme.make_panel()
 	mm.set_anchors_preset(Control.PRESET_BOTTOM_RIGHT)
@@ -181,6 +181,7 @@ func _compute_bounds() -> void:
 func open_view() -> void:
 	visible = true
 	_build_filters()
+	_render_detail()
 	_dirty = true
 
 func close_view() -> void:
@@ -278,7 +279,11 @@ func _render_detail() -> void:
 	var n: TreeNode = TreeDB.get_node_def(id)
 	var s: GameStateData = GameState.s
 	if n == null:
-		_detail.add_child(UITheme.label("hover a node", UITheme.TEXT_DIM, 12))
+		_detail.add_child(UITheme.label("hover a node to read it", UITheme.TEXT_DIM, 12))
+		_detail.add_child(UITheme.wrapped(
+			"Everything you build adds luminance, and luminance is what makes "
+			+ "the field spawn faster and stronger. Shroud is the only branch "
+			+ "that costs none.", UITheme.TEXT_FAINT, 11, 268))
 		return
 	var rank: int = int(s.purchased.get(String(n.id), 0))
 	_detail.add_child(UITheme.label(n.display_name, UITheme.branch_colour(n.branch), 16))

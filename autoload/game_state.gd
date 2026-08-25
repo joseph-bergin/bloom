@@ -58,12 +58,17 @@ func can_purchase(n: TreeNode) -> bool:
 		return false
 	return s.motes >= next_cost(n)
 
-## A node is revealed once a requirement is owned; otherwise it silhouettes.
+## Fog with silhouettes: you always half-see one step past the frontier, so
+## there is something out there to want. Showing only what is immediately
+## buyable makes an unbought tree look like four dots.
 func is_revealed(n: TreeNode) -> bool:
 	if n.requires.is_empty() or requirements_met(n):
 		return true
 	for r in n.requires:
 		if rank_of(r) > 0:
+			return true
+		var parent: TreeNode = TreeDB.get_node_def(r)
+		if parent != null and requirements_met(parent):
 			return true
 	return false
 

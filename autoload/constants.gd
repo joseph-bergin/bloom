@@ -17,8 +17,8 @@ var MAX_CONTACTS: int = 400
 ## field feels like it is escalating rather than averaging out.
 var TIER_TOP_THIRD_BIAS: float = 0.45
 
-var DRIFT_BASE: float = 12.38
-var DRIFT_LUM_SCALE: float = 0.1719
+var DRIFT_BASE: float = 17.5
+var DRIFT_LUM_SCALE: float = 0.24
 
 var HP_BASE: float = 10.0
 var HP_TIER_MULT: float = 2.2
@@ -58,13 +58,17 @@ var LEVEL_CLEAR_MULT: float = 26.0
 
 ## Contact tier caps at MAX_TIER, so past that the boss has to keep growing
 ## some other way or it stops being a wall and the run never ends.
-var BOSS_LEVEL_HP_GROWTH: float = 1.09
+var BOSS_LEVEL_HP_GROWTH: float = 1.14
 
 ## The boss is a wall, not a coin flip: heavy, slow, and worth a lot. If it
 ## reaches you it costs a shield and spends itself, so a level can always
 ## be got past — the price is just steep.
-var BOSS_HP_MULT: float = 4.0
-var BOSS_DRIFT_MULT: float = 0.30
+var BOSS_HP_MULT: float = 1.6
+## The boss used to amble in from the edge and the end of every level was
+## spent waiting for it to reach range. It now starts closer and moves at a
+## real pace.
+var BOSS_DRIFT_MULT: float = 0.62
+var BOSS_SPAWN_RANGE: float = 0.80
 var BOSS_MOTE_MULT: float = 9.0
 var BOSS_RADIUS_MULT: float = 2.6
 var BOSS_TIER_STEP: float = 0.55
@@ -77,7 +81,7 @@ var START_SHIELDS: int = 3
 var AIM_ASSIST_CONE: float = 0.16
 var BREACH_RADIUS: float = 15.0
 
-var TURRET_RANGE_BASE: float = 178.8
+var TURRET_RANGE_BASE: float = 240.0
 var TURRET_DAMAGE_BASE: float = 4.0
 var TURRET_RATE_BASE: float = 2.0    # shots per second
 var PROJECTILE_SPEED: float = 357.5

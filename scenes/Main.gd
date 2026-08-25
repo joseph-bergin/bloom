@@ -8,7 +8,7 @@ extends Node
 @onready var settings: Control = $UILayer/Modals/SettingsPanel
 
 func _ready() -> void:
-	hud.tree_pressed.connect(func(): tree_view.toggle())
+	hud.tree_pressed.connect(_toggle_tree)
 	hud.settings_pressed.connect(func(): settings.toggle())
 	hud.next_level_pressed.connect(func(): GameState.begin_next_level())
 
@@ -29,6 +29,13 @@ func _ready() -> void:
 ## player so the chance to spend is impossible to miss.
 var _open_tree_in: float = -1.0
 
+## Upgrades happen between levels, never during one.
+func _toggle_tree() -> void:
+	if tree_view.visible:
+		tree_view.close_view()
+	elif GameState.upgrading():
+		tree_view.open_view()
+
 func _on_level_cleared(_level: int, _bonus: float) -> void:
 	_open_tree_in = Constants.LEVEL_CLEAR_PAUSE
 
@@ -46,7 +53,7 @@ func _process(delta: float) -> void:
 
 func _unhandled_input(event: InputEvent) -> void:
 	if event.is_action_pressed("toggle_tree"):
-		tree_view.toggle()
+		_toggle_tree()
 		get_viewport().set_input_as_handled()
 	elif event is InputEventKey and (event as InputEventKey).pressed \
 			and (event as InputEventKey).keycode == KEY_ESCAPE:

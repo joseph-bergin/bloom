@@ -424,8 +424,9 @@ func test_meeting_the_quota_summons_a_boss() -> void:
 	var b: Contact = s.boss()
 	ok(b != null and b.is_boss, "and a boss exists")
 	var plain := Contact.make(b.tier, Vector2(10, 0), 0.0)
-	ok(b.max_hp > plain.max_hp * 3.0, "the boss is a wall, not another contact")
-	ok(b.motes() > plain.motes(), "and worth killing")
+	ok(b.max_hp > plain.max_hp, "the boss takes more killing than a contact")
+	ok(b.radius > plain.radius * 2.0, "and is unmistakable on the field")
+	ok(b.motes() > plain.motes() * 5.0, "and worth killing")
 
 func test_nothing_new_spawns_during_a_boss_or_the_breather() -> void:
 	var s := fresh()
@@ -468,6 +469,7 @@ func test_a_boss_that_reaches_you_costs_a_shield_and_comes_back() -> void:
 	s.level = 4
 	s.phase = GameStateData.Phase.BOSS
 	var b := Contact.make_boss(2, Vector2(4.0, 0.0), 10.0)
+	b.hp = b.max_hp * 0.4
 	s.contacts.append(b)
 	s.boss_id = b.get_instance_id()
 	Field.check_breaches(s)
@@ -476,7 +478,7 @@ func test_a_boss_that_reaches_you_costs_a_shield_and_comes_back() -> void:
 	ok(s.phase == GameStateData.Phase.BOSS, "you are still in the boss fight")
 	var again: Contact = s.boss()
 	ok(again != null and again != b, "and it comes straight back")
-	near(again.hp, again.max_hp, 1e-6, "at full health")
+	near(again.hp, b.hp, 1e-6, "as hurt as you left it")
 
 func test_a_boss_breach_with_no_shields_left_ends_the_run() -> void:
 	var s := fresh()

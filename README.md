@@ -22,7 +22,8 @@ miss. The HUD says `ON TARGET` when the trigger has something.
 you earn nothing while you hold it. It is the panic button and the greed
 dial at once.
 
-**T** opens the tree, **Esc** settings.
+**T** opens the tree — **between levels only.** Upgrades are a phase, not
+something you do mid-fight. **Esc** settings.
 
 ## Levels
 
@@ -45,6 +46,19 @@ Nothing resumes until you press *Begin level N*. That is the rhythm the
 game runs on: fight, clear, spend, go again.
 
 Three shields gone ends the run. The level you reached is the score.
+
+## Look
+
+One frame shape, used everywhere: a chamfered panel with corner ticks and
+an accent rule down the left edge, drawn by `ui/ChamferBox.gd`. Every panel,
+button and modal comes from `ui/ui_theme.gd`, so headers, rules, meters and
+colour all speak with one voice. Colour always means the same thing — amber
+is motes and luminance, green is progress, red is threat, blue is Douse.
+
+The field sits in a drifting three-layer starfield with a polar grid that
+echoes the radial shape of the game, a machined turret-reach ring, and a
+vignette pulling the eye to the middle. A few stars are drawn above 1.0 so
+the glow rig catches them.
 
 ## No prestige
 
@@ -103,18 +117,23 @@ commits. Over a single run (four seeds averaged, score is level reached):
 
 | build | level | motes | dps |
 |---|---|---|---|
-| burn + reach | 8.8 | 32K | 226 |
-| mixed (all four) | 6.0 | 4.5K | 18 |
-| root | 6.0 | 9.9K | 8 |
-| shroud | 6.0 | 3.7K | 8 |
-| **buy nothing** | **6.0** | **3.7K** | **8** |
-| burn | 5.8 | 3.8K | 37 |
+| burn + reach | 8.7 | 14.2K | 102 |
+| mixed (all four) | 8.3 | 24.2K | 74 |
+| reach | 8.0 | 9.7K | 16 |
+| shroud | 7.0 | 5.6K | 8 |
+| **buy nothing** | **7.0** | **5.6K** | **8** |
+| root | 6.0 | 8.5K | 8 |
+| burn | 5.0 | 2.5K | 18 |
 
-`burn + reach` clearly beats doing nothing — nearly three levels deeper and
-eight times the income. But most single branches merely *tie* with buying
-nothing, and pure Burn is worse than it: its luminance costs more than its
-damage returns unless Reach is there to give the turret time to use it.
-Shroud still does not pay for itself.
+Committed builds clearly beat idling, and the curve is smooth rather than
+the cliff it used to be — the boss now keeps the damage you did to it
+across attempts, so a wall you cannot clear outright can be ground down at
+a shield apiece. Before that the run was bistable: break through and
+compound forever, or stall at level 6 with nothing in between.
+
+Pure Burn is still *worse than buying nothing*: its luminance costs more
+than its damage returns unless Reach is there to give the turret time to
+use it. Shroud still does not pay for itself.
 
 So the shape is right — commitment beats dabbling beats idling — but the
 floor is too high and two of the four branches are not carrying their
@@ -146,6 +165,11 @@ to expect. Three changed:
   between runs, so if they never accumulate nothing escalates. At 80 the
   ratchet engages — motes climb 5.4K → 27K, luminance 73 → 114, ember income
   10 → 36 per run.
+- **The field and the boss got faster.** Levels were ending with the player
+  waiting for the boss to amble into range. It now starts at 80% of the
+  field radius and moves at 0.62 of contact speed rather than 0.30, which
+  cut time-in-range about threefold and meant boss health had to come down
+  with it.
 - **Levels rebalanced the whole economy.** Pausing spawns for boss fights
   and breathers cut kill throughput about fourfold, so income moved onto the
   level-clear bonus. That bonus is tied to what the level's boss is worth

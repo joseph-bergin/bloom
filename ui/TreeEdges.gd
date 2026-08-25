@@ -26,7 +26,7 @@ func _draw() -> void:
 			elif owned_parent:
 				col = UITheme.branch_colour(n.branch) * 0.26
 			else:
-				col = Color(0.10, 0.12, 0.16)
+				col = Color(0.15, 0.19, 0.24)
 			pts.append(p.pos)
 			pts.append(n.pos)
 			cols.append(col)

@@ -8,6 +8,7 @@ extends Node2D
 var aiming_enabled: bool = true
 
 func _ready() -> void:
+	RenderingServer.set_default_clear_color(UITheme.VOID)
 	overlay.bind_camera(camera)
 	_fit()
 	get_viewport().size_changed.connect(_fit)

@@ -63,17 +63,17 @@ static func on_kill(s: GameStateData, c: Contact) -> void:
 	if s.phase == GameStateData.Phase.FIGHTING:
 		s.level_kills += 1
 
-static func _summon_boss(s: GameStateData) -> void:
+static func _summon_boss(s: GameStateData, carry_hp: float = -1.0) -> void:
 	s.phase = GameStateData.Phase.BOSS
 	var a: float = s.rng.randf() * TAU
-	var at := Vector2(cos(a), sin(a)) * Constants.FIELD_RADIUS
+	var at := Vector2(cos(a), sin(a)) * (Constants.FIELD_RADIUS * Constants.BOSS_SPAWN_RANGE)
 	var b := Contact.make_boss(boss_tier(s), at,
 		Spawning.drift_speed(s.effective_luminance()))
 	# Past the tier cap the boss keeps growing on level alone, so there is
 	# always a wall ahead however strong the player gets.
 	var over: int = maxi(s.level - 1, 0)
 	b.max_hp *= pow(Constants.BOSS_LEVEL_HP_GROWTH, float(over))
-	b.hp = b.max_hp
+	b.hp = b.max_hp if carry_hp < 0.0 else clampf(carry_hp, 1.0, b.max_hp)
 	s.contacts.append(b)
 	s.boss_id = b.get_instance_id()
 	EventBus.contact_spawned.emit(b)
@@ -112,11 +112,15 @@ static func _begin_level(s: GameStateData) -> void:
 ## does NOT advance — if it did, a build with no damage at all could walk
 ## through every level by paying shields, and damage would buy nothing.
 ## This is the gate that makes the offence branches worth anything.
-static func boss_breached(s: GameStateData) -> void:
+static func boss_breached(s: GameStateData, hp_left: float) -> void:
 	s.boss_id = 0
 	EventBus.boss_breached.emit(s.level)
 	if s.shields > 0:
-		_summon_boss(s)
+		# It comes back as hurt as you left it. A pure kill-or-fail check is
+		# bistable — you either clear the wall outright or never do, with
+		# nothing in between. Carrying the damage makes the boss a gradient
+		# you can grind down across attempts, at a shield apiece.
+		_summon_boss(s, hp_left)
 
 static func reset(s: GameStateData) -> void:
 	# Record how far this run got before wiping it — that is the score the

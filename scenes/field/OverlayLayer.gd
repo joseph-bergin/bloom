@@ -44,6 +44,8 @@ func _process(delta: float) -> void:
 	queue_redraw()
 
 func _draw() -> void:
+	_draw_vignette()
+
 	# Motes arc outward from the kill point toward the counter.
 	for m in _motes:
 		var k: float = float(m["t"]) / 0.7
@@ -55,3 +57,15 @@ func _draw() -> void:
 	if flash > 0.0:
 		var r: float = Constants.FIELD_RADIUS * 2.5
 		draw_rect(Rect2(-r, -r, r * 2.0, r * 2.0), Color(1, 1, 1, 1) * (flash * 1.5))
+
+## Darkens the corners so the eye is pulled to the middle, where the game is.
+func _draw_vignette() -> void:
+	var R: float = Constants.FIELD_RADIUS
+	var steps: int = 14
+	for i in range(steps):
+		var t: float = float(i) / float(steps)
+		var r: float = lerpf(R * 1.08, R * 2.1, t)
+		var a: float = lerpf(0.0, 0.22, pow(t, 1.6))
+		draw_arc(Vector2.ZERO, r, 0.0, TAU, 72,
+			Color(UITheme.VOID.r, UITheme.VOID.g, UITheme.VOID.b, a),
+			(R * 1.02) / float(steps) + 2.0, false)

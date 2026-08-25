@@ -5,15 +5,14 @@ const PATH := "user://settings.cfg"
 
 func _ready() -> void:
 	visible = false
-	var panel := UITheme.make_panel()
+	var pair: Array = UITheme.make_section("settings", UITheme.COOL)
+	var panel: PanelContainer = pair[0]
 	panel.set_anchors_preset(Control.PRESET_CENTER)
-	panel.position = Vector2(-150, -110)
-	panel.custom_minimum_size = Vector2(300, 0)
+	panel.position = Vector2(-160, -120)
+	panel.custom_minimum_size = Vector2(320, 0)
 	add_child(panel)
-	var col := VBoxContainer.new()
+	var col: VBoxContainer = pair[1]
 	col.add_theme_constant_override("separation", 6)
-	panel.add_child(col)
-	col.add_child(UITheme.label("SETTINGS", UITheme.TEXT_BRIGHT, 16))
 
 	col.add_child(UITheme.label("Master volume", UITheme.TEXT_DIM, 11))
 	var vol := HSlider.new()
@@ -36,7 +35,7 @@ func _ready() -> void:
 		save_settings())
 	col.add_child(rm)
 
-	col.add_child(HSeparator.new())
+	col.add_child(UITheme.rule())
 	var wipe := UITheme.button("Erase save", UITheme.BAD)
 	wipe.custom_minimum_size = Vector2(0, 26)
 	wipe.pressed.connect(func():

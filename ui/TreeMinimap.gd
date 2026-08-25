@@ -14,8 +14,8 @@ func _process(_delta: float) -> void:
 func _draw() -> void:
 	if bounds.size.x <= 0.0 or bounds.size.y <= 0.0:
 		return
-	draw_rect(Rect2(Vector2.ZERO, size), Color(0.03, 0.035, 0.05, 0.9))
-	draw_rect(Rect2(Vector2.ZERO, size), UITheme.PANEL_EDGE, false, 1.0)
+	draw_rect(Rect2(Vector2.ZERO, size), Color(0.026, 0.034, 0.048, 0.92))
+	draw_rect(Rect2(Vector2.ZERO, size), UITheme.EDGE, false, 1.0)
 	var s: GameStateData = GameState.s
 	var pad := 6.0
 	var inner: Vector2 = size - Vector2(pad, pad) * 2.0

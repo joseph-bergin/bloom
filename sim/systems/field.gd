@@ -23,7 +23,7 @@ static func check_breaches(s: GameStateData) -> void:
 				else "Something reached you at level %d." % s.level)
 			return
 		if c.is_boss:
-			Levels.boss_breached(s)
+			Levels.boss_breached(s, c.hp)
 
 static func end_run(s: GameStateData, reason: String) -> void:
 	if s.run_over:

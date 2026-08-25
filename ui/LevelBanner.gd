@@ -12,7 +12,7 @@ var _banner_time: float = 0.0
 
 func _ready() -> void:
 	# --- boss bar, top centre ---
-	_boss_box = UITheme.make_panel()
+	_boss_box = UITheme.make_panel(UITheme.BAD)
 	_boss_box.set_anchors_preset(Control.PRESET_CENTER_TOP)
 	_boss_box.position = Vector2(-250, 14)
 	_boss_box.custom_minimum_size = Vector2(500, 0)
@@ -24,16 +24,7 @@ func _ready() -> void:
 	_boss_name = UITheme.label("", UITheme.BAD, 15)
 	_boss_name.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	bc.add_child(_boss_name)
-	_boss_bar = ProgressBar.new()
-	_boss_bar.custom_minimum_size = Vector2(0, 12)
-	_boss_bar.show_percentage = false
-	_boss_bar.max_value = 1.0
-	var fill := StyleBoxFlat.new()
-	fill.bg_color = Color(1.0, 0.30, 0.26)
-	_boss_bar.add_theme_stylebox_override("fill", fill)
-	var bg := StyleBoxFlat.new()
-	bg.bg_color = Color(0.14, 0.06, 0.06)
-	_boss_bar.add_theme_stylebox_override("background", bg)
+	_boss_bar = UITheme.meter(UITheme.BAD, 12)
 	bc.add_child(_boss_bar)
 
 	# --- clear banner, centre screen ---

@@ -72,8 +72,10 @@ func _draw() -> void:
 		return
 
 	if state == 1:
-		# Fog with silhouettes — always half-see what's out there.
-		draw_arc(c, R, 0.0, TAU, 22, base * 0.24, 1.0, true)
+		# Fog with silhouettes. Bright enough to read as a shape you want,
+		# dim enough to stay clearly out of reach.
+		draw_circle(c, R * 0.86, Color(0.045, 0.055, 0.072))
+		draw_arc(c, R, 0.0, TAU, 22, base * 0.55, 1.2, true)
 		return
 
 	if state == 3:
@@ -84,9 +86,9 @@ func _draw() -> void:
 		draw_circle(c, R * 0.92, base * glow)
 		draw_circle(c, R * 0.30, base.lerp(Color(1, 1, 1), 0.35) * glow * 1.2)
 	else:
-		draw_circle(c, R * 0.9, Color(0.06, 0.07, 0.10))
-		draw_arc(c, R, 0.0, TAU, 26, base * (1.5 if affordable else 0.5),
-			1.6 if affordable else 1.2, true)
+		draw_circle(c, R * 0.9, Color(0.055, 0.068, 0.09))
+		draw_arc(c, R, 0.0, TAU, 26, base * (1.6 if affordable else 0.85),
+			1.8 if affordable else 1.3, true)
 
 	if node_def.keystone:
 		_poly(c, R + 5.0, 6, base * (1.6 if state == 3 else 0.95))

@@ -49,16 +49,35 @@ Three shields gone ends the run. The level you reached is the score.
 
 ## Look
 
+**The typeface is a 5x7 bitmap font**, authored glyph by glyph in
+`tools/gen_font.py` and emitted as a BMFont page Godot loads directly. No
+external asset, the same as the audio. Sizes are integer multiples of the
+cell — anything else resamples and the pixels stop being pixels — and
+canvas filtering is set to nearest so they stay crisp.
+
 One frame shape, used everywhere: a chamfered panel with corner ticks and
 an accent rule down the left edge, drawn by `ui/ChamferBox.gd`. Every panel,
-button and modal comes from `ui/ui_theme.gd`, so headers, rules, meters and
-colour all speak with one voice. Colour always means the same thing — amber
-is motes and luminance, green is progress, red is threat, blue is Douse.
+button, meter and modal comes from `ui/ui_theme.gd`. Colour always means the
+same thing — amber is motes and light, green is progress, red is threat,
+blue is Douse.
+
+**The HUD says as little as it can.** Shields are pips you count, not
+"shields 3 / 3". Douse is a bare bar; the words appear once, the first time
+you lose a shield, and never again. The one line of prose that earns its
+place is what your light is doing to the field, because that is the whole
+design.
 
 The field sits in a drifting three-layer starfield with a polar grid that
 echoes the radial shape of the game, a machined turret-reach ring, and a
-vignette pulling the eye to the middle. A few stars are drawn above 1.0 so
-the glow rig catches them.
+vignette. A few stars are drawn above 1.0 so the glow rig catches them.
+
+**The tree** is hexagonal cells, each carrying a glyph drawn from what the
+node actually does — a spike for damage, chevrons for fire rate, an eclipse
+for shroud, widening arcs for range, a reticle for aim assist. The icons are
+derived from the node's effects rather than assigned by hand, so a node's
+picture and its effect cannot drift apart. Rank is an arc around the rim,
+owned nodes are drawn above 1.0 so they glow, and unreached branches sit as
+dark silhouettes one step past the frontier.
 
 ## No prestige
 

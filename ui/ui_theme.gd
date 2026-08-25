@@ -3,6 +3,16 @@ extends RefCounted
 ## One palette and one set of builders. Every panel, header and button in
 ## the game comes from here so the interface reads as a single system.
 
+## The font is a 5x7 bitmap, so sizes are integer multiples of the cell.
+## Anything else resamples and the pixels stop being pixels.
+const CELL := 7
+## 1:1 is too small to read on a 1280x800 screen, so the smallest the UI
+## goes is 2x. Every size is still an integer multiple of the cell.
+const TINY := CELL * 2     # 14 — captions
+const BODY := CELL * 2     # 14 — everything normal
+const LARGE := CELL * 3    # 21 — emphasis
+const HUGE := CELL * 5     # 35 — headline
+
 # --- ground --------------------------------------------------------------
 const VOID := Color(0.020, 0.027, 0.040)
 const PANEL := Color(0.043, 0.055, 0.075, 0.93)
@@ -66,7 +76,7 @@ static func header(text: String, accent: Color = ACCENT) -> Control:
 	var l := Label.new()
 	l.text = text.to_upper()
 	l.add_theme_color_override("font_color", accent * 0.92)
-	l.add_theme_font_size_override("font_size", 11)
+	l.add_theme_font_size_override("font_size", TINY)
 	l.add_theme_constant_override("outline_size", 0)
 	row.add_child(l)
 	return row
@@ -99,7 +109,7 @@ static func button(text: String, col: Color = TEXT) -> Button:
 	b.add_theme_color_override("font_hover_color", TEXT_BRIGHT)
 	b.add_theme_color_override("font_pressed_color", TEXT_BRIGHT)
 	b.add_theme_color_override("font_disabled_color", TEXT_FAINT)
-	b.add_theme_font_size_override("font_size", 13)
+	b.add_theme_font_size_override("font_size", 14)
 	var normal := ChamferBox.new(Color(0.07, 0.09, 0.12, 0.95), EDGE * 0.9, col * 0.75)
 	normal.set_pad(8.0)
 	normal.ticks = false
@@ -122,7 +132,7 @@ static func button(text: String, col: Color = TEXT) -> Button:
 ## A primary action: bigger, brighter, unmistakable.
 static func cta(text: String, col: Color = ACCENT) -> Button:
 	var b := button(text, TEXT_BRIGHT)
-	b.add_theme_font_size_override("font_size", 15)
+	b.add_theme_font_size_override("font_size", 14)
 	var normal := ChamferBox.new(col * 0.16, col * 0.9, col)
 	normal.set_pad(10.0)
 	normal.accent_width = 3.0

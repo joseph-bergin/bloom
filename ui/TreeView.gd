@@ -2,7 +2,7 @@ extends Control
 ## Pan, zoom, fog, purchase, free respec. Culled to the camera rect.
 
 const POOL := 200
-const ZOOM_MIN := 0.35
+const ZOOM_MIN := 0.30
 const ZOOM_MAX := 2.0
 const LABEL_ZOOM := 0.6
 
@@ -16,7 +16,7 @@ var _detail: VBoxContainer
 var _respec: Button
 var _filters: HBoxContainer
 
-var _zoom: float = 0.85
+var _zoom: float = 1.15
 var _pan: bool = false
 var _hovered: StringName = &""
 var _selected: StringName = &""
@@ -281,9 +281,9 @@ func _render_detail() -> void:
 	if n == null:
 		_detail.add_child(UITheme.label("hover a node to read it", UITheme.TEXT_DIM, 12))
 		_detail.add_child(UITheme.wrapped(
-			"Everything you build adds luminance, and luminance is what makes "
-			+ "the field spawn faster and stronger. Shroud is the only branch "
-			+ "that costs none.", UITheme.TEXT_FAINT, 11, 268))
+			"Everything you build adds light, and light is what makes the "
+			+ "field spawn faster and stronger. Shroud is the only branch "
+			+ "that costs none.", UITheme.TEXT_FAINT, UITheme.TINY, 268))
 		return
 	var rank: int = int(s.purchased.get(String(n.id), 0))
 	_detail.add_child(UITheme.label(n.display_name, UITheme.branch_colour(n.branch), 16))
@@ -296,9 +296,9 @@ func _render_detail() -> void:
 	_detail.add_child(d)
 
 	if n.lum > 0.0:
-		_detail.add_child(UITheme.label("+%.1f luminance per rank" % n.lum, UITheme.LUM, 12))
+		_detail.add_child(UITheme.label("+%.1f light per rank" % n.lum, UITheme.LUM, 12))
 	else:
-		_detail.add_child(UITheme.label("no luminance", UITheme.GOOD, 12))
+		_detail.add_child(UITheme.label("no light", UITheme.GOOD, 12))
 
 	var maxed: bool = not n.is_infinite() and rank >= n.max_rank
 	if maxed:

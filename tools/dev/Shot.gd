@@ -108,7 +108,7 @@ func _seed() -> void:
 				best = c
 		_aim_target = best.pos
 	if open_tree:
-		s.motes = 5.0e5
+		s.motes = 9.0e3
 		for _p in range(10):
 			for id in TreeDB.all_ids():
 				if GameState.can_purchase(TreeDB.get_node_def(id)):

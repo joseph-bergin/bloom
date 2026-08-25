@@ -1,0 +1,856 @@
+[
+ {
+  "id": "sweep_entry",
+  "constellation": "sweep",
+  "name": "Pulse",
+  "desc": "Sweep radius +8% per rank.",
+  "kind": "rank",
+  "max_rank": 6,
+  "cost": {
+   "motes": 24,
+   "signal": 20
+  },
+  "cost_growth": 1.15,
+  "lum": 1.0,
+  "requires": [],
+  "effects": [
+   {
+    "stat": "sweep_radius",
+    "op": "add",
+    "value": 0.08
+   }
+  ],
+  "pos": {
+   "x": 176.8,
+   "y": 176.8
+  },
+  "reveal_radius": 200,
+  "blight_safe": true,
+  "region": "base"
+ },
+ {
+  "id": "sweep_carrier",
+  "constellation": "sweep",
+  "name": "Carrier",
+  "desc": "Sweep ring travels 10% faster per rank.",
+  "kind": "rank",
+  "max_rank": 6,
+  "cost": {
+   "motes": 120,
+   "signal": 40
+  },
+  "cost_growth": 1.15,
+  "lum": 1.0,
+  "requires": [
+   "sweep_entry"
+  ],
+  "effects": [
+   {
+    "stat": "sweep_speed_mult",
+    "op": "mul",
+    "value": 0.1
+   }
+  ],
+  "pos": {
+   "x": 374.0,
+   "y": 201.8
+  },
+  "reveal_radius": 200,
+  "blight_safe": true,
+  "region": "base"
+ },
+ {
+  "id": "sweep_recover",
+  "constellation": "sweep",
+  "name": "Recovery",
+  "desc": "Sweep cooldown -0.7s per rank.",
+  "kind": "rank",
+  "max_rank": 6,
+  "cost": {
+   "motes": 160,
+   "signal": 60
+  },
+  "cost_growth": 1.15,
+  "lum": 1.2,
+  "requires": [
+   "sweep_entry"
+  ],
+  "effects": [
+   {
+    "stat": "sweep_cooldown",
+    "op": "add",
+    "value": 0.7
+   }
+  ],
+  "pos": {
+   "x": 328.2,
+   "y": 270.0
+  },
+  "reveal_radius": 200,
+  "blight_safe": true,
+  "region": "base"
+ },
+ {
+  "id": "sweep_reach",
+  "constellation": "sweep",
+  "name": "Reach",
+  "desc": "Sweep radius +11% per rank.",
+  "kind": "rank",
+  "max_rank": 8,
+  "cost": {
+   "motes": 380
+  },
+  "cost_growth": 1.15,
+  "lum": 1.4,
+  "requires": [
+   "sweep_carrier"
+  ],
+  "effects": [
+   {
+    "stat": "sweep_radius",
+    "op": "add",
+    "value": 0.11
+   }
+  ],
+  "pos": {
+   "x": 528.0,
+   "y": 284.9
+  },
+  "reveal_radius": 200,
+  "blight_safe": true,
+  "region": "base"
+ },
+ {
+  "id": "sweep_cascade_ping",
+  "constellation": "sweep",
+  "name": "Cascade Ping",
+  "desc": "Sweep radius +9% per rank and cooldown -0.3s per rank.",
+  "kind": "rank",
+  "max_rank": 6,
+  "cost": {
+   "motes": 900,
+   "signal": 200
+  },
+  "cost_growth": 1.15,
+  "lum": 1.6,
+  "requires": [
+   "sweep_recover"
+  ],
+  "effects": [
+   {
+    "stat": "sweep_radius",
+    "op": "add",
+    "value": 0.09
+   },
+   {
+    "stat": "sweep_cooldown",
+    "op": "add",
+    "value": 0.3
+   }
+  ],
+  "pos": {
+   "x": 481.2,
+   "y": 358.4
+  },
+  "reveal_radius": 200,
+  "blight_safe": true,
+  "region": "base"
+ },
+ {
+  "id": "sweep_ripple",
+  "constellation": "sweep",
+  "name": "Ripple",
+  "desc": "Sweep radius +1%. No cap.",
+  "kind": "sink",
+  "max_rank": -1,
+  "cost": {
+   "motes": 260,
+   "signal": 30
+  },
+  "cost_growth": 1.08,
+  "lum": 0.1,
+  "requires": [
+   "sweep_recover"
+  ],
+  "effects": [
+   {
+    "stat": "sweep_radius",
+    "op": "add",
+    "value": 0.01
+   }
+  ],
+  "pos": {
+   "x": 424.3,
+   "y": 424.3
+  },
+  "reveal_radius": 200,
+  "blight_safe": true,
+  "region": "base"
+ },
+ {
+  "id": "sweep_multi",
+  "constellation": "sweep",
+  "name": "Multisweep",
+  "desc": "Sweep radius +15% per rank.",
+  "kind": "rank",
+  "max_rank": 6,
+  "cost": {
+   "motes": 2400
+  },
+  "cost_growth": 1.15,
+  "lum": 2.0,
+  "requires": [
+   "sweep_reach"
+  ],
+  "effects": [
+   {
+    "stat": "sweep_radius",
+    "op": "add",
+    "value": 0.15
+   }
+  ],
+  "pos": {
+   "x": 682.0,
+   "y": 368.0
+  },
+  "reveal_radius": 200,
+  "blight_safe": true,
+  "region": "base"
+ },
+ {
+  "id": "sweep_masking",
+  "constellation": "sweep",
+  "name": "Masking",
+  "desc": "The sweep's transient flare is 5% quieter per rank.",
+  "kind": "rank",
+  "max_rank": 5,
+  "cost": {
+   "motes": 1600,
+   "signal": 300
+  },
+  "cost_growth": 1.15,
+  "lum": 0.0,
+  "requires": [
+   "sweep_cascade_ping"
+  ],
+  "effects": [
+   {
+    "stat": "lum_mult",
+    "op": "mul",
+    "value": -0.02
+   }
+  ],
+  "pos": {
+   "x": 634.8,
+   "y": 444.6
+  },
+  "reveal_radius": 200,
+  "blight_safe": true,
+  "region": "base"
+ },
+ {
+  "id": "sweep_brand_0",
+  "constellation": "sweep",
+  "name": "Brand",
+  "desc": "sweep radius +0.05 per rank.",
+  "kind": "rank",
+  "max_rank": 6,
+  "cost": {
+   "motes": 570
+  },
+  "cost_growth": 1.15,
+  "lum": 1.1,
+  "requires": [
+   "sweep_ripple"
+  ],
+  "effects": [
+   {
+    "stat": "sweep_radius",
+    "op": "add",
+    "value": 0.05
+   }
+  ],
+  "pos": {
+   "x": 578.9,
+   "y": 515.3
+  },
+  "reveal_radius": 200,
+  "blight_safe": true,
+  "region": "base"
+ },
+ {
+  "id": "sweep_taper_1",
+  "constellation": "sweep",
+  "name": "Taper",
+  "desc": "sweep cooldown +0.25 per rank.",
+  "kind": "rank",
+  "max_rank": 8,
+  "cost": {
+   "motes": 884
+  },
+  "cost_growth": 1.15,
+  "lum": 1.4,
+  "requires": [
+   "sweep_ripple"
+  ],
+  "effects": [
+   {
+    "stat": "sweep_cooldown",
+    "op": "add",
+    "value": 0.25
+   }
+  ],
+  "pos": {
+   "x": 515.3,
+   "y": 578.9
+  },
+  "reveal_radius": 200,
+  "blight_safe": true,
+  "region": "base"
+ },
+ {
+  "id": "sweep_torch_2",
+  "constellation": "sweep",
+  "name": "Torch",
+  "desc": "sweep radius +0.05 per rank.",
+  "kind": "rank",
+  "max_rank": 10,
+  "cost": {
+   "motes": 1197
+  },
+  "cost_growth": 1.15,
+  "lum": 1.28,
+  "requires": [
+   "sweep_ripple"
+  ],
+  "effects": [
+   {
+    "stat": "sweep_radius",
+    "op": "add",
+    "value": 0.05
+   }
+  ],
+  "pos": {
+   "x": 444.6,
+   "y": 634.8
+  },
+  "reveal_radius": 200,
+  "blight_safe": false,
+  "region": "base"
+ },
+ {
+  "id": "sweep_pyre_3",
+  "constellation": "sweep",
+  "name": "Pyre",
+  "desc": "sweep cooldown +0.25 per rank.",
+  "kind": "rank",
+  "max_rank": 6,
+  "cost": {
+   "motes": 1511
+  },
+  "cost_growth": 1.15,
+  "lum": 1.61,
+  "requires": [
+   "sweep_ripple"
+  ],
+  "effects": [
+   {
+    "stat": "sweep_cooldown",
+    "op": "add",
+    "value": 0.25
+   }
+  ],
+  "pos": {
+   "x": 368.0,
+   "y": 682.0
+  },
+  "reveal_radius": 200,
+  "blight_safe": false,
+  "region": "base"
+ },
+ {
+  "id": "sweep_soot_4",
+  "constellation": "sweep",
+  "name": "Soot",
+  "desc": "sweep radius +0.05 per rank.",
+  "kind": "rank",
+  "max_rank": 8,
+  "cost": {
+   "motes": 3466
+  },
+  "cost_growth": 1.15,
+  "lum": 1.45,
+  "requires": [
+   "sweep_multi"
+  ],
+  "effects": [
+   {
+    "stat": "sweep_radius",
+    "op": "add",
+    "value": 0.05
+   }
+  ],
+  "pos": {
+   "x": 836.1,
+   "y": 451.1
+  },
+  "reveal_radius": 200,
+  "blight_safe": true,
+  "region": "base"
+ },
+ {
+  "id": "sweep_lumen_5",
+  "constellation": "sweep",
+  "name": "Lumen",
+  "desc": "sweep cooldown +0.25 per rank.",
+  "kind": "rank",
+  "max_rank": 10,
+  "cost": {
+   "motes": 4061
+  },
+  "cost_growth": 1.15,
+  "lum": 1.82,
+  "requires": [
+   "sweep_masking"
+  ],
+  "effects": [
+   {
+    "stat": "sweep_cooldown",
+    "op": "add",
+    "value": 0.25
+   }
+  ],
+  "pos": {
+   "x": 778.1,
+   "y": 545.0
+  },
+  "reveal_radius": 200,
+  "blight_safe": true,
+  "region": "base"
+ },
+ {
+  "id": "sweep_candela_6",
+  "constellation": "sweep",
+  "name": "Candela",
+  "desc": "sweep radius +0.05 per rank.",
+  "kind": "rank",
+  "max_rank": 6,
+  "cost": {
+   "motes": 4657
+  },
+  "cost_growth": 1.15,
+  "lum": 1.63,
+  "requires": [
+   "sweep_brand_0"
+  ],
+  "effects": [
+   {
+    "stat": "sweep_radius",
+    "op": "add",
+    "value": 0.05
+   }
+  ],
+  "pos": {
+   "x": 709.6,
+   "y": 631.6
+  },
+  "reveal_radius": 200,
+  "blight_safe": true,
+  "region": "base"
+ },
+ {
+  "id": "sweep_nit_7",
+  "constellation": "sweep",
+  "name": "Nit",
+  "desc": "sweep cooldown +0.25 per rank.",
+  "kind": "rank",
+  "max_rank": 8,
+  "cost": {
+   "motes": 5253
+  },
+  "cost_growth": 1.15,
+  "lum": 2.03,
+  "requires": [
+   "sweep_taper_1"
+  ],
+  "effects": [
+   {
+    "stat": "sweep_cooldown",
+    "op": "add",
+    "value": 0.25
+   }
+  ],
+  "pos": {
+   "x": 631.6,
+   "y": 709.6
+  },
+  "reveal_radius": 200,
+  "blight_safe": false,
+  "region": "base"
+ },
+ {
+  "id": "sweep_phot_8",
+  "constellation": "sweep",
+  "name": "Phot",
+  "desc": "sweep radius +0.05 per rank.",
+  "kind": "rank",
+  "max_rank": 10,
+  "cost": {
+   "motes": 11112
+  },
+  "cost_growth": 1.15,
+  "lum": 1.8,
+  "requires": [
+   "sweep_soot_4"
+  ],
+  "effects": [
+   {
+    "stat": "sweep_radius",
+    "op": "add",
+    "value": 0.05
+   }
+  ],
+  "pos": {
+   "x": 990.1,
+   "y": 534.2
+  },
+  "reveal_radius": 200,
+  "blight_safe": true,
+  "region": "base"
+ },
+ {
+  "id": "sweep_lux_9",
+  "constellation": "sweep",
+  "name": "Lux",
+  "desc": "sweep cooldown +0.25 per rank.",
+  "kind": "rank",
+  "max_rank": 6,
+  "cost": {
+   "motes": 12243
+  },
+  "cost_growth": 1.15,
+  "lum": 2.24,
+  "requires": [
+   "sweep_lumen_5"
+  ],
+  "effects": [
+   {
+    "stat": "sweep_cooldown",
+    "op": "add",
+    "value": 0.25
+   }
+  ],
+  "pos": {
+   "x": 933.8,
+   "y": 627.5
+  },
+  "reveal_radius": 200,
+  "blight_safe": true,
+  "region": "base"
+ },
+ {
+  "id": "sweep_stilb_10",
+  "constellation": "sweep",
+  "name": "Stilb",
+  "desc": "sweep radius +0.05 per rank.",
+  "kind": "rank",
+  "max_rank": 8,
+  "cost": {
+   "motes": 13375
+  },
+  "cost_growth": 1.15,
+  "lum": 1.98,
+  "requires": [
+   "sweep_candela_6"
+  ],
+  "effects": [
+   {
+    "stat": "sweep_radius",
+    "op": "add",
+    "value": 0.05
+   }
+  ],
+  "pos": {
+   "x": 868.7,
+   "y": 714.8
+  },
+  "reveal_radius": 200,
+  "blight_safe": true,
+  "region": "base"
+ },
+ {
+  "id": "sweep_talbot_11",
+  "constellation": "sweep",
+  "name": "Talbot",
+  "desc": "sweep cooldown +0.25 per rank.",
+  "kind": "rank",
+  "max_rank": 10,
+  "cost": {
+   "motes": 14507
+  },
+  "cost_growth": 1.15,
+  "lum": 2.44,
+  "requires": [
+   "sweep_candela_6"
+  ],
+  "effects": [
+   {
+    "stat": "sweep_cooldown",
+    "op": "add",
+    "value": 0.25
+   }
+  ],
+  "pos": {
+   "x": 795.5,
+   "y": 795.5
+  },
+  "reveal_radius": 200,
+  "blight_safe": true,
+  "region": "base"
+ },
+ {
+  "id": "sweep_rayl_12",
+  "constellation": "sweep",
+  "name": "Rayl",
+  "desc": "sweep radius +0.05 per rank.",
+  "kind": "rank",
+  "max_rank": 6,
+  "cost": {
+   "motes": 29713
+  },
+  "cost_growth": 1.15,
+  "lum": 2.16,
+  "requires": [
+   "sweep_phot_8"
+  ],
+  "effects": [
+   {
+    "stat": "sweep_radius",
+    "op": "add",
+    "value": 0.05
+   }
+  ],
+  "pos": {
+   "x": 1144.1,
+   "y": 617.3
+  },
+  "reveal_radius": 200,
+  "blight_safe": true,
+  "region": "base"
+ },
+ {
+  "id": "sweep_filament_13",
+  "constellation": "sweep",
+  "name": "Filament",
+  "desc": "sweep cooldown +0.25 per rank.",
+  "kind": "rank",
+  "max_rank": 8,
+  "cost": {
+   "motes": 31863
+  },
+  "cost_growth": 1.15,
+  "lum": 2.65,
+  "requires": [
+   "sweep_lux_9"
+  ],
+  "effects": [
+   {
+    "stat": "sweep_cooldown",
+    "op": "add",
+    "value": 0.25
+   }
+  ],
+  "pos": {
+   "x": 1079.0,
+   "y": 725.1
+  },
+  "reveal_radius": 200,
+  "blight_safe": true,
+  "region": "base"
+ },
+ {
+  "id": "sweep_ash_14",
+  "constellation": "sweep",
+  "name": "Ash",
+  "desc": "sweep radius +0.05 per rank.",
+  "kind": "rank",
+  "max_rank": 10,
+  "cost": {
+   "motes": 34014
+  },
+  "cost_growth": 1.15,
+  "lum": 2.33,
+  "requires": [
+   "sweep_stilb_10"
+  ],
+  "effects": [
+   {
+    "stat": "sweep_radius",
+    "op": "add",
+    "value": 0.05
+   }
+  ],
+  "pos": {
+   "x": 1003.8,
+   "y": 826.0
+  },
+  "reveal_radius": 200,
+  "blight_safe": false,
+  "region": "base"
+ },
+ {
+  "id": "sweep_tinder_15",
+  "constellation": "sweep",
+  "name": "Tinder",
+  "desc": "sweep cooldown +0.25 per rank.",
+  "kind": "rank",
+  "max_rank": 6,
+  "cost": {
+   "motes": 36164
+  },
+  "cost_growth": 1.15,
+  "lum": 2.86,
+  "requires": [
+   "sweep_talbot_11"
+  ],
+  "effects": [
+   {
+    "stat": "sweep_cooldown",
+    "op": "add",
+    "value": 0.25
+   }
+  ],
+  "pos": {
+   "x": 919.2,
+   "y": 919.2
+  },
+  "reveal_radius": 200,
+  "blight_safe": false,
+  "region": "base"
+ },
+ {
+  "id": "sweep_ember_16",
+  "constellation": "sweep",
+  "name": "Ember",
+  "desc": "sweep radius +0.05 per rank.",
+  "kind": "rank",
+  "max_rank": 8,
+  "cost": {
+   "motes": 72797
+  },
+  "cost_growth": 1.15,
+  "lum": 2.51,
+  "requires": [
+   "sweep_rayl_12"
+  ],
+  "effects": [
+   {
+    "stat": "sweep_radius",
+    "op": "add",
+    "value": 0.05
+   }
+  ],
+  "pos": {
+   "x": 1298.1,
+   "y": 700.4
+  },
+  "reveal_radius": 200,
+  "blight_safe": false,
+  "region": "base"
+ },
+ {
+  "id": "sweep_coal_17",
+  "constellation": "sweep",
+  "name": "Coal",
+  "desc": "sweep cooldown +0.25 per rank.",
+  "kind": "rank",
+  "max_rank": 10,
+  "cost": {
+   "motes": 76883
+  },
+  "cost_growth": 1.15,
+  "lum": 3.07,
+  "requires": [
+   "sweep_filament_13"
+  ],
+  "effects": [
+   {
+    "stat": "sweep_cooldown",
+    "op": "add",
+    "value": 0.25
+   }
+  ],
+  "pos": {
+   "x": 1224.3,
+   "y": 822.7
+  },
+  "reveal_radius": 200,
+  "blight_safe": true,
+  "region": "base"
+ },
+ {
+  "id": "sweep_lighthouse",
+  "constellation": "sweep",
+  "name": "Lighthouse",
+  "desc": "Sweep has no cooldown and covers the whole field. Every sweep costs quadruple transient luminance, and everything it touches notices.",
+  "kind": "keystone",
+  "max_rank": 1,
+  "cost": {
+   "facets": 8
+  },
+  "cost_growth": 1.0,
+  "lum": 2.0,
+  "requires": [
+   "sweep_coal_17"
+  ],
+  "effects": [
+   {
+    "op": "rule",
+    "rule": "lighthouse"
+   }
+  ],
+  "pos": {
+   "x": 1371.9,
+   "y": 916.7
+  },
+  "reveal_radius": 320,
+  "blight_safe": false,
+  "region": "base"
+ },
+ {
+  "id": "bridge_sweep_tether",
+  "constellation": "sweep",
+  "name": "Standing Watch",
+  "desc": "Sensor capacity +2 and tether stability +0.8.",
+  "kind": "bridge",
+  "max_rank": 1,
+  "cost": {
+   "facets": 6
+  },
+  "cost_growth": 1.0,
+  "lum": 1.0,
+  "requires": [
+   "sweep_coal_17",
+   "tether_slag_16"
+  ],
+  "effects": [
+   {
+    "stat": "tether_capacity",
+    "op": "add",
+    "value": 2.0
+   },
+   {
+    "stat": "tether_stability",
+    "op": "add",
+    "value": 0.8
+   }
+  ],
+  "pos": {
+   "x": 261.9,
+   "y": 1060.4
+  },
+  "reveal_radius": 400,
+  "blight_safe": false,
+  "region": "base"
+ }
+]

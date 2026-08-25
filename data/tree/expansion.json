@@ -1,0 +1,899 @@
+[
+ {
+  "id": "expansion_entry",
+  "constellation": "expansion",
+  "name": "Ignition",
+  "desc": "The colony learns to burn hotter. Mote yield +8% per rank.",
+  "kind": "rank",
+  "max_rank": 5,
+  "cost": {
+   "motes": 18
+  },
+  "cost_growth": 1.15,
+  "lum": 3.0,
+  "requires": [],
+  "effects": [
+   {
+    "stat": "yield_mult",
+    "op": "mul",
+    "value": 0.08
+   }
+  ],
+  "pos": {
+   "x": 0.0,
+   "y": -250.0
+  },
+  "reveal_radius": 200,
+  "blight_safe": true,
+  "region": "base"
+ },
+ {
+  "id": "expansion_bloomfeed",
+  "constellation": "expansion",
+  "name": "Bloomfeed",
+  "desc": "Mote yield +6% per rank.",
+  "kind": "rank",
+  "max_rank": 8,
+  "cost": {
+   "motes": 60
+  },
+  "cost_growth": 1.15,
+  "lum": 3.5,
+  "requires": [
+   "expansion_entry"
+  ],
+  "effects": [
+   {
+    "stat": "yield_mult",
+    "op": "mul",
+    "value": 0.06
+   }
+  ],
+  "pos": {
+   "x": -121.8,
+   "y": -407.2
+  },
+  "reveal_radius": 200,
+  "blight_safe": true,
+  "region": "base"
+ },
+ {
+  "id": "expansion_spread",
+  "constellation": "expansion",
+  "name": "Spread",
+  "desc": "Mote yield +9% per rank. Loud.",
+  "kind": "rank",
+  "max_rank": 8,
+  "cost": {
+   "motes": 140
+  },
+  "cost_growth": 1.15,
+  "lum": 5.0,
+  "requires": [
+   "expansion_entry"
+  ],
+  "effects": [
+   {
+    "stat": "yield_mult",
+    "op": "mul",
+    "value": 0.09
+   }
+  ],
+  "pos": {
+   "x": -41.1,
+   "y": -423.0
+  },
+  "reveal_radius": 200,
+  "blight_safe": true,
+  "region": "base"
+ },
+ {
+  "id": "expansion_rootmass",
+  "constellation": "expansion",
+  "name": "Rootmass",
+  "desc": "Tribute rate +7% per rank.",
+  "kind": "rank",
+  "max_rank": 6,
+  "cost": {
+   "motes": 180
+  },
+  "cost_growth": 1.15,
+  "lum": 4.0,
+  "requires": [
+   "expansion_entry"
+  ],
+  "effects": [
+   {
+    "stat": "tribute_mult",
+    "op": "mul",
+    "value": 0.07
+   }
+  ],
+  "pos": {
+   "x": 41.1,
+   "y": -423.0
+  },
+  "reveal_radius": 200,
+  "blight_safe": false,
+  "region": "base"
+ },
+ {
+  "id": "expansion_gleaning",
+  "constellation": "expansion",
+  "name": "Gleaning",
+  "desc": "Signal from every read +10% per rank.",
+  "kind": "rank",
+  "max_rank": 6,
+  "cost": {
+   "motes": 90
+  },
+  "cost_growth": 1.15,
+  "lum": 2.0,
+  "requires": [
+   "expansion_entry"
+  ],
+  "effects": [
+   {
+    "stat": "signal_mult",
+    "op": "mul",
+    "value": 0.1
+   }
+  ],
+  "pos": {
+   "x": 121.8,
+   "y": -407.2
+  },
+  "reveal_radius": 200,
+  "blight_safe": false,
+  "region": "base"
+ },
+ {
+  "id": "expansion_harvest",
+  "constellation": "expansion",
+  "name": "Harvest",
+  "desc": "Mote yield +11% per rank.",
+  "kind": "rank",
+  "max_rank": 8,
+  "cost": {
+   "motes": 420
+  },
+  "cost_growth": 1.15,
+  "lum": 6.0,
+  "requires": [
+   "expansion_bloomfeed"
+  ],
+  "effects": [
+   {
+    "stat": "yield_mult",
+    "op": "mul",
+    "value": 0.11
+   }
+  ],
+  "pos": {
+   "x": -171.9,
+   "y": -574.8
+  },
+  "reveal_radius": 200,
+  "blight_safe": true,
+  "region": "base"
+ },
+ {
+  "id": "expansion_facetwork",
+  "constellation": "expansion",
+  "name": "Facetwork",
+  "desc": "Facet yield +12% per rank.",
+  "kind": "rank",
+  "max_rank": 5,
+  "cost": {
+   "facets": 2
+  },
+  "cost_growth": 1.15,
+  "lum": 4.0,
+  "requires": [
+   "expansion_spread"
+  ],
+  "effects": [
+   {
+    "stat": "facet_mult",
+    "op": "mul",
+    "value": 0.12
+   }
+  ],
+  "pos": {
+   "x": -86.9,
+   "y": -593.7
+  },
+  "reveal_radius": 200,
+  "blight_safe": true,
+  "region": "base"
+ },
+ {
+  "id": "expansion_greed",
+  "constellation": "expansion",
+  "name": "Greed",
+  "desc": "Mote yield +1%. No cap. Cheap forever.",
+  "kind": "sink",
+  "max_rank": -1,
+  "cost": {
+   "motes": 240
+  },
+  "cost_growth": 1.08,
+  "lum": 0.4,
+  "requires": [
+   "expansion_spread"
+  ],
+  "effects": [
+   {
+    "stat": "yield_mult",
+    "op": "mul",
+    "value": 0.01
+   }
+  ],
+  "pos": {
+   "x": 0.0,
+   "y": -600.0
+  },
+  "reveal_radius": 200,
+  "blight_safe": true,
+  "region": "base"
+ },
+ {
+  "id": "expansion_efflorescence",
+  "constellation": "expansion",
+  "name": "Efflorescence",
+  "desc": "Mote yield +14% per rank. Very loud.",
+  "kind": "rank",
+  "max_rank": 8,
+  "cost": {
+   "motes": 1100
+  },
+  "cost_growth": 1.15,
+  "lum": 8.0,
+  "requires": [
+   "expansion_harvest"
+  ],
+  "effects": [
+   {
+    "stat": "yield_mult",
+    "op": "mul",
+    "value": 0.14
+   }
+  ],
+  "pos": {
+   "x": -222.1,
+   "y": -742.5
+  },
+  "reveal_radius": 200,
+  "blight_safe": true,
+  "region": "base"
+ },
+ {
+  "id": "expansion_appetite",
+  "constellation": "expansion",
+  "name": "Appetite",
+  "desc": "Mote yield +1%. No cap.",
+  "kind": "sink",
+  "max_rank": -1,
+  "cost": {
+   "motes": 900
+  },
+  "cost_growth": 1.08,
+  "lum": 0.4,
+  "requires": [
+   "expansion_facetwork"
+  ],
+  "effects": [
+   {
+    "stat": "yield_mult",
+    "op": "mul",
+    "value": 0.01
+   }
+  ],
+  "pos": {
+   "x": -134.4,
+   "y": -763.2
+  },
+  "reveal_radius": 200,
+  "blight_safe": true,
+  "region": "base"
+ },
+ {
+  "id": "expansion_filament_0",
+  "constellation": "expansion",
+  "name": "Filament",
+  "desc": "yield mult +0.05 per rank.",
+  "kind": "rank",
+  "max_rank": 6,
+  "cost": {
+   "motes": 570
+  },
+  "cost_growth": 1.15,
+  "lum": 3.2,
+  "requires": [
+   "expansion_greed"
+  ],
+  "effects": [
+   {
+    "stat": "yield_mult",
+    "op": "mul",
+    "value": 0.05
+   }
+  ],
+  "pos": {
+   "x": -45.0,
+   "y": -773.7
+  },
+  "reveal_radius": 200,
+  "blight_safe": true,
+  "region": "base"
+ },
+ {
+  "id": "expansion_ash_1",
+  "constellation": "expansion",
+  "name": "Ash",
+  "desc": "tribute mult +0.05 per rank.",
+  "kind": "rank",
+  "max_rank": 8,
+  "cost": {
+   "motes": 884
+  },
+  "cost_growth": 1.15,
+  "lum": 2.59,
+  "requires": [
+   "expansion_greed"
+  ],
+  "effects": [
+   {
+    "stat": "tribute_mult",
+    "op": "mul",
+    "value": 0.05
+   }
+  ],
+  "pos": {
+   "x": 45.0,
+   "y": -773.7
+  },
+  "reveal_radius": 200,
+  "blight_safe": true,
+  "region": "base"
+ },
+ {
+  "id": "expansion_tinder_2",
+  "constellation": "expansion",
+  "name": "Tinder",
+  "desc": "yield mult +0.05 per rank.",
+  "kind": "rank",
+  "max_rank": 10,
+  "cost": {
+   "motes": 1197
+  },
+  "cost_growth": 1.15,
+  "lum": 3.71,
+  "requires": [
+   "expansion_greed"
+  ],
+  "effects": [
+   {
+    "stat": "yield_mult",
+    "op": "mul",
+    "value": 0.05
+   }
+  ],
+  "pos": {
+   "x": 134.4,
+   "y": -763.2
+  },
+  "reveal_radius": 200,
+  "blight_safe": true,
+  "region": "base"
+ },
+ {
+  "id": "expansion_ember_3",
+  "constellation": "expansion",
+  "name": "Ember",
+  "desc": "tribute mult +0.05 per rank.",
+  "kind": "rank",
+  "max_rank": 6,
+  "cost": {
+   "motes": 1511
+  },
+  "cost_growth": 1.15,
+  "lum": 2.98,
+  "requires": [
+   "expansion_greed"
+  ],
+  "effects": [
+   {
+    "stat": "tribute_mult",
+    "op": "mul",
+    "value": 0.05
+   }
+  ],
+  "pos": {
+   "x": 222.1,
+   "y": -742.5
+  },
+  "reveal_radius": 200,
+  "blight_safe": false,
+  "region": "base"
+ },
+ {
+  "id": "expansion_thermal",
+  "constellation": "expansion",
+  "name": "Thermal Bleed",
+  "desc": "Mote yield +18% per rank. Structural luminance climbs with it.",
+  "kind": "rank",
+  "max_rank": 6,
+  "cost": {
+   "motes": 2600
+  },
+  "cost_growth": 1.15,
+  "lum": 11.0,
+  "requires": [
+   "expansion_efflorescence"
+  ],
+  "effects": [
+   {
+    "stat": "yield_mult",
+    "op": "mul",
+    "value": 0.18
+   }
+  ],
+  "pos": {
+   "x": -272.2,
+   "y": -910.2
+  },
+  "reveal_radius": 200,
+  "blight_safe": true,
+  "region": "base"
+ },
+ {
+  "id": "expansion_coal_4",
+  "constellation": "expansion",
+  "name": "Coal",
+  "desc": "yield mult +0.05 per rank.",
+  "kind": "rank",
+  "max_rank": 8,
+  "cost": {
+   "motes": 3466
+  },
+  "cost_growth": 1.15,
+  "lum": 4.22,
+  "requires": [
+   "expansion_appetite"
+  ],
+  "effects": [
+   {
+    "stat": "yield_mult",
+    "op": "mul",
+    "value": 0.05
+   }
+  ],
+  "pos": {
+   "x": -164.8,
+   "y": -935.6
+  },
+  "reveal_radius": 200,
+  "blight_safe": true,
+  "region": "base"
+ },
+ {
+  "id": "expansion_wick_5",
+  "constellation": "expansion",
+  "name": "Wick",
+  "desc": "tribute mult +0.05 per rank.",
+  "kind": "rank",
+  "max_rank": 10,
+  "cost": {
+   "motes": 4061
+  },
+  "cost_growth": 1.15,
+  "lum": 3.36,
+  "requires": [
+   "expansion_filament_0"
+  ],
+  "effects": [
+   {
+    "stat": "tribute_mult",
+    "op": "mul",
+    "value": 0.05
+   }
+  ],
+  "pos": {
+   "x": -55.2,
+   "y": -948.4
+  },
+  "reveal_radius": 200,
+  "blight_safe": true,
+  "region": "base"
+ },
+ {
+  "id": "expansion_glim_6",
+  "constellation": "expansion",
+  "name": "Glim",
+  "desc": "yield mult +0.05 per rank.",
+  "kind": "rank",
+  "max_rank": 6,
+  "cost": {
+   "motes": 4657
+  },
+  "cost_growth": 1.15,
+  "lum": 4.74,
+  "requires": [
+   "expansion_ash_1"
+  ],
+  "effects": [
+   {
+    "stat": "yield_mult",
+    "op": "mul",
+    "value": 0.05
+   }
+  ],
+  "pos": {
+   "x": 55.2,
+   "y": -948.4
+  },
+  "reveal_radius": 200,
+  "blight_safe": true,
+  "region": "base"
+ },
+ {
+  "id": "expansion_spark_7",
+  "constellation": "expansion",
+  "name": "Spark",
+  "desc": "tribute mult +0.05 per rank.",
+  "kind": "rank",
+  "max_rank": 8,
+  "cost": {
+   "motes": 5253
+  },
+  "cost_growth": 1.15,
+  "lum": 3.74,
+  "requires": [
+   "expansion_tinder_2"
+  ],
+  "effects": [
+   {
+    "stat": "tribute_mult",
+    "op": "mul",
+    "value": 0.05
+   }
+  ],
+  "pos": {
+   "x": 164.8,
+   "y": -935.6
+  },
+  "reveal_radius": 200,
+  "blight_safe": false,
+  "region": "base"
+ },
+ {
+  "id": "expansion_cinderlet_8",
+  "constellation": "expansion",
+  "name": "Cinderlet",
+  "desc": "yield mult +0.05 per rank.",
+  "kind": "rank",
+  "max_rank": 10,
+  "cost": {
+   "motes": 11112
+  },
+  "cost_growth": 1.15,
+  "lum": 5.25,
+  "requires": [
+   "expansion_thermal"
+  ],
+  "effects": [
+   {
+    "stat": "yield_mult",
+    "op": "mul",
+    "value": 0.05
+   }
+  ],
+  "pos": {
+   "x": -322.3,
+   "y": -1077.8
+  },
+  "reveal_radius": 200,
+  "blight_safe": true,
+  "region": "base"
+ },
+ {
+  "id": "expansion_char_9",
+  "constellation": "expansion",
+  "name": "Char",
+  "desc": "tribute mult +0.05 per rank.",
+  "kind": "rank",
+  "max_rank": 6,
+  "cost": {
+   "motes": 12243
+  },
+  "cost_growth": 1.15,
+  "lum": 4.13,
+  "requires": [
+   "expansion_coal_4"
+  ],
+  "effects": [
+   {
+    "stat": "tribute_mult",
+    "op": "mul",
+    "value": 0.05
+   }
+  ],
+  "pos": {
+   "x": -216.6,
+   "y": -1104.0
+  },
+  "reveal_radius": 200,
+  "blight_safe": true,
+  "region": "base"
+ },
+ {
+  "id": "expansion_kindle_10",
+  "constellation": "expansion",
+  "name": "Kindle",
+  "desc": "yield mult +0.05 per rank.",
+  "kind": "rank",
+  "max_rank": 8,
+  "cost": {
+   "motes": 13375
+  },
+  "cost_growth": 1.15,
+  "lum": 5.76,
+  "requires": [
+   "expansion_wick_5"
+  ],
+  "effects": [
+   {
+    "stat": "yield_mult",
+    "op": "mul",
+    "value": 0.05
+   }
+  ],
+  "pos": {
+   "x": -108.8,
+   "y": -1119.7
+  },
+  "reveal_radius": 200,
+  "blight_safe": true,
+  "region": "base"
+ },
+ {
+  "id": "expansion_flint_11",
+  "constellation": "expansion",
+  "name": "Flint",
+  "desc": "tribute mult +0.05 per rank.",
+  "kind": "rank",
+  "max_rank": 10,
+  "cost": {
+   "motes": 14507
+  },
+  "cost_growth": 1.15,
+  "lum": 4.51,
+  "requires": [
+   "expansion_glim_6"
+  ],
+  "effects": [
+   {
+    "stat": "tribute_mult",
+    "op": "mul",
+    "value": 0.05
+   }
+  ],
+  "pos": {
+   "x": 0.0,
+   "y": -1125.0
+  },
+  "reveal_radius": 200,
+  "blight_safe": true,
+  "region": "base"
+ },
+ {
+  "id": "expansion_scoria_12",
+  "constellation": "expansion",
+  "name": "Scoria",
+  "desc": "yield mult +0.05 per rank.",
+  "kind": "rank",
+  "max_rank": 6,
+  "cost": {
+   "motes": 29713
+  },
+  "cost_growth": 1.15,
+  "lum": 6.27,
+  "requires": [
+   "expansion_cinderlet_8"
+  ],
+  "effects": [
+   {
+    "stat": "yield_mult",
+    "op": "mul",
+    "value": 0.05
+   }
+  ],
+  "pos": {
+   "x": -372.5,
+   "y": -1245.5
+  },
+  "reveal_radius": 200,
+  "blight_safe": true,
+  "region": "base"
+ },
+ {
+  "id": "expansion_slag_13",
+  "constellation": "expansion",
+  "name": "Slag",
+  "desc": "tribute mult +0.05 per rank.",
+  "kind": "rank",
+  "max_rank": 8,
+  "cost": {
+   "motes": 31863
+  },
+  "cost_growth": 1.15,
+  "lum": 4.9,
+  "requires": [
+   "expansion_char_9"
+  ],
+  "effects": [
+   {
+    "stat": "tribute_mult",
+    "op": "mul",
+    "value": 0.05
+   }
+  ],
+  "pos": {
+   "x": -250.3,
+   "y": -1275.7
+  },
+  "reveal_radius": 200,
+  "blight_safe": true,
+  "region": "base"
+ },
+ {
+  "id": "expansion_fume_14",
+  "constellation": "expansion",
+  "name": "Fume",
+  "desc": "yield mult +0.05 per rank.",
+  "kind": "rank",
+  "max_rank": 10,
+  "cost": {
+   "motes": 34014
+  },
+  "cost_growth": 1.15,
+  "lum": 6.78,
+  "requires": [
+   "expansion_kindle_10"
+  ],
+  "effects": [
+   {
+    "stat": "yield_mult",
+    "op": "mul",
+    "value": 0.05
+   }
+  ],
+  "pos": {
+   "x": -125.7,
+   "y": -1293.9
+  },
+  "reveal_radius": 200,
+  "blight_safe": false,
+  "region": "base"
+ },
+ {
+  "id": "expansion_brand_15",
+  "constellation": "expansion",
+  "name": "Brand",
+  "desc": "tribute mult +0.05 per rank.",
+  "kind": "rank",
+  "max_rank": 6,
+  "cost": {
+   "motes": 36164
+  },
+  "cost_growth": 1.15,
+  "lum": 5.28,
+  "requires": [
+   "expansion_flint_11"
+  ],
+  "effects": [
+   {
+    "stat": "tribute_mult",
+    "op": "mul",
+    "value": 0.05
+   }
+  ],
+  "pos": {
+   "x": 0.0,
+   "y": -1300.0
+  },
+  "reveal_radius": 200,
+  "blight_safe": false,
+  "region": "base"
+ },
+ {
+  "id": "expansion_taper_16",
+  "constellation": "expansion",
+  "name": "Taper",
+  "desc": "yield mult +0.05 per rank.",
+  "kind": "rank",
+  "max_rank": 8,
+  "cost": {
+   "motes": 72797
+  },
+  "cost_growth": 1.15,
+  "lum": 7.3,
+  "requires": [
+   "expansion_scoria_12"
+  ],
+  "effects": [
+   {
+    "stat": "yield_mult",
+    "op": "mul",
+    "value": 0.05
+   }
+  ],
+  "pos": {
+   "x": -422.6,
+   "y": -1413.2
+  },
+  "reveal_radius": 200,
+  "blight_safe": false,
+  "region": "base"
+ },
+ {
+  "id": "expansion_torch_17",
+  "constellation": "expansion",
+  "name": "Torch",
+  "desc": "tribute mult +0.05 per rank.",
+  "kind": "rank",
+  "max_rank": 10,
+  "cost": {
+   "motes": 76883
+  },
+  "cost_growth": 1.15,
+  "lum": 5.66,
+  "requires": [
+   "expansion_slag_13"
+  ],
+  "effects": [
+   {
+    "stat": "tribute_mult",
+    "op": "mul",
+    "value": 0.05
+   }
+  ],
+  "pos": {
+   "x": -284.0,
+   "y": -1447.4
+  },
+  "reveal_radius": 200,
+  "blight_safe": true,
+  "region": "base"
+ },
+ {
+  "id": "expansion_wildfire",
+  "constellation": "expansion",
+  "name": "Wildfire",
+  "desc": "Mote income x4. Structural luminance grows +0.4/s continuously, forever.",
+  "kind": "keystone",
+  "max_rank": 1,
+  "cost": {
+   "facets": 8
+  },
+  "cost_growth": 1.0,
+  "lum": 6.0,
+  "requires": [
+   "expansion_torch_17"
+  ],
+  "effects": [
+   {
+    "op": "rule",
+    "rule": "wildfire"
+   }
+  ],
+  "pos": {
+   "x": -321.9,
+   "y": -1618.3
+  },
+  "reveal_radius": 320,
+  "blight_safe": false,
+  "region": "base"
+ }
+]

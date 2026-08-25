@@ -1,0 +1,106 @@
+[gd_scene load_steps=15 format=3]
+
+[ext_resource type="Script" path="res://scenes/Main.gd" id="1_main"]
+[ext_resource type="Script" path="res://scenes/SimRoot.gd" id="2_sim"]
+[ext_resource type="PackedScene" path="res://scenes/field/FieldView.tscn" id="3_field"]
+[ext_resource type="Script" path="res://ui/HUD.gd" id="4_hud"]
+[ext_resource type="Script" path="res://ui/ContactPanel.gd" id="5_contacts"]
+[ext_resource type="Script" path="res://ui/TetherPanel.gd" id="6_tethers"]
+[ext_resource type="Script" path="res://ui/IncomingPanel.gd" id="7_incoming"]
+[ext_resource type="Script" path="res://ui/TriagePanel.gd" id="8_triage"]
+[ext_resource type="Script" path="res://ui/LogFeed.gd" id="9_log"]
+[ext_resource type="Script" path="res://ui/tree/TreeView.gd" id="10_tree"]
+[ext_resource type="Script" path="res://ui/DormancyReveal.gd" id="11_dorm"]
+[ext_resource type="Script" path="res://ui/EmberModal.gd" id="12_ember"]
+[ext_resource type="Script" path="res://ui/PostRunSummary.gd" id="13_post"]
+[ext_resource type="Script" path="res://ui/SettingsPanel.gd" id="14_settings"]
+
+[node name="Main" type="Node"]
+script = ExtResource("1_main")
+
+[node name="SimRoot" type="Node" parent="."]
+script = ExtResource("2_sim")
+
+[node name="FieldView" parent="." instance=ExtResource("3_field")]
+
+[node name="UILayer" type="CanvasLayer" parent="."]
+
+[node name="HUD" type="Control" parent="UILayer"]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+mouse_filter = 2
+script = ExtResource("4_hud")
+
+[node name="ContactPanel" type="Control" parent="UILayer"]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+mouse_filter = 2
+script = ExtResource("5_contacts")
+
+[node name="TetherPanel" type="Control" parent="UILayer"]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+mouse_filter = 2
+script = ExtResource("6_tethers")
+
+[node name="IncomingPanel" type="Control" parent="UILayer"]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+mouse_filter = 2
+script = ExtResource("7_incoming")
+
+[node name="TriagePanel" type="Control" parent="UILayer"]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+mouse_filter = 2
+script = ExtResource("8_triage")
+
+[node name="LogFeed" type="Control" parent="UILayer"]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+mouse_filter = 2
+script = ExtResource("9_log")
+
+[node name="TreeView" type="Control" parent="UILayer"]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+script = ExtResource("10_tree")
+
+[node name="Modals" type="Control" parent="UILayer"]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+mouse_filter = 2
+
+[node name="DormancyReveal" type="Control" parent="UILayer/Modals"]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+mouse_filter = 2
+script = ExtResource("11_dorm")
+
+[node name="EmberModal" type="Control" parent="UILayer/Modals"]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+script = ExtResource("12_ember")
+
+[node name="PostRunSummary" type="Control" parent="UILayer/Modals"]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+script = ExtResource("13_post")
+
+[node name="SettingsPanel" type="Control" parent="UILayer/Modals"]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+mouse_filter = 2
+script = ExtResource("14_settings")

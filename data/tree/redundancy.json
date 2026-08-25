@@ -1,0 +1,877 @@
+[
+ {
+  "id": "redundancy_entry",
+  "constellation": "redundancy",
+  "name": "Second Body",
+  "desc": "Maximum redundancy +1 per rank.",
+  "kind": "rank",
+  "max_rank": 3,
+  "cost": {
+   "motes": 320
+  },
+  "cost_growth": 1.15,
+  "lum": 2.0,
+  "requires": [],
+  "effects": [
+   {
+    "stat": "max_redundancy",
+    "op": "add",
+    "value": 1.0
+   }
+  ],
+  "pos": {
+   "x": -250.0,
+   "y": 0.0
+  },
+  "reveal_radius": 200,
+  "blight_safe": true,
+  "region": "base"
+ },
+ {
+  "id": "redundancy_dispersal",
+  "constellation": "redundancy",
+  "name": "Dispersal",
+  "desc": "Chance an incoming strike is absorbed: +7% per rank.",
+  "kind": "rank",
+  "max_rank": 6,
+  "cost": {
+   "motes": 480
+  },
+  "cost_growth": 1.15,
+  "lum": 2.4,
+  "requires": [
+   "redundancy_entry"
+  ],
+  "effects": [
+   {
+    "stat": "strike_mitigation",
+    "op": "add",
+    "value": 0.07
+   }
+  ],
+  "pos": {
+   "x": -407.2,
+   "y": 121.8
+  },
+  "reveal_radius": 200,
+  "blight_safe": true,
+  "region": "base"
+ },
+ {
+  "id": "redundancy_hardening",
+  "constellation": "redundancy",
+  "name": "Hardening",
+  "desc": "Blight takes 8% fewer nodes per rank.",
+  "kind": "rank",
+  "max_rank": 6,
+  "cost": {
+   "motes": 600
+  },
+  "cost_growth": 1.15,
+  "lum": 2.2,
+  "requires": [
+   "redundancy_entry"
+  ],
+  "effects": [
+   {
+    "stat": "blight_resist",
+    "op": "add",
+    "value": 0.08
+   }
+  ],
+  "pos": {
+   "x": -423.0,
+   "y": 41.1
+  },
+  "reveal_radius": 200,
+  "blight_safe": true,
+  "region": "base"
+ },
+ {
+  "id": "redundancy_thirdbody",
+  "constellation": "redundancy",
+  "name": "Third Body",
+  "desc": "Maximum redundancy +1 per rank.",
+  "kind": "rank",
+  "max_rank": 3,
+  "cost": {
+   "motes": 2200
+  },
+  "cost_growth": 1.15,
+  "lum": 3.0,
+  "requires": [
+   "redundancy_dispersal"
+  ],
+  "effects": [
+   {
+    "stat": "max_redundancy",
+    "op": "add",
+    "value": 1.0
+   }
+  ],
+  "pos": {
+   "x": -574.8,
+   "y": 171.9
+  },
+  "reveal_radius": 200,
+  "blight_safe": true,
+  "region": "base"
+ },
+ {
+  "id": "redundancy_brace",
+  "constellation": "redundancy",
+  "name": "Brace",
+  "desc": "Strike mitigation +0.5%. No cap.",
+  "kind": "sink",
+  "max_rank": -1,
+  "cost": {
+   "motes": 900
+  },
+  "cost_growth": 1.08,
+  "lum": 0.2,
+  "requires": [
+   "redundancy_hardening"
+  ],
+  "effects": [
+   {
+    "stat": "strike_mitigation",
+    "op": "add",
+    "value": 0.005
+   }
+  ],
+  "pos": {
+   "x": -593.7,
+   "y": 86.9
+  },
+  "reveal_radius": 200,
+  "blight_safe": true,
+  "region": "base"
+ },
+ {
+  "id": "redundancy_scatter",
+  "constellation": "redundancy",
+  "name": "Scatter",
+  "desc": "Chance an incoming strike is absorbed: +5% per rank.",
+  "kind": "rank",
+  "max_rank": 6,
+  "cost": {
+   "motes": 2800
+  },
+  "cost_growth": 1.15,
+  "lum": 2.6,
+  "requires": [
+   "redundancy_thirdbody"
+  ],
+  "effects": [
+   {
+    "stat": "strike_mitigation",
+    "op": "add",
+    "value": 0.05
+   }
+  ],
+  "pos": {
+   "x": -742.5,
+   "y": 222.1
+  },
+  "reveal_radius": 200,
+  "blight_safe": true,
+  "region": "base"
+ },
+ {
+  "id": "redundancy_immune",
+  "constellation": "redundancy",
+  "name": "Immune Response",
+  "desc": "Blight takes 10% fewer nodes per rank.",
+  "kind": "rank",
+  "max_rank": 5,
+  "cost": {
+   "motes": 3600,
+   "facets": 2
+  },
+  "cost_growth": 1.15,
+  "lum": 2.8,
+  "requires": [
+   "redundancy_brace"
+  ],
+  "effects": [
+   {
+    "stat": "blight_resist",
+    "op": "add",
+    "value": 0.1
+   }
+  ],
+  "pos": {
+   "x": -763.2,
+   "y": 134.4
+  },
+  "reveal_radius": 200,
+  "blight_safe": true,
+  "region": "base"
+ },
+ {
+  "id": "redundancy_tinder_0",
+  "constellation": "redundancy",
+  "name": "Tinder",
+  "desc": "strike mitigation +0.03 per rank.",
+  "kind": "rank",
+  "max_rank": 6,
+  "cost": {
+   "motes": 570
+  },
+  "cost_growth": 1.15,
+  "lum": 2.1,
+  "requires": [
+   "redundancy_brace"
+  ],
+  "effects": [
+   {
+    "stat": "strike_mitigation",
+    "op": "add",
+    "value": 0.03
+   }
+  ],
+  "pos": {
+   "x": -773.7,
+   "y": 45.0
+  },
+  "reveal_radius": 200,
+  "blight_safe": true,
+  "region": "base"
+ },
+ {
+  "id": "redundancy_ember_1",
+  "constellation": "redundancy",
+  "name": "Ember",
+  "desc": "blight resist +0.04 per rank.",
+  "kind": "rank",
+  "max_rank": 8,
+  "cost": {
+   "motes": 884
+  },
+  "cost_growth": 1.15,
+  "lum": 2.16,
+  "requires": [
+   "redundancy_brace"
+  ],
+  "effects": [
+   {
+    "stat": "blight_resist",
+    "op": "add",
+    "value": 0.04
+   }
+  ],
+  "pos": {
+   "x": -773.7,
+   "y": -45.0
+  },
+  "reveal_radius": 200,
+  "blight_safe": false,
+  "region": "base"
+ },
+ {
+  "id": "redundancy_coal_2",
+  "constellation": "redundancy",
+  "name": "Coal",
+  "desc": "strike mitigation +0.03 per rank.",
+  "kind": "rank",
+  "max_rank": 10,
+  "cost": {
+   "motes": 1197
+  },
+  "cost_growth": 1.15,
+  "lum": 2.44,
+  "requires": [
+   "redundancy_brace"
+  ],
+  "effects": [
+   {
+    "stat": "strike_mitigation",
+    "op": "add",
+    "value": 0.03
+   }
+  ],
+  "pos": {
+   "x": -763.2,
+   "y": -134.4
+  },
+  "reveal_radius": 200,
+  "blight_safe": false,
+  "region": "base"
+ },
+ {
+  "id": "redundancy_wick_3",
+  "constellation": "redundancy",
+  "name": "Wick",
+  "desc": "blight resist +0.04 per rank.",
+  "kind": "rank",
+  "max_rank": 6,
+  "cost": {
+   "motes": 1511
+  },
+  "cost_growth": 1.15,
+  "lum": 2.48,
+  "requires": [
+   "redundancy_brace"
+  ],
+  "effects": [
+   {
+    "stat": "blight_resist",
+    "op": "add",
+    "value": 0.04
+   }
+  ],
+  "pos": {
+   "x": -742.5,
+   "y": -222.1
+  },
+  "reveal_radius": 200,
+  "blight_safe": false,
+  "region": "base"
+ },
+ {
+  "id": "redundancy_deepbody",
+  "constellation": "redundancy",
+  "name": "Deep Body",
+  "desc": "Maximum redundancy +1 per rank.",
+  "kind": "rank",
+  "max_rank": 2,
+  "cost": {
+   "motes": 9000,
+   "facets": 4
+  },
+  "cost_growth": 1.15,
+  "lum": 3.6,
+  "requires": [
+   "redundancy_scatter"
+  ],
+  "effects": [
+   {
+    "stat": "max_redundancy",
+    "op": "add",
+    "value": 1.0
+   }
+  ],
+  "pos": {
+   "x": -910.2,
+   "y": 272.2
+  },
+  "reveal_radius": 200,
+  "blight_safe": true,
+  "region": "base"
+ },
+ {
+  "id": "redundancy_glim_4",
+  "constellation": "redundancy",
+  "name": "Glim",
+  "desc": "strike mitigation +0.03 per rank.",
+  "kind": "rank",
+  "max_rank": 8,
+  "cost": {
+   "motes": 3466
+  },
+  "cost_growth": 1.15,
+  "lum": 2.77,
+  "requires": [
+   "redundancy_immune"
+  ],
+  "effects": [
+   {
+    "stat": "strike_mitigation",
+    "op": "add",
+    "value": 0.03
+   }
+  ],
+  "pos": {
+   "x": -935.6,
+   "y": 164.8
+  },
+  "reveal_radius": 200,
+  "blight_safe": true,
+  "region": "base"
+ },
+ {
+  "id": "redundancy_spark_5",
+  "constellation": "redundancy",
+  "name": "Spark",
+  "desc": "blight resist +0.04 per rank.",
+  "kind": "rank",
+  "max_rank": 10,
+  "cost": {
+   "motes": 4061
+  },
+  "cost_growth": 1.15,
+  "lum": 2.8,
+  "requires": [
+   "redundancy_tinder_0"
+  ],
+  "effects": [
+   {
+    "stat": "blight_resist",
+    "op": "add",
+    "value": 0.04
+   }
+  ],
+  "pos": {
+   "x": -948.4,
+   "y": 55.2
+  },
+  "reveal_radius": 200,
+  "blight_safe": true,
+  "region": "base"
+ },
+ {
+  "id": "redundancy_cinderlet_6",
+  "constellation": "redundancy",
+  "name": "Cinderlet",
+  "desc": "strike mitigation +0.03 per rank.",
+  "kind": "rank",
+  "max_rank": 6,
+  "cost": {
+   "motes": 4657
+  },
+  "cost_growth": 1.15,
+  "lum": 3.11,
+  "requires": [
+   "redundancy_tinder_0"
+  ],
+  "effects": [
+   {
+    "stat": "strike_mitigation",
+    "op": "add",
+    "value": 0.03
+   }
+  ],
+  "pos": {
+   "x": -948.4,
+   "y": -55.2
+  },
+  "reveal_radius": 200,
+  "blight_safe": false,
+  "region": "base"
+ },
+ {
+  "id": "redundancy_char_7",
+  "constellation": "redundancy",
+  "name": "Char",
+  "desc": "blight resist +0.04 per rank.",
+  "kind": "rank",
+  "max_rank": 8,
+  "cost": {
+   "motes": 5253
+  },
+  "cost_growth": 1.15,
+  "lum": 3.12,
+  "requires": [
+   "redundancy_tinder_0"
+  ],
+  "effects": [
+   {
+    "stat": "blight_resist",
+    "op": "add",
+    "value": 0.04
+   }
+  ],
+  "pos": {
+   "x": -935.6,
+   "y": -164.8
+  },
+  "reveal_radius": 200,
+  "blight_safe": false,
+  "region": "base"
+ },
+ {
+  "id": "redundancy_kindle_8",
+  "constellation": "redundancy",
+  "name": "Kindle",
+  "desc": "strike mitigation +0.03 per rank.",
+  "kind": "rank",
+  "max_rank": 10,
+  "cost": {
+   "motes": 11112
+  },
+  "cost_growth": 1.15,
+  "lum": 3.44,
+  "requires": [
+   "redundancy_deepbody"
+  ],
+  "effects": [
+   {
+    "stat": "strike_mitigation",
+    "op": "add",
+    "value": 0.03
+   }
+  ],
+  "pos": {
+   "x": -1077.8,
+   "y": 322.3
+  },
+  "reveal_radius": 200,
+  "blight_safe": true,
+  "region": "base"
+ },
+ {
+  "id": "redundancy_flint_9",
+  "constellation": "redundancy",
+  "name": "Flint",
+  "desc": "blight resist +0.04 per rank.",
+  "kind": "rank",
+  "max_rank": 6,
+  "cost": {
+   "motes": 12243
+  },
+  "cost_growth": 1.15,
+  "lum": 3.44,
+  "requires": [
+   "redundancy_glim_4"
+  ],
+  "effects": [
+   {
+    "stat": "blight_resist",
+    "op": "add",
+    "value": 0.04
+   }
+  ],
+  "pos": {
+   "x": -1104.0,
+   "y": 216.6
+  },
+  "reveal_radius": 200,
+  "blight_safe": true,
+  "region": "base"
+ },
+ {
+  "id": "redundancy_scoria_10",
+  "constellation": "redundancy",
+  "name": "Scoria",
+  "desc": "strike mitigation +0.03 per rank.",
+  "kind": "rank",
+  "max_rank": 8,
+  "cost": {
+   "motes": 13375
+  },
+  "cost_growth": 1.15,
+  "lum": 3.78,
+  "requires": [
+   "redundancy_spark_5"
+  ],
+  "effects": [
+   {
+    "stat": "strike_mitigation",
+    "op": "add",
+    "value": 0.03
+   }
+  ],
+  "pos": {
+   "x": -1119.7,
+   "y": 108.8
+  },
+  "reveal_radius": 200,
+  "blight_safe": true,
+  "region": "base"
+ },
+ {
+  "id": "redundancy_slag_11",
+  "constellation": "redundancy",
+  "name": "Slag",
+  "desc": "blight resist +0.04 per rank.",
+  "kind": "rank",
+  "max_rank": 10,
+  "cost": {
+   "motes": 14507
+  },
+  "cost_growth": 1.15,
+  "lum": 3.76,
+  "requires": [
+   "redundancy_spark_5"
+  ],
+  "effects": [
+   {
+    "stat": "blight_resist",
+    "op": "add",
+    "value": 0.04
+   }
+  ],
+  "pos": {
+   "x": -1125.0,
+   "y": 0.0
+  },
+  "reveal_radius": 200,
+  "blight_safe": true,
+  "region": "base"
+ },
+ {
+  "id": "redundancy_fume_12",
+  "constellation": "redundancy",
+  "name": "Fume",
+  "desc": "strike mitigation +0.03 per rank.",
+  "kind": "rank",
+  "max_rank": 6,
+  "cost": {
+   "motes": 29713
+  },
+  "cost_growth": 1.15,
+  "lum": 4.12,
+  "requires": [
+   "redundancy_kindle_8"
+  ],
+  "effects": [
+   {
+    "stat": "strike_mitigation",
+    "op": "add",
+    "value": 0.03
+   }
+  ],
+  "pos": {
+   "x": -1245.5,
+   "y": 372.5
+  },
+  "reveal_radius": 200,
+  "blight_safe": true,
+  "region": "base"
+ },
+ {
+  "id": "redundancy_brand_13",
+  "constellation": "redundancy",
+  "name": "Brand",
+  "desc": "blight resist +0.04 per rank.",
+  "kind": "rank",
+  "max_rank": 8,
+  "cost": {
+   "motes": 31863
+  },
+  "cost_growth": 1.15,
+  "lum": 4.08,
+  "requires": [
+   "redundancy_flint_9"
+  ],
+  "effects": [
+   {
+    "stat": "blight_resist",
+    "op": "add",
+    "value": 0.04
+   }
+  ],
+  "pos": {
+   "x": -1275.7,
+   "y": 250.3
+  },
+  "reveal_radius": 200,
+  "blight_safe": true,
+  "region": "base"
+ },
+ {
+  "id": "redundancy_taper_14",
+  "constellation": "redundancy",
+  "name": "Taper",
+  "desc": "strike mitigation +0.03 per rank.",
+  "kind": "rank",
+  "max_rank": 10,
+  "cost": {
+   "motes": 34014
+  },
+  "cost_growth": 1.15,
+  "lum": 4.45,
+  "requires": [
+   "redundancy_scoria_10"
+  ],
+  "effects": [
+   {
+    "stat": "strike_mitigation",
+    "op": "add",
+    "value": 0.03
+   }
+  ],
+  "pos": {
+   "x": -1293.9,
+   "y": 125.7
+  },
+  "reveal_radius": 200,
+  "blight_safe": true,
+  "region": "base"
+ },
+ {
+  "id": "redundancy_torch_15",
+  "constellation": "redundancy",
+  "name": "Torch",
+  "desc": "blight resist +0.04 per rank.",
+  "kind": "rank",
+  "max_rank": 6,
+  "cost": {
+   "motes": 36164
+  },
+  "cost_growth": 1.15,
+  "lum": 4.4,
+  "requires": [
+   "redundancy_slag_11"
+  ],
+  "effects": [
+   {
+    "stat": "blight_resist",
+    "op": "add",
+    "value": 0.04
+   }
+  ],
+  "pos": {
+   "x": -1300.0,
+   "y": 0.0
+  },
+  "reveal_radius": 200,
+  "blight_safe": false,
+  "region": "base"
+ },
+ {
+  "id": "redundancy_pyre_16",
+  "constellation": "redundancy",
+  "name": "Pyre",
+  "desc": "strike mitigation +0.03 per rank.",
+  "kind": "rank",
+  "max_rank": 8,
+  "cost": {
+   "motes": 72797
+  },
+  "cost_growth": 1.15,
+  "lum": 4.79,
+  "requires": [
+   "redundancy_fume_12"
+  ],
+  "effects": [
+   {
+    "stat": "strike_mitigation",
+    "op": "add",
+    "value": 0.03
+   }
+  ],
+  "pos": {
+   "x": -1413.2,
+   "y": 422.6
+  },
+  "reveal_radius": 200,
+  "blight_safe": true,
+  "region": "base"
+ },
+ {
+  "id": "redundancy_soot_17",
+  "constellation": "redundancy",
+  "name": "Soot",
+  "desc": "blight resist +0.04 per rank.",
+  "kind": "rank",
+  "max_rank": 10,
+  "cost": {
+   "motes": 76883
+  },
+  "cost_growth": 1.15,
+  "lum": 4.72,
+  "requires": [
+   "redundancy_brand_13"
+  ],
+  "effects": [
+   {
+    "stat": "blight_resist",
+    "op": "add",
+    "value": 0.04
+   }
+  ],
+  "pos": {
+   "x": -1447.4,
+   "y": 284.0
+  },
+  "reveal_radius": 200,
+  "blight_safe": true,
+  "region": "base"
+ },
+ {
+  "id": "redundancy_lumen_18",
+  "constellation": "redundancy",
+  "name": "Lumen",
+  "desc": "strike mitigation +0.03 per rank.",
+  "kind": "rank",
+  "max_rank": 6,
+  "cost": {
+   "motes": 80968
+  },
+  "cost_growth": 1.15,
+  "lum": 5.12,
+  "requires": [
+   "redundancy_taper_14"
+  ],
+  "effects": [
+   {
+    "stat": "strike_mitigation",
+    "op": "add",
+    "value": 0.03
+   }
+  ],
+  "pos": {
+   "x": -1468.1,
+   "y": 142.7
+  },
+  "reveal_radius": 200,
+  "blight_safe": false,
+  "region": "base"
+ },
+ {
+  "id": "redundancy_diaspora",
+  "constellation": "redundancy",
+  "name": "Diaspora",
+  "desc": "+3 maximum redundancy. All income -40%.",
+  "kind": "keystone",
+  "max_rank": 1,
+  "cost": {
+   "facets": 8
+  },
+  "cost_growth": 1.0,
+  "lum": 3.0,
+  "requires": [
+   "redundancy_soot_17"
+  ],
+  "effects": [
+   {
+    "op": "rule",
+    "rule": "diaspora"
+   }
+  ],
+  "pos": {
+   "x": -1618.3,
+   "y": 321.9
+  },
+  "reveal_radius": 320,
+  "blight_safe": true,
+  "region": "base"
+ },
+ {
+  "id": "bridge_redundancy_shroud",
+  "constellation": "redundancy",
+  "name": "Deep Cover",
+  "desc": "Strike mitigation +15% and structural luminance -8%.",
+  "kind": "bridge",
+  "max_rank": 1,
+  "cost": {
+   "facets": 6
+  },
+  "cost_growth": 1.0,
+  "lum": 1.0,
+  "requires": [
+   "redundancy_pyre_16",
+   "shroud_nit_17"
+  ],
+  "effects": [
+   {
+    "stat": "strike_mitigation",
+    "op": "add",
+    "value": 0.15
+   },
+   {
+    "stat": "lum_mult",
+    "op": "mul",
+    "value": -0.08
+   }
+  ],
+  "pos": {
+   "x": -295.2,
+   "y": -400.8
+  },
+  "reveal_radius": 400,
+  "blight_safe": false,
+  "region": "base"
+ }
+]

@@ -1,0 +1,939 @@
+[
+ {
+  "id": "shroud_entry",
+  "constellation": "shroud",
+  "name": "Cowl",
+  "desc": "Structural luminance reduced by 2% per rank.",
+  "kind": "rank",
+  "max_rank": 6,
+  "cost": {
+   "motes": 22
+  },
+  "cost_growth": 1.15,
+  "lum": 0.0,
+  "requires": [],
+  "effects": [
+   {
+    "stat": "shroud",
+    "op": "add",
+    "value": 0.02
+   }
+  ],
+  "pos": {
+   "x": 176.8,
+   "y": -176.8
+  },
+  "reveal_radius": 200,
+  "blight_safe": true,
+  "region": "base"
+ },
+ {
+  "id": "shroud_baffle",
+  "constellation": "shroud",
+  "name": "Baffle",
+  "desc": "Structural luminance reduced by 3% per rank.",
+  "kind": "rank",
+  "max_rank": 8,
+  "cost": {
+   "motes": 120
+  },
+  "cost_growth": 1.15,
+  "lum": 0.0,
+  "requires": [
+   "shroud_entry"
+  ],
+  "effects": [
+   {
+    "stat": "shroud",
+    "op": "add",
+    "value": 0.03
+   }
+  ],
+  "pos": {
+   "x": 201.8,
+   "y": -374.0
+  },
+  "reveal_radius": 200,
+  "blight_safe": true,
+  "region": "base"
+ },
+ {
+  "id": "shroud_dampen",
+  "constellation": "shroud",
+  "name": "Dampening Field",
+  "desc": "Transient light fades faster: tau -0.8s per rank.",
+  "kind": "rank",
+  "max_rank": 6,
+  "cost": {
+   "motes": 150
+  },
+  "cost_growth": 1.15,
+  "lum": 0.0,
+  "requires": [
+   "shroud_entry"
+  ],
+  "effects": [
+   {
+    "stat": "transient_decay",
+    "op": "add",
+    "value": 0.8
+   }
+  ],
+  "pos": {
+   "x": 270.0,
+   "y": -328.2
+  },
+  "reveal_radius": 200,
+  "blight_safe": true,
+  "region": "base"
+ },
+ {
+  "id": "shroud_mantle",
+  "constellation": "shroud",
+  "name": "Mantle",
+  "desc": "Structural luminance reduced by 3.5% per rank.",
+  "kind": "rank",
+  "max_rank": 8,
+  "cost": {
+   "motes": 480
+  },
+  "cost_growth": 1.15,
+  "lum": 0.0,
+  "requires": [
+   "shroud_baffle"
+  ],
+  "effects": [
+   {
+    "stat": "shroud",
+    "op": "add",
+    "value": 0.035
+   }
+  ],
+  "pos": {
+   "x": 284.9,
+   "y": -528.0
+  },
+  "reveal_radius": 200,
+  "blight_safe": true,
+  "region": "base"
+ },
+ {
+  "id": "shroud_smother",
+  "constellation": "shroud",
+  "name": "Smother",
+  "desc": "Transient light fades faster: tau -0.6s per rank.",
+  "kind": "rank",
+  "max_rank": 6,
+  "cost": {
+   "motes": 520
+  },
+  "cost_growth": 1.15,
+  "lum": 0.0,
+  "requires": [
+   "shroud_dampen"
+  ],
+  "effects": [
+   {
+    "stat": "transient_decay",
+    "op": "add",
+    "value": 0.6
+   }
+  ],
+  "pos": {
+   "x": 358.4,
+   "y": -481.2
+  },
+  "reveal_radius": 200,
+  "blight_safe": true,
+  "region": "base"
+ },
+ {
+  "id": "shroud_quiet",
+  "constellation": "shroud",
+  "name": "Quiet Growth",
+  "desc": "Everything you build costs 4% less luminance per rank.",
+  "kind": "rank",
+  "max_rank": 6,
+  "cost": {
+   "motes": 900
+  },
+  "cost_growth": 1.15,
+  "lum": 0.0,
+  "requires": [
+   "shroud_dampen"
+  ],
+  "effects": [
+   {
+    "stat": "lum_mult",
+    "op": "mul",
+    "value": -0.04
+   }
+  ],
+  "pos": {
+   "x": 424.3,
+   "y": -424.3
+  },
+  "reveal_radius": 200,
+  "blight_safe": true,
+  "region": "base"
+ },
+ {
+  "id": "shroud_hush",
+  "constellation": "shroud",
+  "name": "Hush",
+  "desc": "Structural luminance reduced by 0.4%. No cap.",
+  "kind": "sink",
+  "max_rank": -1,
+  "cost": {
+   "motes": 300
+  },
+  "cost_growth": 1.08,
+  "lum": 0.0,
+  "requires": [
+   "shroud_dampen"
+  ],
+  "effects": [
+   {
+    "stat": "shroud",
+    "op": "add",
+    "value": 0.004
+   }
+  ],
+  "pos": {
+   "x": 481.2,
+   "y": -358.4
+  },
+  "reveal_radius": 200,
+  "blight_safe": true,
+  "region": "base"
+ },
+ {
+  "id": "shroud_occlude",
+  "constellation": "shroud",
+  "name": "Occlusion",
+  "desc": "Structural luminance reduced by 4% per rank.",
+  "kind": "rank",
+  "max_rank": 8,
+  "cost": {
+   "motes": 1400
+  },
+  "cost_growth": 1.15,
+  "lum": 0.0,
+  "requires": [
+   "shroud_mantle"
+  ],
+  "effects": [
+   {
+    "stat": "shroud",
+    "op": "add",
+    "value": 0.04
+   }
+  ],
+  "pos": {
+   "x": 368.0,
+   "y": -682.0
+  },
+  "reveal_radius": 200,
+  "blight_safe": true,
+  "region": "base"
+ },
+ {
+  "id": "shroud_stillness",
+  "constellation": "shroud",
+  "name": "Stillness",
+  "desc": "Structural luminance reduced by 0.4%. No cap.",
+  "kind": "sink",
+  "max_rank": -1,
+  "cost": {
+   "motes": 1200
+  },
+  "cost_growth": 1.08,
+  "lum": 0.0,
+  "requires": [
+   "shroud_smother"
+  ],
+  "effects": [
+   {
+    "stat": "shroud",
+    "op": "add",
+    "value": 0.004
+   }
+  ],
+  "pos": {
+   "x": 444.6,
+   "y": -634.8
+  },
+  "reveal_radius": 200,
+  "blight_safe": true,
+  "region": "base"
+ },
+ {
+  "id": "shroud_wick_0",
+  "constellation": "shroud",
+  "name": "Wick",
+  "desc": "shroud +0.02 per rank.",
+  "kind": "rank",
+  "max_rank": 6,
+  "cost": {
+   "motes": 570
+  },
+  "cost_growth": 1.15,
+  "lum": 0.0,
+  "requires": [
+   "shroud_quiet"
+  ],
+  "effects": [
+   {
+    "stat": "shroud",
+    "op": "add",
+    "value": 0.02
+   }
+  ],
+  "pos": {
+   "x": 515.3,
+   "y": -578.9
+  },
+  "reveal_radius": 200,
+  "blight_safe": true,
+  "region": "base"
+ },
+ {
+  "id": "shroud_glim_1",
+  "constellation": "shroud",
+  "name": "Glim",
+  "desc": "transient decay +0.3 per rank.",
+  "kind": "rank",
+  "max_rank": 8,
+  "cost": {
+   "motes": 884
+  },
+  "cost_growth": 1.15,
+  "lum": 0.0,
+  "requires": [
+   "shroud_quiet"
+  ],
+  "effects": [
+   {
+    "stat": "transient_decay",
+    "op": "add",
+    "value": 0.3
+   }
+  ],
+  "pos": {
+   "x": 578.9,
+   "y": -515.3
+  },
+  "reveal_radius": 200,
+  "blight_safe": true,
+  "region": "base"
+ },
+ {
+  "id": "shroud_spark_2",
+  "constellation": "shroud",
+  "name": "Spark",
+  "desc": "shroud +0.02 per rank.",
+  "kind": "rank",
+  "max_rank": 10,
+  "cost": {
+   "motes": 1197
+  },
+  "cost_growth": 1.15,
+  "lum": 0.0,
+  "requires": [
+   "shroud_hush"
+  ],
+  "effects": [
+   {
+    "stat": "shroud",
+    "op": "add",
+    "value": 0.02
+   }
+  ],
+  "pos": {
+   "x": 634.8,
+   "y": -444.6
+  },
+  "reveal_radius": 200,
+  "blight_safe": true,
+  "region": "base"
+ },
+ {
+  "id": "shroud_cinderlet_3",
+  "constellation": "shroud",
+  "name": "Cinderlet",
+  "desc": "transient decay +0.3 per rank.",
+  "kind": "rank",
+  "max_rank": 6,
+  "cost": {
+   "motes": 1511
+  },
+  "cost_growth": 1.15,
+  "lum": 0.0,
+  "requires": [
+   "shroud_hush"
+  ],
+  "effects": [
+   {
+    "stat": "transient_decay",
+    "op": "add",
+    "value": 0.3
+   }
+  ],
+  "pos": {
+   "x": 682.0,
+   "y": -368.0
+  },
+  "reveal_radius": 200,
+  "blight_safe": false,
+  "region": "base"
+ },
+ {
+  "id": "shroud_veil",
+  "constellation": "shroud",
+  "name": "Veil",
+  "desc": "Structural luminance reduced by 4.5% per rank.",
+  "kind": "rank",
+  "max_rank": 8,
+  "cost": {
+   "motes": 3800
+  },
+  "cost_growth": 1.15,
+  "lum": 0.0,
+  "requires": [
+   "shroud_occlude"
+  ],
+  "effects": [
+   {
+    "stat": "shroud",
+    "op": "add",
+    "value": 0.045
+   }
+  ],
+  "pos": {
+   "x": 451.1,
+   "y": -836.1
+  },
+  "reveal_radius": 200,
+  "blight_safe": true,
+  "region": "base"
+ },
+ {
+  "id": "shroud_char_4",
+  "constellation": "shroud",
+  "name": "Char",
+  "desc": "shroud +0.02 per rank.",
+  "kind": "rank",
+  "max_rank": 8,
+  "cost": {
+   "motes": 3466
+  },
+  "cost_growth": 1.15,
+  "lum": 0.0,
+  "requires": [
+   "shroud_stillness"
+  ],
+  "effects": [
+   {
+    "stat": "shroud",
+    "op": "add",
+    "value": 0.02
+   }
+  ],
+  "pos": {
+   "x": 545.0,
+   "y": -778.1
+  },
+  "reveal_radius": 200,
+  "blight_safe": true,
+  "region": "base"
+ },
+ {
+  "id": "shroud_kindle_5",
+  "constellation": "shroud",
+  "name": "Kindle",
+  "desc": "transient decay +0.3 per rank.",
+  "kind": "rank",
+  "max_rank": 10,
+  "cost": {
+   "motes": 4061
+  },
+  "cost_growth": 1.15,
+  "lum": 0.0,
+  "requires": [
+   "shroud_wick_0"
+  ],
+  "effects": [
+   {
+    "stat": "transient_decay",
+    "op": "add",
+    "value": 0.3
+   }
+  ],
+  "pos": {
+   "x": 631.6,
+   "y": -709.6
+  },
+  "reveal_radius": 200,
+  "blight_safe": true,
+  "region": "base"
+ },
+ {
+  "id": "shroud_flint_6",
+  "constellation": "shroud",
+  "name": "Flint",
+  "desc": "shroud +0.02 per rank.",
+  "kind": "rank",
+  "max_rank": 6,
+  "cost": {
+   "motes": 4657
+  },
+  "cost_growth": 1.15,
+  "lum": 0.0,
+  "requires": [
+   "shroud_glim_1"
+  ],
+  "effects": [
+   {
+    "stat": "shroud",
+    "op": "add",
+    "value": 0.02
+   }
+  ],
+  "pos": {
+   "x": 709.6,
+   "y": -631.6
+  },
+  "reveal_radius": 200,
+  "blight_safe": true,
+  "region": "base"
+ },
+ {
+  "id": "shroud_scoria_7",
+  "constellation": "shroud",
+  "name": "Scoria",
+  "desc": "transient decay +0.3 per rank.",
+  "kind": "rank",
+  "max_rank": 8,
+  "cost": {
+   "motes": 5253
+  },
+  "cost_growth": 1.15,
+  "lum": 0.0,
+  "requires": [
+   "shroud_spark_2"
+  ],
+  "effects": [
+   {
+    "stat": "transient_decay",
+    "op": "add",
+    "value": 0.3
+   }
+  ],
+  "pos": {
+   "x": 778.1,
+   "y": -545.0
+  },
+  "reveal_radius": 200,
+  "blight_safe": false,
+  "region": "base"
+ },
+ {
+  "id": "shroud_slag_8",
+  "constellation": "shroud",
+  "name": "Slag",
+  "desc": "shroud +0.02 per rank.",
+  "kind": "rank",
+  "max_rank": 10,
+  "cost": {
+   "motes": 11112
+  },
+  "cost_growth": 1.15,
+  "lum": 0.0,
+  "requires": [
+   "shroud_veil"
+  ],
+  "effects": [
+   {
+    "stat": "shroud",
+    "op": "add",
+    "value": 0.02
+   }
+  ],
+  "pos": {
+   "x": 534.2,
+   "y": -990.1
+  },
+  "reveal_radius": 200,
+  "blight_safe": true,
+  "region": "base"
+ },
+ {
+  "id": "shroud_fume_9",
+  "constellation": "shroud",
+  "name": "Fume",
+  "desc": "transient decay +0.3 per rank.",
+  "kind": "rank",
+  "max_rank": 6,
+  "cost": {
+   "motes": 12243
+  },
+  "cost_growth": 1.15,
+  "lum": 0.0,
+  "requires": [
+   "shroud_char_4"
+  ],
+  "effects": [
+   {
+    "stat": "transient_decay",
+    "op": "add",
+    "value": 0.3
+   }
+  ],
+  "pos": {
+   "x": 627.5,
+   "y": -933.8
+  },
+  "reveal_radius": 200,
+  "blight_safe": true,
+  "region": "base"
+ },
+ {
+  "id": "shroud_brand_10",
+  "constellation": "shroud",
+  "name": "Brand",
+  "desc": "shroud +0.02 per rank.",
+  "kind": "rank",
+  "max_rank": 8,
+  "cost": {
+   "motes": 13375
+  },
+  "cost_growth": 1.15,
+  "lum": 0.0,
+  "requires": [
+   "shroud_kindle_5"
+  ],
+  "effects": [
+   {
+    "stat": "shroud",
+    "op": "add",
+    "value": 0.02
+   }
+  ],
+  "pos": {
+   "x": 714.8,
+   "y": -868.7
+  },
+  "reveal_radius": 200,
+  "blight_safe": true,
+  "region": "base"
+ },
+ {
+  "id": "shroud_taper_11",
+  "constellation": "shroud",
+  "name": "Taper",
+  "desc": "transient decay +0.3 per rank.",
+  "kind": "rank",
+  "max_rank": 10,
+  "cost": {
+   "motes": 14507
+  },
+  "cost_growth": 1.15,
+  "lum": 0.0,
+  "requires": [
+   "shroud_flint_6"
+  ],
+  "effects": [
+   {
+    "stat": "transient_decay",
+    "op": "add",
+    "value": 0.3
+   }
+  ],
+  "pos": {
+   "x": 795.5,
+   "y": -795.5
+  },
+  "reveal_radius": 200,
+  "blight_safe": true,
+  "region": "base"
+ },
+ {
+  "id": "shroud_torch_12",
+  "constellation": "shroud",
+  "name": "Torch",
+  "desc": "shroud +0.02 per rank.",
+  "kind": "rank",
+  "max_rank": 6,
+  "cost": {
+   "motes": 29713
+  },
+  "cost_growth": 1.15,
+  "lum": 0.0,
+  "requires": [
+   "shroud_slag_8"
+  ],
+  "effects": [
+   {
+    "stat": "shroud",
+    "op": "add",
+    "value": 0.02
+   }
+  ],
+  "pos": {
+   "x": 617.3,
+   "y": -1144.1
+  },
+  "reveal_radius": 200,
+  "blight_safe": true,
+  "region": "base"
+ },
+ {
+  "id": "shroud_pyre_13",
+  "constellation": "shroud",
+  "name": "Pyre",
+  "desc": "transient decay +0.3 per rank.",
+  "kind": "rank",
+  "max_rank": 8,
+  "cost": {
+   "motes": 31863
+  },
+  "cost_growth": 1.15,
+  "lum": 0.0,
+  "requires": [
+   "shroud_fume_9"
+  ],
+  "effects": [
+   {
+    "stat": "transient_decay",
+    "op": "add",
+    "value": 0.3
+   }
+  ],
+  "pos": {
+   "x": 725.1,
+   "y": -1079.0
+  },
+  "reveal_radius": 200,
+  "blight_safe": true,
+  "region": "base"
+ },
+ {
+  "id": "shroud_soot_14",
+  "constellation": "shroud",
+  "name": "Soot",
+  "desc": "shroud +0.02 per rank.",
+  "kind": "rank",
+  "max_rank": 10,
+  "cost": {
+   "motes": 34014
+  },
+  "cost_growth": 1.15,
+  "lum": 0.0,
+  "requires": [
+   "shroud_brand_10"
+  ],
+  "effects": [
+   {
+    "stat": "shroud",
+    "op": "add",
+    "value": 0.02
+   }
+  ],
+  "pos": {
+   "x": 826.0,
+   "y": -1003.8
+  },
+  "reveal_radius": 200,
+  "blight_safe": false,
+  "region": "base"
+ },
+ {
+  "id": "shroud_lumen_15",
+  "constellation": "shroud",
+  "name": "Lumen",
+  "desc": "transient decay +0.3 per rank.",
+  "kind": "rank",
+  "max_rank": 6,
+  "cost": {
+   "motes": 36164
+  },
+  "cost_growth": 1.15,
+  "lum": 0.0,
+  "requires": [
+   "shroud_taper_11"
+  ],
+  "effects": [
+   {
+    "stat": "transient_decay",
+    "op": "add",
+    "value": 0.3
+   }
+  ],
+  "pos": {
+   "x": 919.2,
+   "y": -919.2
+  },
+  "reveal_radius": 200,
+  "blight_safe": false,
+  "region": "base"
+ },
+ {
+  "id": "shroud_candela_16",
+  "constellation": "shroud",
+  "name": "Candela",
+  "desc": "shroud +0.02 per rank.",
+  "kind": "rank",
+  "max_rank": 8,
+  "cost": {
+   "motes": 72797
+  },
+  "cost_growth": 1.15,
+  "lum": 0.0,
+  "requires": [
+   "shroud_torch_12"
+  ],
+  "effects": [
+   {
+    "stat": "shroud",
+    "op": "add",
+    "value": 0.02
+   }
+  ],
+  "pos": {
+   "x": 700.4,
+   "y": -1298.1
+  },
+  "reveal_radius": 200,
+  "blight_safe": true,
+  "region": "base"
+ },
+ {
+  "id": "shroud_nit_17",
+  "constellation": "shroud",
+  "name": "Nit",
+  "desc": "transient decay +0.3 per rank.",
+  "kind": "rank",
+  "max_rank": 10,
+  "cost": {
+   "motes": 76883
+  },
+  "cost_growth": 1.15,
+  "lum": 0.0,
+  "requires": [
+   "shroud_pyre_13"
+  ],
+  "effects": [
+   {
+    "stat": "transient_decay",
+    "op": "add",
+    "value": 0.3
+   }
+  ],
+  "pos": {
+   "x": 822.7,
+   "y": -1224.3
+  },
+  "reveal_radius": 200,
+  "blight_safe": true,
+  "region": "base"
+ },
+ {
+  "id": "shroud_nullwake",
+  "constellation": "shroud",
+  "name": "Nullwake",
+  "desc": "Structural luminance -60%. You can never use active sweep again.",
+  "kind": "keystone",
+  "max_rank": 1,
+  "cost": {
+   "facets": 6
+  },
+  "cost_growth": 1.0,
+  "lum": 0.0,
+  "requires": [
+   "shroud_nit_17"
+  ],
+  "effects": [
+   {
+    "stat": "lum_mult",
+    "op": "mul",
+    "value": -0.6
+   },
+   {
+    "op": "rule",
+    "rule": "nullwake"
+   }
+  ],
+  "pos": {
+   "x": 916.7,
+   "y": -1371.9
+  },
+  "reveal_radius": 320,
+  "blight_safe": false,
+  "region": "base"
+ },
+ {
+  "id": "shroud_cinder",
+  "constellation": "shroud",
+  "name": "Cinder",
+  "desc": "While luminance is under 20 you are undetectable. Above 20, awareness accrues at triple rate.",
+  "kind": "keystone",
+  "max_rank": 1,
+  "cost": {
+   "facets": 9
+  },
+  "cost_growth": 1.0,
+  "lum": 0.0,
+  "requires": [
+   "shroud_nit_17"
+  ],
+  "effects": [
+   {
+    "op": "rule",
+    "rule": "cinder"
+   }
+  ],
+  "pos": {
+   "x": 1371.9,
+   "y": -916.7
+  },
+  "reveal_radius": 320,
+  "blight_safe": true,
+  "region": "base"
+ },
+ {
+  "id": "bridge_shroud_expansion",
+  "constellation": "shroud",
+  "name": "Cold Bloom",
+  "desc": "Growth without the glare: mote yield +25% and structural luminance -10%.",
+  "kind": "bridge",
+  "max_rank": 1,
+  "cost": {
+   "facets": 5
+  },
+  "cost_growth": 1.0,
+  "lum": 1.0,
+  "requires": [
+   "shroud_candela_16",
+   "expansion_torch_17"
+  ],
+  "effects": [
+   {
+    "stat": "yield_mult",
+    "op": "mul",
+    "value": 0.25
+   },
+   {
+    "stat": "lum_mult",
+    "op": "mul",
+    "value": -0.1
+   }
+  ],
+  "pos": {
+   "x": 208.2,
+   "y": -1372.8
+  },
+  "reveal_radius": 400,
+  "blight_safe": false,
+  "region": "base"
+ }
+]

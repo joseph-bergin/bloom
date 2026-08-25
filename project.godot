@@ -6,21 +6,20 @@ config_version=5
 [application]
 
 config/name="BLOOM"
-config/description="An incremental game where the number going up is rendered as a light you cannot switch off."
+config/description="Every upgrade you buy makes you brighter, and brightness is the thing that spawns the enemies."
 run/main_scene="res://scenes/Main.tscn"
 config/features=PackedStringArray("4.3", "Forward Plus")
-run/low_processor_mode=false
 config/icon="res://icon.svg"
 
 [autoload]
 
 Constants="*res://autoload/constants.gd"
 EventBus="*res://autoload/event_bus.gd"
-GameState="*res://autoload/game_state.gd"
 TreeDB="*res://autoload/tree_db.gd"
 Stats="*res://autoload/stats.gd"
+GameState="*res://autoload/game_state.gd"
 SaveManager="*res://autoload/save_manager.gd"
-AudioDirector="*res://autoload/audio_director.gd"
+Audio="*res://autoload/audio.gd"
 SteamBridge="*res://autoload/steam_bridge.gd"
 
 [display]
@@ -38,18 +37,19 @@ common/physics_ticks_per_second=60
 
 renderer/rendering_method="forward_plus"
 viewport/hdr_2d=true
-textures/canvas_textures/default_texture_filter=2
 anti_aliasing/quality/msaa_2d=1
 
 [input]
 
-sweep={
+douse={
 "deadzone": 0.5,
 "events": [Object(InputEventKey,"resource_local_to_scene":false,"resource_name":"","device":-1,"window_id":0,"alt_pressed":false,"shift_pressed":false,"ctrl_pressed":false,"meta_pressed":false,"pressed":false,"keycode":32,"physical_keycode":0,"key_label":0,"unicode":0,"location":0,"echo":false,"script":null)
+, Object(InputEventJoypadButton,"resource_local_to_scene":false,"resource_name":"","device":-1,"button_index":2,"pressure":0.0,"pressed":false,"script":null)
 ]
 }
 toggle_tree={
 "deadzone": 0.5,
 "events": [Object(InputEventKey,"resource_local_to_scene":false,"resource_name":"","device":-1,"window_id":0,"alt_pressed":false,"shift_pressed":false,"ctrl_pressed":false,"meta_pressed":false,"pressed":false,"keycode":84,"physical_keycode":0,"key_label":0,"unicode":0,"location":0,"echo":false,"script":null)
+, Object(InputEventJoypadButton,"resource_local_to_scene":false,"resource_name":"","device":-1,"button_index":3,"pressure":0.0,"pressed":false,"script":null)
 ]
 }

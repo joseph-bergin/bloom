@@ -1,0 +1,857 @@
+[
+ {
+  "id": "burn_entry",
+  "branch": "burn",
+  "name": "Ignition",
+  "desc": "+8% damage per rank.",
+  "max_rank": 10,
+  "cost": 40,
+  "cost_growth": 1.15,
+  "lum": 4.0,
+  "requires": [],
+  "effects": [
+   {
+    "stat": "damage_mult",
+    "op": "add",
+    "value": 0.08
+   }
+  ],
+  "pos": {
+   "x": 0.0,
+   "y": -190.0
+  },
+  "keystone": false,
+  "section": "base"
+ },
+ {
+  "id": "burn_stoke",
+  "branch": "burn",
+  "name": "Stoke",
+  "desc": "+10% fire rate per rank.",
+  "max_rank": 8,
+  "cost": 90,
+  "cost_growth": 1.15,
+  "lum": 3.5,
+  "requires": [
+   "burn_entry"
+  ],
+  "effects": [
+   {
+    "stat": "fire_rate_mult",
+    "op": "add",
+    "value": 0.1
+   }
+  ],
+  "pos": {
+   "x": -199.8,
+   "y": -275.1
+  },
+  "keystone": false,
+  "section": "base"
+ },
+ {
+  "id": "burn_edge",
+  "branch": "burn",
+  "name": "Edge",
+  "desc": "+3% critical chance per rank.",
+  "max_rank": 10,
+  "cost": 110,
+  "cost_growth": 1.15,
+  "lum": 3.0,
+  "requires": [
+   "burn_entry"
+  ],
+  "effects": [
+   {
+    "stat": "crit_chance",
+    "op": "add",
+    "value": 0.03
+   }
+  ],
+  "pos": {
+   "x": 0.0,
+   "y": -340.0
+  },
+  "keystone": false,
+  "section": "base"
+ },
+ {
+  "id": "burn_fuel",
+  "branch": "burn",
+  "name": "Fuel",
+  "desc": "+11% damage per rank.",
+  "max_rank": 10,
+  "cost": 240,
+  "cost_growth": 1.15,
+  "lum": 5.0,
+  "requires": [
+   "burn_entry"
+  ],
+  "effects": [
+   {
+    "stat": "damage_mult",
+    "op": "add",
+    "value": 0.11
+   }
+  ],
+  "pos": {
+   "x": 199.8,
+   "y": -275.1
+  },
+  "keystone": false,
+  "section": "base"
+ },
+ {
+  "id": "burn_bellows",
+  "branch": "burn",
+  "name": "Bellows",
+  "desc": "+12% fire rate per rank.",
+  "max_rank": 8,
+  "cost": 420,
+  "cost_growth": 1.15,
+  "lum": 4.5,
+  "requires": [
+   "burn_stoke"
+  ],
+  "effects": [
+   {
+    "stat": "fire_rate_mult",
+    "op": "add",
+    "value": 0.12
+   }
+  ],
+  "pos": {
+   "x": -288.0,
+   "y": -396.4
+  },
+  "keystone": false,
+  "section": "base"
+ },
+ {
+  "id": "burn_shear",
+  "branch": "burn",
+  "name": "Shear",
+  "desc": "Critical hits do +0.4x damage per rank.",
+  "max_rank": 6,
+  "cost": 520,
+  "cost_growth": 1.15,
+  "lum": 4.0,
+  "requires": [
+   "burn_edge"
+  ],
+  "effects": [
+   {
+    "stat": "crit_mult",
+    "op": "add",
+    "value": 0.4
+   }
+  ],
+  "pos": {
+   "x": -101.9,
+   "y": -479.3
+  },
+  "keystone": false,
+  "section": "base"
+ },
+ {
+  "id": "burn_split",
+  "branch": "burn",
+  "name": "Split Shot",
+  "desc": "+1 projectile per rank. Each one is more light.",
+  "max_rank": 3,
+  "cost": 1400,
+  "cost_growth": 1.15,
+  "lum": 7.0,
+  "requires": [
+   "burn_edge"
+  ],
+  "effects": [
+   {
+    "stat": "projectiles",
+    "op": "add",
+    "value": 1.0
+   }
+  ],
+  "pos": {
+   "x": 101.9,
+   "y": -479.3
+  },
+  "keystone": false,
+  "section": "base"
+ },
+ {
+  "id": "burn_more",
+  "branch": "burn",
+  "name": "More",
+  "desc": "+1% damage. No cap.",
+  "max_rank": -1,
+  "cost": 300,
+  "cost_growth": 1.08,
+  "lum": 0.4,
+  "requires": [
+   "burn_fuel"
+  ],
+  "effects": [
+   {
+    "stat": "damage_mult",
+    "op": "add",
+    "value": 0.01
+   }
+  ],
+  "pos": {
+   "x": 288.0,
+   "y": -396.4
+  },
+  "keystone": false,
+  "section": "base"
+ },
+ {
+  "id": "burn_furnace",
+  "branch": "burn",
+  "name": "Furnace",
+  "desc": "+15% damage per rank. Very loud.",
+  "max_rank": 10,
+  "cost": 1100,
+  "cost_growth": 1.15,
+  "lum": 6.5,
+  "requires": [
+   "burn_bellows"
+  ],
+  "effects": [
+   {
+    "stat": "damage_mult",
+    "op": "add",
+    "value": 0.15
+   }
+  ],
+  "pos": {
+   "x": -376.2,
+   "y": -517.8
+  },
+  "keystone": false,
+  "section": "base"
+ },
+ {
+  "id": "burn_roar",
+  "branch": "burn",
+  "name": "Roar",
+  "desc": "+14% fire rate per rank.",
+  "max_rank": 8,
+  "cost": 2200,
+  "cost_growth": 1.15,
+  "lum": 6.0,
+  "requires": [
+   "burn_shear"
+  ],
+  "effects": [
+   {
+    "stat": "fire_rate_mult",
+    "op": "add",
+    "value": 0.14
+   }
+  ],
+  "pos": {
+   "x": -197.8,
+   "y": -608.7
+  },
+  "keystone": false,
+  "section": "base"
+ },
+ {
+  "id": "burn_faster",
+  "branch": "burn",
+  "name": "Faster",
+  "desc": "+1% fire rate. No cap.",
+  "max_rank": -1,
+  "cost": 600,
+  "cost_growth": 1.08,
+  "lum": 0.4,
+  "requires": [
+   "burn_shear"
+  ],
+  "effects": [
+   {
+    "stat": "fire_rate_mult",
+    "op": "add",
+    "value": 0.01
+   }
+  ],
+  "pos": {
+   "x": 0.0,
+   "y": -640.0
+  },
+  "keystone": false,
+  "section": "base"
+ },
+ {
+  "id": "burn_whitehot",
+  "branch": "burn",
+  "name": "White Hot",
+  "desc": "+5% critical chance per rank.",
+  "max_rank": 8,
+  "cost": 3000,
+  "cost_growth": 1.15,
+  "lum": 5.5,
+  "requires": [
+   "burn_furnace"
+  ],
+  "effects": [
+   {
+    "stat": "crit_chance",
+    "op": "add",
+    "value": 0.05
+   }
+  ],
+  "pos": {
+   "x": -464.4,
+   "y": -639.1
+  },
+  "keystone": false,
+  "section": "base"
+ },
+ {
+  "id": "burn_ash_0",
+  "branch": "burn",
+  "name": "Ash",
+  "desc": "damage mult +0.06 per rank.",
+  "max_rank": 6,
+  "cost": 875,
+  "cost_growth": 1.15,
+  "lum": 3.4,
+  "requires": [
+   "burn_roar"
+  ],
+  "effects": [
+   {
+    "stat": "damage_mult",
+    "op": "add",
+    "value": 0.06
+   }
+  ],
+  "pos": {
+   "x": -244.1,
+   "y": -751.3
+  },
+  "keystone": false,
+  "section": "base"
+ },
+ {
+  "id": "burn_tinder_1",
+  "branch": "burn",
+  "name": "Tinder",
+  "desc": "fire rate mult +0.06 per rank.",
+  "max_rank": 8,
+  "cost": 1312,
+  "cost_growth": 1.15,
+  "lum": 3.21,
+  "requires": [
+   "burn_faster"
+  ],
+  "effects": [
+   {
+    "stat": "fire_rate_mult",
+    "op": "add",
+    "value": 0.06
+   }
+  ],
+  "pos": {
+   "x": 0.0,
+   "y": -790.0
+  },
+  "keystone": false,
+  "section": "base"
+ },
+ {
+  "id": "burn_coal_2",
+  "branch": "burn",
+  "name": "Coal",
+  "desc": "crit chance +0.02 per rank.",
+  "max_rank": 10,
+  "cost": 1750,
+  "cost_growth": 1.15,
+  "lum": 2.96,
+  "requires": [
+   "burn_faster"
+  ],
+  "effects": [
+   {
+    "stat": "crit_chance",
+    "op": "add",
+    "value": 0.02
+   }
+  ],
+  "pos": {
+   "x": 244.1,
+   "y": -751.3
+  },
+  "keystone": false,
+  "section": "base"
+ },
+ {
+  "id": "burn_wick_3",
+  "branch": "burn",
+  "name": "Wick",
+  "desc": "damage mult +0.06 per rank.",
+  "max_rank": 6,
+  "cost": 2188,
+  "cost_growth": 1.15,
+  "lum": 4.11,
+  "requires": [
+   "burn_faster"
+  ],
+  "effects": [
+   {
+    "stat": "damage_mult",
+    "op": "add",
+    "value": 0.06
+   }
+  ],
+  "pos": {
+   "x": 464.4,
+   "y": -639.1
+  },
+  "keystone": false,
+  "section": "base"
+ },
+ {
+  "id": "burn_glim_4",
+  "branch": "burn",
+  "name": "Glim",
+  "desc": "fire rate mult +0.06 per rank.",
+  "max_rank": 8,
+  "cost": 4594,
+  "cost_growth": 1.15,
+  "lum": 3.84,
+  "requires": [
+   "burn_whitehot"
+  ],
+  "effects": [
+   {
+    "stat": "fire_rate_mult",
+    "op": "add",
+    "value": 0.06
+   }
+  ],
+  "pos": {
+   "x": -552.5,
+   "y": -760.5
+  },
+  "keystone": false,
+  "section": "base"
+ },
+ {
+  "id": "burn_spark_5",
+  "branch": "burn",
+  "name": "Spark",
+  "desc": "crit chance +0.02 per rank.",
+  "max_rank": 10,
+  "cost": 5359,
+  "cost_growth": 1.15,
+  "lum": 3.51,
+  "requires": [
+   "burn_ash_0"
+  ],
+  "effects": [
+   {
+    "stat": "crit_chance",
+    "op": "add",
+    "value": 0.02
+   }
+  ],
+  "pos": {
+   "x": -346.0,
+   "y": -874.0
+  },
+  "keystone": false,
+  "section": "base"
+ },
+ {
+  "id": "burn_char_6",
+  "branch": "burn",
+  "name": "Char",
+  "desc": "damage mult +0.06 per rank.",
+  "max_rank": 6,
+  "cost": 6125,
+  "cost_growth": 1.15,
+  "lum": 4.83,
+  "requires": [
+   "burn_tinder_1"
+  ],
+  "effects": [
+   {
+    "stat": "damage_mult",
+    "op": "add",
+    "value": 0.06
+   }
+  ],
+  "pos": {
+   "x": -117.8,
+   "y": -932.6
+  },
+  "keystone": false,
+  "section": "base"
+ },
+ {
+  "id": "burn_kindle_7",
+  "branch": "burn",
+  "name": "Kindle",
+  "desc": "fire rate mult +0.06 per rank.",
+  "max_rank": 8,
+  "cost": 6891,
+  "cost_growth": 1.15,
+  "lum": 4.47,
+  "requires": [
+   "burn_tinder_1"
+  ],
+  "effects": [
+   {
+    "stat": "fire_rate_mult",
+    "op": "add",
+    "value": 0.06
+   }
+  ],
+  "pos": {
+   "x": 117.8,
+   "y": -932.6
+  },
+  "keystone": false,
+  "section": "base"
+ },
+ {
+  "id": "burn_flint_8",
+  "branch": "burn",
+  "name": "Flint",
+  "desc": "crit chance +0.02 per rank.",
+  "max_rank": 10,
+  "cost": 13398,
+  "cost_growth": 1.15,
+  "lum": 4.06,
+  "requires": [
+   "burn_glim_4"
+  ],
+  "effects": [
+   {
+    "stat": "crit_chance",
+    "op": "add",
+    "value": 0.02
+   }
+  ],
+  "pos": {
+   "x": -640.7,
+   "y": -881.8
+  },
+  "keystone": false,
+  "section": "base"
+ },
+ {
+  "id": "burn_slag_9",
+  "branch": "burn",
+  "name": "Slag",
+  "desc": "damage mult +0.06 per rank.",
+  "max_rank": 6,
+  "cost": 14738,
+  "cost_growth": 1.15,
+  "lum": 5.54,
+  "requires": [
+   "burn_spark_5"
+  ],
+  "effects": [
+   {
+    "stat": "damage_mult",
+    "op": "add",
+    "value": 0.06
+   }
+  ],
+  "pos": {
+   "x": -401.3,
+   "y": -1013.5
+  },
+  "keystone": false,
+  "section": "base"
+ },
+ {
+  "id": "burn_fume_10",
+  "branch": "burn",
+  "name": "Fume",
+  "desc": "fire rate mult +0.06 per rank.",
+  "max_rank": 8,
+  "cost": 16078,
+  "cost_growth": 1.15,
+  "lum": 5.1,
+  "requires": [
+   "burn_char_6"
+  ],
+  "effects": [
+   {
+    "stat": "fire_rate_mult",
+    "op": "add",
+    "value": 0.06
+   }
+  ],
+  "pos": {
+   "x": -136.6,
+   "y": -1081.4
+  },
+  "keystone": false,
+  "section": "base"
+ },
+ {
+  "id": "burn_brand_11",
+  "branch": "burn",
+  "name": "Brand",
+  "desc": "crit chance +0.02 per rank.",
+  "max_rank": 10,
+  "cost": 17418,
+  "cost_growth": 1.15,
+  "lum": 4.6,
+  "requires": [
+   "burn_kindle_7"
+  ],
+  "effects": [
+   {
+    "stat": "crit_chance",
+    "op": "add",
+    "value": 0.02
+   }
+  ],
+  "pos": {
+   "x": 136.6,
+   "y": -1081.4
+  },
+  "keystone": false,
+  "section": "base"
+ },
+ {
+  "id": "burn_taper_12",
+  "branch": "burn",
+  "name": "Taper",
+  "desc": "damage mult +0.06 per rank.",
+  "max_rank": 6,
+  "cost": 32826,
+  "cost_growth": 1.15,
+  "lum": 6.26,
+  "requires": [
+   "burn_flint_8"
+  ],
+  "effects": [
+   {
+    "stat": "damage_mult",
+    "op": "add",
+    "value": 0.06
+   }
+  ],
+  "pos": {
+   "x": -728.9,
+   "y": -1003.2
+  },
+  "keystone": false,
+  "section": "base"
+ },
+ {
+  "id": "burn_torch_13",
+  "branch": "burn",
+  "name": "Torch",
+  "desc": "fire rate mult +0.06 per rank.",
+  "max_rank": 8,
+  "cost": 35171,
+  "cost_growth": 1.15,
+  "lum": 5.73,
+  "requires": [
+   "burn_slag_9"
+  ],
+  "effects": [
+   {
+    "stat": "fire_rate_mult",
+    "op": "add",
+    "value": 0.06
+   }
+  ],
+  "pos": {
+   "x": -456.5,
+   "y": -1152.9
+  },
+  "keystone": false,
+  "section": "base"
+ },
+ {
+  "id": "burn_pyre_14",
+  "branch": "burn",
+  "name": "Pyre",
+  "desc": "crit chance +0.02 per rank.",
+  "max_rank": 10,
+  "cost": 37516,
+  "cost_growth": 1.15,
+  "lum": 5.15,
+  "requires": [
+   "burn_fume_10"
+  ],
+  "effects": [
+   {
+    "stat": "crit_chance",
+    "op": "add",
+    "value": 0.02
+   }
+  ],
+  "pos": {
+   "x": -155.4,
+   "y": -1230.2
+  },
+  "keystone": false,
+  "section": "base"
+ },
+ {
+  "id": "burn_soot_15",
+  "branch": "burn",
+  "name": "Soot",
+  "desc": "damage mult +0.06 per rank.",
+  "max_rank": 6,
+  "cost": 39860,
+  "cost_growth": 1.15,
+  "lum": 6.97,
+  "requires": [
+   "burn_brand_11"
+  ],
+  "effects": [
+   {
+    "stat": "damage_mult",
+    "op": "add",
+    "value": 0.06
+   }
+  ],
+  "pos": {
+   "x": 155.4,
+   "y": -1230.2
+  },
+  "keystone": false,
+  "section": "base"
+ },
+ {
+  "id": "burn_lumen_16",
+  "branch": "burn",
+  "name": "Lumen",
+  "desc": "fire rate mult +0.06 per rank.",
+  "max_rank": 8,
+  "cost": 73859,
+  "cost_growth": 1.15,
+  "lum": 6.36,
+  "requires": [
+   "burn_taper_12"
+  ],
+  "effects": [
+   {
+    "stat": "fire_rate_mult",
+    "op": "add",
+    "value": 0.06
+   }
+  ],
+  "pos": {
+   "x": -817.0,
+   "y": -1124.5
+  },
+  "keystone": false,
+  "section": "base"
+ },
+ {
+  "id": "burn_nit_17",
+  "branch": "burn",
+  "name": "Nit",
+  "desc": "crit chance +0.02 per rank.",
+  "max_rank": 10,
+  "cost": 77962,
+  "cost_growth": 1.15,
+  "lum": 5.69,
+  "requires": [
+   "burn_torch_13"
+  ],
+  "effects": [
+   {
+    "stat": "crit_chance",
+    "op": "add",
+    "value": 0.02
+   }
+  ],
+  "pos": {
+   "x": -511.7,
+   "y": -1292.4
+  },
+  "keystone": false,
+  "section": "base"
+ },
+ {
+  "id": "burn_lux_18",
+  "branch": "burn",
+  "name": "Lux",
+  "desc": "damage mult +0.06 per rank.",
+  "max_rank": 6,
+  "cost": 82065,
+  "cost_growth": 1.15,
+  "lum": 7.68,
+  "requires": [
+   "burn_pyre_14"
+  ],
+  "effects": [
+   {
+    "stat": "damage_mult",
+    "op": "add",
+    "value": 0.06
+   }
+  ],
+  "pos": {
+   "x": -174.2,
+   "y": -1379.0
+  },
+  "keystone": false,
+  "section": "base"
+ },
+ {
+  "id": "burn_ember_19",
+  "branch": "burn",
+  "name": "Ember",
+  "desc": "fire rate mult +0.06 per rank.",
+  "max_rank": 8,
+  "cost": 86169,
+  "cost_growth": 1.15,
+  "lum": 6.99,
+  "requires": [
+   "burn_soot_15"
+  ],
+  "effects": [
+   {
+    "stat": "fire_rate_mult",
+    "op": "add",
+    "value": 0.06
+   }
+  ],
+  "pos": {
+   "x": 174.2,
+   "y": -1379.0
+  },
+  "keystone": false,
+  "section": "base"
+ },
+ {
+  "id": "burn_wildfire",
+  "branch": "burn",
+  "name": "Wildfire",
+  "desc": "Damage x3. Luminance grows +0.3/s continuously, forever.",
+  "max_rank": 1,
+  "cost": 6000,
+  "cost_growth": 1.0,
+  "lum": 8.0,
+  "requires": [
+   "burn_lux_18"
+  ],
+  "effects": [
+   {
+    "op": "rule",
+    "rule": "wildfire"
+   }
+  ],
+  "pos": {
+   "x": 0.0,
+   "y": -1540.0
+  },
+  "keystone": true,
+  "section": "base"
+ }
+]

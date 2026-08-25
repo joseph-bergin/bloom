@@ -1,177 +1,77 @@
 extends Node
-## Every tunable number in the game. Pure data, no logic.
-## A literal number in a system file is a bug (see spec 2.4).
+## Every tuning number, no exceptions.
+##
+## These are `var`, not `const`, so tools/sim_runner.gd can sweep them with
+## --set=KEY=VALUE. Nothing else may write to them.
 
-# --- Field ---------------------------------------------------------------
-const FIELD_RADIUS := 1000.0
+var FIELD_RADIUS: float = 640.0
 
-# --- Contacts ------------------------------------------------------------
-const CASCADE_BASE := 0.0035
-const SPAWN_INTERVAL_BASE := 12.0
-const CONTACT_CAP_BASE := 40
-const CONTACT_CAP_PER_EMBER := 12
-const SPAWN_PRESSURE_SCALE := 0.4
-const SPAWN_RANGE_MIN := 0.55
-const SPAWN_RANGE_MAX := 1.0
-const SPAWN_DRIFT_MAX := 0.06          # rad/s
-const SPAWN_CLOSING_MIN := -14.0       # u/s, negative approaches
-const SPAWN_CLOSING_MAX := 6.0
-const TIER_MAX := 7
-const TIER_WEIGHTS: Array[float] = [0.45, 0.28, 0.15, 0.08, 0.04]
-const TIER_PRESSURE_FLOOR := 0.8
-const CASCADE_TIER_SCALE := 0.15
-const FLEE_DESPAWN := 20.0
-const FLEE_SPEED := 90.0
-const CONTACT_MIN_RANGE := 30.0
+var SPAWN_INTERVAL_BASE: float = 3.0
+var SPAWN_LUM_SCALE: float = 50.0
+var TIER_LUM_STEP: float = 40.0
+var MAX_TIER: int = 7
+## Tier rolls uniformly 0..max_tier but weighted toward the top third, so the
+## field feels like it is escalating rather than averaging out.
+var TIER_TOP_THIRD_BIAS: float = 0.45
 
-# --- Field pressure ------------------------------------------------------
-const PRESSURE_PER_EMBER := 0.18
-const PRESSURE_TIME_SCALE := 0.0006
-const PRESSURE_TIME_EXP := 1.25
-const PRESSURE_LUM_SCALE := 0.0015
+var DRIFT_BASE: float = 18.0
+var DRIFT_LUM_SCALE: float = 0.25
 
-# --- Luminance -----------------------------------------------------------
-# You are a colony of something that burns. There is no configuration in
-# which you emit nothing — Shroud reduces this baseline like any other
-# structural light, but never removes it. Without a floor, a player who
-# builds nothing is permanently undetectable and waiting becomes a winning
-# strategy, which spec section 15 lists as a failure mode to design against.
-const LUMINANCE_BASELINE := 2.5
+var HP_BASE: float = 10.0
+var HP_TIER_MULT: float = 2.2
+var MOTE_BASE: float = 3.0
+var MOTE_TIER_MULT: float = 1.9
+var RADIUS_BASE: float = 6.0
+var RADIUS_TIER_STEP: float = 2.0
 
-const TRANSIENT_TAU_BASE := 12.0
-const TRANSIENT_TAU_MIN := 4.0
-const SHROUD_CAP := 0.88
-const TRANSIENT_SWEEP := 25.0
-const TRANSIENT_LANCE_LAUNCH := 8.0
-const TRANSIENT_DETONATION := 6.0
-const TRANSIENT_DETONATION_EXP := 1.4
-const TRANSIENT_REASSERT := 40.0
-const TRANSIENT_PURCHASE := 3.0
+var SHROUD_CAP: float = 0.80
+var DOUSE_FACTOR: float = 0.10
+var DOUSE_DRAIN: float = 0.20        # meter per second held
+var DOUSE_REFILL: float = 0.06
 
-# --- Sensing -------------------------------------------------------------
-const PASSIVE_INTERVAL_BASE := 6.0
-const PASSIVE_INTERVAL_MIN := 1.5
-const PASSIVE_RANGE_BASE := 420.0
-const PASSIVE_BEARING_NOISE := 0.25    # radians at precision 1.0
-const PASSIVE_RANGE_NOISE := 0.30      # +/- 30%
-const OPTICS_RANK_RANGE_DATA := 4      # rank at which range becomes known
-const OPTICS_RANK_STRIKE_DETECT := 6
-const SIGNAL_PER_READ := 0.35
+## Each prestige starts you in a darker, denser field. Without this the
+## field never escalates across runs, mote income stays flat, and ember
+## income with it — the whole campaign plateaus on the first cycle.
+var PRESTIGE_DENSITY: float = 0.04
 
-const SWEEP_RING_SPEED := 600.0
-const SWEEP_RADIUS_BASE := 350.0
-const SWEEP_COOLDOWN_BASE := 8.0
-const SWEEP_TRANSIENT := 25.0
-const LIGHTHOUSE_TRANSIENT_MULT := 4.0
-const LIGHTHOUSE_AWARENESS := 0.15
+var START_SHIELDS: int = 3
+var EMBER_DIVISOR: float = 80.0
+## Retiring early must always beat dying.
+var RETIRE_BONUS: float = 0.25
 
-const UNCERT_GROWTH := 14.0
-const DROP_THRESHOLD := 400.0
+var TURRET_RANGE_BASE: float = 260.0
+var TURRET_DAMAGE_BASE: float = 4.0
+var TURRET_RATE_BASE: float = 2.0    # shots per second
+var PROJECTILE_SPEED: float = 520.0
+var PROJECTILE_LIFETIME: float = 3.0
+var CRIT_MULT_BASE: float = 2.0
 
-# --- Lances --------------------------------------------------------------
-const LANCE_SPEED_BASE := 260.0
-const STALE_PENALTY := 0.10
-const MIN_HIT_CHANCE_BASE := 0.05
-const LANCE_MISS_AWARENESS := 0.3
-const LANCE_MISS_MARKER_TIME := 2.0
-const LANCE_COST_SIGNAL := 0.0
-const MOTES_BASE := 8.0
-const MOTES_TIER_EXP := 1.8
-const FACET_TIER_MIN := 4
+var WILDFIRE_LUM_RATE: float = 0.3
+var CINDER_THRESHOLD: float = 20.0
+var CINDER_SPAWN_MULT: float = 2.0
+var LONGSHOT_RANGE_MULT: float = 2.5
+var LONGSHOT_RATE_MULT: float = 0.5
+var WILDFIRE_DAMAGE_MULT: float = 3.0
+var DIASPORA_SHIELDS: int = 3
+var DIASPORA_INCOME_MULT: float = 0.6
 
-# --- Backlight -----------------------------------------------------------
-const BACKLIGHT_FLOOR := 0.015
-const BACKLIGHT_SCALE := 0.00004
-const BACKLIGHT_CAP := 0.90
-const HUNTER_AWARENESS := 0.75
-const HUNTER_TIER_MIN := 2
-const HUNTER_SPAWN_RANGE := 0.92       # fraction of FIELD_RADIUS
-const HUNTER_CLOSING := -22.0
+# --- feel ----------------------------------------------------------------
+var HITSTOP_SECONDS: float = 0.05
+var SHAKE_PER_TIER: float = 2.2
+var SHAKE_DECAY: float = 7.0
+var BREACH_FLASH: float = 0.3
+var BREACH_DUCK: float = 1.0
 
-# --- Awareness -----------------------------------------------------------
-const AWARENESS_RATE := 0.012
-const AWARENESS_THRESHOLD_BASE := 30.0
-const AWARENESS_TIER_MULT := 1.9
-const AWARENESS_DECAY := 0.004         # when below threshold
-const BLIGHT_TIER_MIN := 4
-const BLIGHT_CHANCE := 0.4
-
-# --- Strikes -------------------------------------------------------------
-const STRIKE_SPEED := 180.0
-const STRIKE_PREP_MIN := 5.0
-const STRIKE_PREP_MAX := 20.0
-const DISPERSAL_COST_SIGNAL := 40.0
-const DISPERSAL_TRANSIENT := 10.0
-
-# --- Tethers -------------------------------------------------------------
-const TETHER_YIELD := 0.6
-const SLACK_BASE := 0.004
-const SLACK_LUM_SCALE := 200.0
-const TETHER_ESTABLISH_COST := 25.0    # signal
-const TETHER_REASSERT_COST := 18.0     # signal
-const TETHER_MAX_AWARENESS := 0.5
-const TETHER_TIER_MARGIN := 1
-const TETHER_FACET_INTERVAL := 90.0
-const TETHER_WARN_1 := 0.75
-const TETHER_WARN_2 := 0.9
-const SENSOR_CAPACITY_BASE := 3
-
-# --- Blight --------------------------------------------------------------
-const BLIGHT_NODES_MIN := 3
-const BLIGHT_NODES_MAX := 6
-const BLIGHT_CONSTELLATION_WEIGHT := 3.0
-
-# --- Redundancy ----------------------------------------------------------
-const REDUNDANCY_BASE := 1
-const STRIKE_FLASH_TIME := 0.4
-const STRIKE_DUCK_TIME := 1.0
-
-# --- Economy -------------------------------------------------------------
-const SIGNAL_PASSIVE_BASE := 0.0
-const COST_GROWTH_RANK := 1.15
-const COST_GROWTH_STRONG := 1.35
-
-# --- Prestige ------------------------------------------------------------
-const DORMANCY_EFFICIENCY_BASE := 0.35
-const DORMANCY_EFFICIENCY_MAX := 0.8
-const DORMANCY_CLAMP_SECONDS := 43200.0   # 12h
-const EMBER_MOTE_DIVISOR := 1.0e6
-const EMBER_EXP := 0.42
-const EMBER_FACET_VALUE := 0.5
-const COLD_UNLOCK_EMBERS := 8
-const COLD_TIER_PER_RANK := 1
-const COLD_INCOME_PENALTY := 0.18
-
-# --- Automation ----------------------------------------------------------
-const AUTO_SWEEP_MARGIN := 0.1
-const AUTO_LANCE_INTERVAL := 0.75
-
-# --- Feel ----------------------------------------------------------------
-const HITSTOP_FRAMES := 3
-const SHAKE_PER_TIER := 2.4
-const SHAKE_DECAY := 6.0
-
-# --- Save ----------------------------------------------------------------
-const SAVE_VERSION := 3
-const AUTOSAVE_INTERVAL := 30.0
+# --- save ----------------------------------------------------------------
+var SAVE_VERSION: int = 2
 const SAVE_PATH := "user://save.json"
 const SAVE_BACKUP_PATH := "user://save.backup.json"
+var AUTOSAVE_INTERVAL: float = 20.0
 
-# --- Rendering -----------------------------------------------------------
-const HDR_CONTACT_BASE := 1.4
-const HDR_PLAYER_BASE := 1.2
 
-## Deterministic-friendly weighted roll. Returns index into `weights`.
-static func weighted_roll(weights: Array, rng: RandomNumberGenerator = null) -> int:
-	var total: float = 0.0
-	for w in weights:
-		total += float(w)
-	if total <= 0.0:
-		return 0
-	var r: float = (rng.randf() if rng != null else randf()) * total
-	var acc: float = 0.0
-	for i in range(weights.size()):
-		acc += float(weights[i])
-		if r <= acc:
-			return i
-	return weights.size() - 1
+## Apply a sweep override. Used only by the headless runner.
+func set_tuning(key: String, value: float) -> bool:
+	if not has_method("get") or get(key) == null:
+		return false
+	set(key, int(value) if typeof(get(key)) == TYPE_INT else value)
+	return true

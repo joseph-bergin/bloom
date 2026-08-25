@@ -1,16 +1,12 @@
-[gd_scene load_steps=12 format=3]
+[gd_scene load_steps=8 format=3]
 
 [ext_resource type="Script" path="res://scenes/field/FieldView.gd" id="1_fv"]
 [ext_resource type="Script" path="res://scenes/field/GlowRig.gd" id="2_glow"]
-[ext_resource type="Script" path="res://scenes/field/layers/BackgroundLayer.gd" id="3_bg"]
-[ext_resource type="Script" path="res://scenes/field/layers/SweepLayer.gd" id="4_sweep"]
-[ext_resource type="Script" path="res://scenes/field/layers/GhostLayer.gd" id="5_ghost"]
-[ext_resource type="Script" path="res://scenes/field/layers/ContactLayer.gd" id="6_contact"]
-[ext_resource type="Script" path="res://scenes/field/layers/LanceLayer.gd" id="7_lance"]
-[ext_resource type="Script" path="res://scenes/field/layers/IncomingLayer.gd" id="8_incoming"]
-[ext_resource type="Script" path="res://scenes/field/layers/PlayerBloom.gd" id="9_bloom"]
-[ext_resource type="Script" path="res://scenes/field/layers/OverlayLayer.gd" id="10_overlay"]
-[ext_resource type="Script" path="res://scenes/field/AudioRig.gd" id="11_audio"]
+[ext_resource type="Script" path="res://scenes/field/BackdropLayer.gd" id="3_back"]
+[ext_resource type="Script" path="res://scenes/field/ContactLayer.gd" id="4_contact"]
+[ext_resource type="Script" path="res://scenes/field/ProjectileLayer.gd" id="5_proj"]
+[ext_resource type="Script" path="res://scenes/field/PlayerBloom.gd" id="6_bloom"]
+[ext_resource type="Script" path="res://scenes/field/OverlayLayer.gd" id="7_overlay"]
 
 [node name="FieldView" type="Node2D"]
 script = ExtResource("1_fv")
@@ -20,29 +16,17 @@ script = ExtResource("2_glow")
 
 [node name="Camera2D" type="Camera2D" parent="."]
 
-[node name="BackgroundLayer" type="Node2D" parent="."]
-script = ExtResource("3_bg")
-
-[node name="SweepLayer" type="Node2D" parent="."]
-script = ExtResource("4_sweep")
-
-[node name="GhostLayer" type="Node2D" parent="."]
-script = ExtResource("5_ghost")
+[node name="BackdropLayer" type="Node2D" parent="."]
+script = ExtResource("3_back")
 
 [node name="ContactLayer" type="Node2D" parent="."]
-script = ExtResource("6_contact")
+script = ExtResource("4_contact")
 
-[node name="LanceLayer" type="Node2D" parent="."]
-script = ExtResource("7_lance")
-
-[node name="IncomingLayer" type="Node2D" parent="."]
-script = ExtResource("8_incoming")
+[node name="ProjectileLayer" type="Node2D" parent="."]
+script = ExtResource("5_proj")
 
 [node name="PlayerBloom" type="Node2D" parent="."]
-script = ExtResource("9_bloom")
+script = ExtResource("6_bloom")
 
 [node name="OverlayLayer" type="Node2D" parent="."]
-script = ExtResource("10_overlay")
-
-[node name="AudioRig" type="Node2D" parent="."]
-script = ExtResource("11_audio")
+script = ExtResource("7_overlay")

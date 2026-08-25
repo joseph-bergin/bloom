@@ -1,0 +1,857 @@
+[
+ {
+  "id": "root_entry",
+  "branch": "root",
+  "name": "Anchor",
+  "desc": "+9% mote yield per rank.",
+  "max_rank": 8,
+  "cost": 50,
+  "cost_growth": 1.15,
+  "lum": 2.0,
+  "requires": [],
+  "effects": [
+   {
+    "stat": "mote_mult",
+    "op": "mul",
+    "value": 0.09
+   }
+  ],
+  "pos": {
+   "x": -190.0,
+   "y": 0.0
+  },
+  "keystone": false,
+  "section": "base"
+ },
+ {
+  "id": "root_shield",
+  "branch": "root",
+  "name": "Second Skin",
+  "desc": "+1 shield per rank.",
+  "max_rank": 2,
+  "cost": 400,
+  "cost_growth": 1.15,
+  "lum": 2.5,
+  "requires": [
+   "root_entry"
+  ],
+  "effects": [
+   {
+    "stat": "shields",
+    "op": "add",
+    "value": 1.0
+   }
+  ],
+  "pos": {
+   "x": -275.1,
+   "y": 199.8
+  },
+  "keystone": false,
+  "section": "base"
+ },
+ {
+  "id": "root_gather",
+  "branch": "root",
+  "name": "Gather",
+  "desc": "+11% mote yield per rank.",
+  "max_rank": 8,
+  "cost": 180,
+  "cost_growth": 1.15,
+  "lum": 2.2,
+  "requires": [
+   "root_entry"
+  ],
+  "effects": [
+   {
+    "stat": "mote_mult",
+    "op": "mul",
+    "value": 0.11
+   }
+  ],
+  "pos": {
+   "x": -340.0,
+   "y": 0.0
+  },
+  "keystone": false,
+  "section": "base"
+ },
+ {
+  "id": "root_bank",
+  "branch": "root",
+  "name": "Bank",
+  "desc": "+10% embers banked per rank.",
+  "max_rank": 6,
+  "cost": 600,
+  "cost_growth": 1.15,
+  "lum": 2.4,
+  "requires": [
+   "root_entry"
+  ],
+  "effects": [
+   {
+    "stat": "ember_mult",
+    "op": "mul",
+    "value": 0.1
+   }
+  ],
+  "pos": {
+   "x": -275.1,
+   "y": -199.8
+  },
+  "keystone": false,
+  "section": "base"
+ },
+ {
+  "id": "root_thick",
+  "branch": "root",
+  "name": "Thicken",
+  "desc": "+1 shield per rank.",
+  "max_rank": 2,
+  "cost": 2200,
+  "cost_growth": 1.15,
+  "lum": 3.0,
+  "requires": [
+   "root_shield"
+  ],
+  "effects": [
+   {
+    "stat": "shields",
+    "op": "add",
+    "value": 1.0
+   }
+  ],
+  "pos": {
+   "x": -396.4,
+   "y": 288.0
+  },
+  "keystone": false,
+  "section": "base"
+ },
+ {
+  "id": "root_harvest",
+  "branch": "root",
+  "name": "Harvest",
+  "desc": "+13% mote yield per rank.",
+  "max_rank": 8,
+  "cost": 900,
+  "cost_growth": 1.15,
+  "lum": 2.8,
+  "requires": [
+   "root_gather"
+  ],
+  "effects": [
+   {
+    "stat": "mote_mult",
+    "op": "mul",
+    "value": 0.13
+   }
+  ],
+  "pos": {
+   "x": -479.3,
+   "y": 101.9
+  },
+  "keystone": false,
+  "section": "base"
+ },
+ {
+  "id": "root_thrift",
+  "branch": "root",
+  "name": "Thrift",
+  "desc": "+1% mote yield. No cap.",
+  "max_rank": -1,
+  "cost": 340,
+  "cost_growth": 1.08,
+  "lum": 0.2,
+  "requires": [
+   "root_gather"
+  ],
+  "effects": [
+   {
+    "stat": "mote_mult",
+    "op": "mul",
+    "value": 0.01
+   }
+  ],
+  "pos": {
+   "x": -479.3,
+   "y": -101.9
+  },
+  "keystone": false,
+  "section": "base"
+ },
+ {
+  "id": "root_deepbank",
+  "branch": "root",
+  "name": "Deep Bank",
+  "desc": "+12% embers banked per rank.",
+  "max_rank": 6,
+  "cost": 2400,
+  "cost_growth": 1.15,
+  "lum": 2.6,
+  "requires": [
+   "root_thick"
+  ],
+  "effects": [
+   {
+    "stat": "ember_mult",
+    "op": "mul",
+    "value": 0.12
+   }
+  ],
+  "pos": {
+   "x": -517.8,
+   "y": 376.2
+  },
+  "keystone": false,
+  "section": "base"
+ },
+ {
+  "id": "root_bounty",
+  "branch": "root",
+  "name": "Bounty",
+  "desc": "+16% mote yield per rank.",
+  "max_rank": 8,
+  "cost": 3200,
+  "cost_growth": 1.15,
+  "lum": 3.2,
+  "requires": [
+   "root_harvest"
+  ],
+  "effects": [
+   {
+    "stat": "mote_mult",
+    "op": "mul",
+    "value": 0.16
+   }
+  ],
+  "pos": {
+   "x": -608.7,
+   "y": 197.8
+  },
+  "keystone": false,
+  "section": "base"
+ },
+ {
+  "id": "root_keep",
+  "branch": "root",
+  "name": "Keep",
+  "desc": "+1% embers banked. No cap.",
+  "max_rank": -1,
+  "cost": 1200,
+  "cost_growth": 1.08,
+  "lum": 0.2,
+  "requires": [
+   "root_harvest"
+  ],
+  "effects": [
+   {
+    "stat": "ember_mult",
+    "op": "mul",
+    "value": 0.01
+   }
+  ],
+  "pos": {
+   "x": -640.0,
+   "y": 0.0
+  },
+  "keystone": false,
+  "section": "base"
+ },
+ {
+  "id": "root_lastwall",
+  "branch": "root",
+  "name": "Last Wall",
+  "desc": "+1 shield per rank.",
+  "max_rank": 1,
+  "cost": 9000,
+  "cost_growth": 1.15,
+  "lum": 3.4,
+  "requires": [
+   "root_deepbank"
+  ],
+  "effects": [
+   {
+    "stat": "shields",
+    "op": "add",
+    "value": 1.0
+   }
+  ],
+  "pos": {
+   "x": -639.1,
+   "y": 464.4
+  },
+  "keystone": false,
+  "section": "base"
+ },
+ {
+  "id": "root_scoria_0",
+  "branch": "root",
+  "name": "Scoria",
+  "desc": "mote mult +0.05 per rank.",
+  "max_rank": 6,
+  "cost": 875,
+  "cost_growth": 1.15,
+  "lum": 2.1,
+  "requires": [
+   "root_bounty"
+  ],
+  "effects": [
+   {
+    "stat": "mote_mult",
+    "op": "mul",
+    "value": 0.05
+   }
+  ],
+  "pos": {
+   "x": -751.3,
+   "y": 244.1
+  },
+  "keystone": false,
+  "section": "base"
+ },
+ {
+  "id": "root_fleck_1",
+  "branch": "root",
+  "name": "Fleck",
+  "desc": "ember mult +0.05 per rank.",
+  "max_rank": 8,
+  "cost": 1312,
+  "cost_growth": 1.15,
+  "lum": 2.46,
+  "requires": [
+   "root_keep"
+  ],
+  "effects": [
+   {
+    "stat": "ember_mult",
+    "op": "mul",
+    "value": 0.05
+   }
+  ],
+  "pos": {
+   "x": -790.0,
+   "y": 0.0
+  },
+  "keystone": false,
+  "section": "base"
+ },
+ {
+  "id": "root_grain_2",
+  "branch": "root",
+  "name": "Grain",
+  "desc": "mote mult +0.05 per rank.",
+  "max_rank": 10,
+  "cost": 1750,
+  "cost_growth": 1.15,
+  "lum": 2.39,
+  "requires": [
+   "root_keep"
+  ],
+  "effects": [
+   {
+    "stat": "mote_mult",
+    "op": "mul",
+    "value": 0.05
+   }
+  ],
+  "pos": {
+   "x": -751.3,
+   "y": -244.1
+  },
+  "keystone": false,
+  "section": "base"
+ },
+ {
+  "id": "root_mote_3",
+  "branch": "root",
+  "name": "Mote",
+  "desc": "ember mult +0.05 per rank.",
+  "max_rank": 6,
+  "cost": 2188,
+  "cost_growth": 1.15,
+  "lum": 2.78,
+  "requires": [
+   "root_keep"
+  ],
+  "effects": [
+   {
+    "stat": "ember_mult",
+    "op": "mul",
+    "value": 0.05
+   }
+  ],
+  "pos": {
+   "x": -639.1,
+   "y": -464.4
+  },
+  "keystone": false,
+  "section": "base"
+ },
+ {
+  "id": "root_shard_4",
+  "branch": "root",
+  "name": "Shard",
+  "desc": "mote mult +0.05 per rank.",
+  "max_rank": 8,
+  "cost": 4594,
+  "cost_growth": 1.15,
+  "lum": 2.69,
+  "requires": [
+   "root_lastwall"
+  ],
+  "effects": [
+   {
+    "stat": "mote_mult",
+    "op": "mul",
+    "value": 0.05
+   }
+  ],
+  "pos": {
+   "x": -760.5,
+   "y": 552.5
+  },
+  "keystone": false,
+  "section": "base"
+ },
+ {
+  "id": "root_ash_5",
+  "branch": "root",
+  "name": "Ash",
+  "desc": "ember mult +0.05 per rank.",
+  "max_rank": 10,
+  "cost": 5359,
+  "cost_growth": 1.15,
+  "lum": 3.1,
+  "requires": [
+   "root_scoria_0"
+  ],
+  "effects": [
+   {
+    "stat": "ember_mult",
+    "op": "mul",
+    "value": 0.05
+   }
+  ],
+  "pos": {
+   "x": -874.0,
+   "y": 346.0
+  },
+  "keystone": false,
+  "section": "base"
+ },
+ {
+  "id": "root_tinder_6",
+  "branch": "root",
+  "name": "Tinder",
+  "desc": "mote mult +0.05 per rank.",
+  "max_rank": 6,
+  "cost": 6125,
+  "cost_growth": 1.15,
+  "lum": 2.98,
+  "requires": [
+   "root_fleck_1"
+  ],
+  "effects": [
+   {
+    "stat": "mote_mult",
+    "op": "mul",
+    "value": 0.05
+   }
+  ],
+  "pos": {
+   "x": -932.6,
+   "y": 117.8
+  },
+  "keystone": false,
+  "section": "base"
+ },
+ {
+  "id": "root_coal_7",
+  "branch": "root",
+  "name": "Coal",
+  "desc": "ember mult +0.05 per rank.",
+  "max_rank": 8,
+  "cost": 6891,
+  "cost_growth": 1.15,
+  "lum": 3.43,
+  "requires": [
+   "root_fleck_1"
+  ],
+  "effects": [
+   {
+    "stat": "ember_mult",
+    "op": "mul",
+    "value": 0.05
+   }
+  ],
+  "pos": {
+   "x": -932.6,
+   "y": -117.8
+  },
+  "keystone": false,
+  "section": "base"
+ },
+ {
+  "id": "root_wick_8",
+  "branch": "root",
+  "name": "Wick",
+  "desc": "mote mult +0.05 per rank.",
+  "max_rank": 10,
+  "cost": 13398,
+  "cost_growth": 1.15,
+  "lum": 3.28,
+  "requires": [
+   "root_shard_4"
+  ],
+  "effects": [
+   {
+    "stat": "mote_mult",
+    "op": "mul",
+    "value": 0.05
+   }
+  ],
+  "pos": {
+   "x": -881.8,
+   "y": 640.7
+  },
+  "keystone": false,
+  "section": "base"
+ },
+ {
+  "id": "root_glim_9",
+  "branch": "root",
+  "name": "Glim",
+  "desc": "ember mult +0.05 per rank.",
+  "max_rank": 6,
+  "cost": 14738,
+  "cost_growth": 1.15,
+  "lum": 3.75,
+  "requires": [
+   "root_ash_5"
+  ],
+  "effects": [
+   {
+    "stat": "ember_mult",
+    "op": "mul",
+    "value": 0.05
+   }
+  ],
+  "pos": {
+   "x": -1013.5,
+   "y": 401.3
+  },
+  "keystone": false,
+  "section": "base"
+ },
+ {
+  "id": "root_spark_10",
+  "branch": "root",
+  "name": "Spark",
+  "desc": "mote mult +0.05 per rank.",
+  "max_rank": 8,
+  "cost": 16078,
+  "cost_growth": 1.15,
+  "lum": 3.57,
+  "requires": [
+   "root_tinder_6"
+  ],
+  "effects": [
+   {
+    "stat": "mote_mult",
+    "op": "mul",
+    "value": 0.05
+   }
+  ],
+  "pos": {
+   "x": -1081.4,
+   "y": 136.6
+  },
+  "keystone": false,
+  "section": "base"
+ },
+ {
+  "id": "root_char_11",
+  "branch": "root",
+  "name": "Char",
+  "desc": "ember mult +0.05 per rank.",
+  "max_rank": 10,
+  "cost": 17418,
+  "cost_growth": 1.15,
+  "lum": 4.07,
+  "requires": [
+   "root_tinder_6"
+  ],
+  "effects": [
+   {
+    "stat": "ember_mult",
+    "op": "mul",
+    "value": 0.05
+   }
+  ],
+  "pos": {
+   "x": -1081.4,
+   "y": -136.6
+  },
+  "keystone": false,
+  "section": "base"
+ },
+ {
+  "id": "root_kindle_12",
+  "branch": "root",
+  "name": "Kindle",
+  "desc": "mote mult +0.05 per rank.",
+  "max_rank": 6,
+  "cost": 32826,
+  "cost_growth": 1.15,
+  "lum": 3.86,
+  "requires": [
+   "root_wick_8"
+  ],
+  "effects": [
+   {
+    "stat": "mote_mult",
+    "op": "mul",
+    "value": 0.05
+   }
+  ],
+  "pos": {
+   "x": -1003.2,
+   "y": 728.9
+  },
+  "keystone": false,
+  "section": "base"
+ },
+ {
+  "id": "root_flint_13",
+  "branch": "root",
+  "name": "Flint",
+  "desc": "ember mult +0.05 per rank.",
+  "max_rank": 8,
+  "cost": 35171,
+  "cost_growth": 1.15,
+  "lum": 4.39,
+  "requires": [
+   "root_glim_9"
+  ],
+  "effects": [
+   {
+    "stat": "ember_mult",
+    "op": "mul",
+    "value": 0.05
+   }
+  ],
+  "pos": {
+   "x": -1152.9,
+   "y": 456.5
+  },
+  "keystone": false,
+  "section": "base"
+ },
+ {
+  "id": "root_slag_14",
+  "branch": "root",
+  "name": "Slag",
+  "desc": "mote mult +0.05 per rank.",
+  "max_rank": 10,
+  "cost": 37516,
+  "cost_growth": 1.15,
+  "lum": 4.16,
+  "requires": [
+   "root_spark_10"
+  ],
+  "effects": [
+   {
+    "stat": "mote_mult",
+    "op": "mul",
+    "value": 0.05
+   }
+  ],
+  "pos": {
+   "x": -1230.2,
+   "y": 155.4
+  },
+  "keystone": false,
+  "section": "base"
+ },
+ {
+  "id": "root_fume_15",
+  "branch": "root",
+  "name": "Fume",
+  "desc": "ember mult +0.05 per rank.",
+  "max_rank": 6,
+  "cost": 39860,
+  "cost_growth": 1.15,
+  "lum": 4.71,
+  "requires": [
+   "root_spark_10"
+  ],
+  "effects": [
+   {
+    "stat": "ember_mult",
+    "op": "mul",
+    "value": 0.05
+   }
+  ],
+  "pos": {
+   "x": -1230.2,
+   "y": -155.4
+  },
+  "keystone": false,
+  "section": "base"
+ },
+ {
+  "id": "root_brand_16",
+  "branch": "root",
+  "name": "Brand",
+  "desc": "mote mult +0.05 per rank.",
+  "max_rank": 8,
+  "cost": 73859,
+  "cost_growth": 1.15,
+  "lum": 4.45,
+  "requires": [
+   "root_kindle_12"
+  ],
+  "effects": [
+   {
+    "stat": "mote_mult",
+    "op": "mul",
+    "value": 0.05
+   }
+  ],
+  "pos": {
+   "x": -1124.5,
+   "y": 817.0
+  },
+  "keystone": false,
+  "section": "base"
+ },
+ {
+  "id": "root_taper_17",
+  "branch": "root",
+  "name": "Taper",
+  "desc": "ember mult +0.05 per rank.",
+  "max_rank": 10,
+  "cost": 77962,
+  "cost_growth": 1.15,
+  "lum": 5.04,
+  "requires": [
+   "root_flint_13"
+  ],
+  "effects": [
+   {
+    "stat": "ember_mult",
+    "op": "mul",
+    "value": 0.05
+   }
+  ],
+  "pos": {
+   "x": -1292.4,
+   "y": 511.7
+  },
+  "keystone": false,
+  "section": "base"
+ },
+ {
+  "id": "root_torch_18",
+  "branch": "root",
+  "name": "Torch",
+  "desc": "mote mult +0.05 per rank.",
+  "max_rank": 6,
+  "cost": 82065,
+  "cost_growth": 1.15,
+  "lum": 4.75,
+  "requires": [
+   "root_slag_14"
+  ],
+  "effects": [
+   {
+    "stat": "mote_mult",
+    "op": "mul",
+    "value": 0.05
+   }
+  ],
+  "pos": {
+   "x": -1379.0,
+   "y": 174.2
+  },
+  "keystone": false,
+  "section": "base"
+ },
+ {
+  "id": "root_pyre_19",
+  "branch": "root",
+  "name": "Pyre",
+  "desc": "ember mult +0.05 per rank.",
+  "max_rank": 8,
+  "cost": 86169,
+  "cost_growth": 1.15,
+  "lum": 5.36,
+  "requires": [
+   "root_slag_14"
+  ],
+  "effects": [
+   {
+    "stat": "ember_mult",
+    "op": "mul",
+    "value": 0.05
+   }
+  ],
+  "pos": {
+   "x": -1379.0,
+   "y": -174.2
+  },
+  "keystone": false,
+  "section": "base"
+ },
+ {
+  "id": "root_soot_20",
+  "branch": "root",
+  "name": "Soot",
+  "desc": "mote mult +0.05 per rank.",
+  "max_rank": 10,
+  "cost": 157976,
+  "cost_growth": 1.15,
+  "lum": 5.04,
+  "requires": [
+   "root_brand_16"
+  ],
+  "effects": [
+   {
+    "stat": "mote_mult",
+    "op": "mul",
+    "value": 0.05
+   }
+  ],
+  "pos": {
+   "x": -1245.9,
+   "y": 905.2
+  },
+  "keystone": false,
+  "section": "base"
+ },
+ {
+  "id": "root_diaspora",
+  "branch": "root",
+  "name": "Diaspora",
+  "desc": "+3 shields. All mote income -40%.",
+  "max_rank": 1,
+  "cost": 6000,
+  "cost_growth": 1.0,
+  "lum": 3.0,
+  "requires": [
+   "root_soot_20"
+  ],
+  "effects": [
+   {
+    "op": "rule",
+    "rule": "diaspora"
+   }
+  ],
+  "pos": {
+   "x": -1690.0,
+   "y": 0.0
+  },
+  "keystone": true,
+  "section": "base"
+ }
+]

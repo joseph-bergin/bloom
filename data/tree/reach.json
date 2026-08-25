@@ -1,0 +1,836 @@
+[
+ {
+  "id": "reach_entry",
+  "branch": "reach",
+  "name": "Aperture",
+  "desc": "+7% turret range per rank.",
+  "max_rank": 8,
+  "cost": 45,
+  "cost_growth": 1.15,
+  "lum": 1.0,
+  "requires": [],
+  "effects": [
+   {
+    "stat": "range_mult",
+    "op": "add",
+    "value": 0.07
+   }
+  ],
+  "pos": {
+   "x": 0.0,
+   "y": 190.0
+  },
+  "keystone": false,
+  "section": "base"
+ },
+ {
+  "id": "reach_focus",
+  "branch": "reach",
+  "name": "Focus",
+  "desc": "+9% turret range per rank.",
+  "max_rank": 8,
+  "cost": 130,
+  "cost_growth": 1.15,
+  "lum": 1.2,
+  "requires": [
+   "reach_entry"
+  ],
+  "effects": [
+   {
+    "stat": "range_mult",
+    "op": "add",
+    "value": 0.09
+   }
+  ],
+  "pos": {
+   "x": 199.8,
+   "y": 275.1
+  },
+  "keystone": false,
+  "section": "base"
+ },
+ {
+  "id": "reach_pierce",
+  "branch": "reach",
+  "name": "Pierce",
+  "desc": "Projectiles pass through +1 contact per rank.",
+  "max_rank": 3,
+  "cost": 600,
+  "cost_growth": 1.15,
+  "lum": 1.8,
+  "requires": [
+   "reach_entry"
+  ],
+  "effects": [
+   {
+    "stat": "pierce",
+    "op": "add",
+    "value": 1.0
+   }
+  ],
+  "pos": {
+   "x": 0.0,
+   "y": 340.0
+  },
+  "keystone": false,
+  "section": "base"
+ },
+ {
+  "id": "reach_lead",
+  "branch": "reach",
+  "name": "Lead",
+  "desc": "+8% range and +4% fire rate per rank.",
+  "max_rank": 6,
+  "cost": 340,
+  "cost_growth": 1.15,
+  "lum": 1.5,
+  "requires": [
+   "reach_entry"
+  ],
+  "effects": [
+   {
+    "stat": "range_mult",
+    "op": "add",
+    "value": 0.08
+   },
+   {
+    "stat": "fire_rate_mult",
+    "op": "add",
+    "value": 0.04
+   }
+  ],
+  "pos": {
+   "x": -199.8,
+   "y": 275.1
+  },
+  "keystone": false,
+  "section": "base"
+ },
+ {
+  "id": "reach_chain",
+  "branch": "reach",
+  "name": "Chain",
+  "desc": "Projectiles jump to +1 nearby contact per rank.",
+  "max_rank": 3,
+  "cost": 1500,
+  "cost_growth": 1.15,
+  "lum": 2.0,
+  "requires": [
+   "reach_focus"
+  ],
+  "effects": [
+   {
+    "stat": "chain",
+    "op": "add",
+    "value": 1.0
+   }
+  ],
+  "pos": {
+   "x": 288.0,
+   "y": 396.4
+  },
+  "keystone": false,
+  "section": "base"
+ },
+ {
+  "id": "reach_sweepr",
+  "branch": "reach",
+  "name": "Sweep",
+  "desc": "+11% turret range per rank.",
+  "max_rank": 8,
+  "cost": 760,
+  "cost_growth": 1.15,
+  "lum": 1.6,
+  "requires": [
+   "reach_pierce"
+  ],
+  "effects": [
+   {
+    "stat": "range_mult",
+    "op": "add",
+    "value": 0.11
+   }
+  ],
+  "pos": {
+   "x": 101.9,
+   "y": 479.3
+  },
+  "keystone": false,
+  "section": "base"
+ },
+ {
+  "id": "reach_further",
+  "branch": "reach",
+  "name": "Further",
+  "desc": "+1% range. No cap.",
+  "max_rank": -1,
+  "cost": 280,
+  "cost_growth": 1.08,
+  "lum": 0.1,
+  "requires": [
+   "reach_pierce"
+  ],
+  "effects": [
+   {
+    "stat": "range_mult",
+    "op": "add",
+    "value": 0.01
+   }
+  ],
+  "pos": {
+   "x": -101.9,
+   "y": 479.3
+  },
+  "keystone": false,
+  "section": "base"
+ },
+ {
+  "id": "reach_splinter",
+  "branch": "reach",
+  "name": "Splinter",
+  "desc": "+1 projectile per rank.",
+  "max_rank": 2,
+  "cost": 2600,
+  "cost_growth": 1.15,
+  "lum": 2.0,
+  "requires": [
+   "reach_chain"
+  ],
+  "effects": [
+   {
+    "stat": "projectiles",
+    "op": "add",
+    "value": 1.0
+   }
+  ],
+  "pos": {
+   "x": 376.2,
+   "y": 517.8
+  },
+  "keystone": false,
+  "section": "base"
+ },
+ {
+  "id": "reach_horizon",
+  "branch": "reach",
+  "name": "Horizon",
+  "desc": "+13% turret range per rank.",
+  "max_rank": 8,
+  "cost": 2000,
+  "cost_growth": 1.15,
+  "lum": 1.8,
+  "requires": [
+   "reach_sweepr"
+  ],
+  "effects": [
+   {
+    "stat": "range_mult",
+    "op": "add",
+    "value": 0.13
+   }
+  ],
+  "pos": {
+   "x": 197.8,
+   "y": 608.7
+  },
+  "keystone": false,
+  "section": "base"
+ },
+ {
+  "id": "reach_keener",
+  "branch": "reach",
+  "name": "Keener",
+  "desc": "+1% range. No cap.",
+  "max_rank": -1,
+  "cost": 900,
+  "cost_growth": 1.08,
+  "lum": 0.1,
+  "requires": [
+   "reach_sweepr"
+  ],
+  "effects": [
+   {
+    "stat": "range_mult",
+    "op": "add",
+    "value": 0.01
+   }
+  ],
+  "pos": {
+   "x": 0.0,
+   "y": 640.0
+  },
+  "keystone": false,
+  "section": "base"
+ },
+ {
+  "id": "reach_pyre_0",
+  "branch": "reach",
+  "name": "Pyre",
+  "desc": "range mult +0.06 per rank.",
+  "max_rank": 6,
+  "cost": 875,
+  "cost_growth": 1.15,
+  "lum": 1.2,
+  "requires": [
+   "reach_splinter"
+  ],
+  "effects": [
+   {
+    "stat": "range_mult",
+    "op": "add",
+    "value": 0.06
+   }
+  ],
+  "pos": {
+   "x": 464.4,
+   "y": 639.1
+  },
+  "keystone": false,
+  "section": "base"
+ },
+ {
+  "id": "reach_soot_1",
+  "branch": "reach",
+  "name": "Soot",
+  "desc": "fire rate mult +0.03 per rank.",
+  "max_rank": 8,
+  "cost": 1312,
+  "cost_growth": 1.15,
+  "lum": 1.5,
+  "requires": [
+   "reach_horizon"
+  ],
+  "effects": [
+   {
+    "stat": "fire_rate_mult",
+    "op": "add",
+    "value": 0.03
+   }
+  ],
+  "pos": {
+   "x": 244.1,
+   "y": 751.3
+  },
+  "keystone": false,
+  "section": "base"
+ },
+ {
+  "id": "reach_lumen_2",
+  "branch": "reach",
+  "name": "Lumen",
+  "desc": "range mult +0.06 per rank.",
+  "max_rank": 10,
+  "cost": 1750,
+  "cost_growth": 1.15,
+  "lum": 1.37,
+  "requires": [
+   "reach_keener"
+  ],
+  "effects": [
+   {
+    "stat": "range_mult",
+    "op": "add",
+    "value": 0.06
+   }
+  ],
+  "pos": {
+   "x": 0.0,
+   "y": 790.0
+  },
+  "keystone": false,
+  "section": "base"
+ },
+ {
+  "id": "reach_nit_3",
+  "branch": "reach",
+  "name": "Nit",
+  "desc": "fire rate mult +0.03 per rank.",
+  "max_rank": 6,
+  "cost": 2188,
+  "cost_growth": 1.15,
+  "lum": 1.69,
+  "requires": [
+   "reach_keener"
+  ],
+  "effects": [
+   {
+    "stat": "fire_rate_mult",
+    "op": "add",
+    "value": 0.03
+   }
+  ],
+  "pos": {
+   "x": -244.1,
+   "y": 751.3
+  },
+  "keystone": false,
+  "section": "base"
+ },
+ {
+  "id": "reach_lux_4",
+  "branch": "reach",
+  "name": "Lux",
+  "desc": "range mult +0.06 per rank.",
+  "max_rank": 8,
+  "cost": 4594,
+  "cost_growth": 1.15,
+  "lum": 1.54,
+  "requires": [
+   "reach_pyre_0"
+  ],
+  "effects": [
+   {
+    "stat": "range_mult",
+    "op": "add",
+    "value": 0.06
+   }
+  ],
+  "pos": {
+   "x": 552.5,
+   "y": 760.5
+  },
+  "keystone": false,
+  "section": "base"
+ },
+ {
+  "id": "reach_ember_5",
+  "branch": "reach",
+  "name": "Ember",
+  "desc": "fire rate mult +0.03 per rank.",
+  "max_rank": 10,
+  "cost": 5359,
+  "cost_growth": 1.15,
+  "lum": 1.89,
+  "requires": [
+   "reach_soot_1"
+  ],
+  "effects": [
+   {
+    "stat": "fire_rate_mult",
+    "op": "add",
+    "value": 0.03
+   }
+  ],
+  "pos": {
+   "x": 346.0,
+   "y": 874.0
+  },
+  "keystone": false,
+  "section": "base"
+ },
+ {
+  "id": "reach_cinder_6",
+  "branch": "reach",
+  "name": "Cinder",
+  "desc": "range mult +0.06 per rank.",
+  "max_rank": 6,
+  "cost": 6125,
+  "cost_growth": 1.15,
+  "lum": 1.7,
+  "requires": [
+   "reach_lumen_2"
+  ],
+  "effects": [
+   {
+    "stat": "range_mult",
+    "op": "add",
+    "value": 0.06
+   }
+  ],
+  "pos": {
+   "x": 117.8,
+   "y": 932.6
+  },
+  "keystone": false,
+  "section": "base"
+ },
+ {
+  "id": "reach_scoria_7",
+  "branch": "reach",
+  "name": "Scoria",
+  "desc": "fire rate mult +0.03 per rank.",
+  "max_rank": 8,
+  "cost": 6891,
+  "cost_growth": 1.15,
+  "lum": 2.09,
+  "requires": [
+   "reach_lumen_2"
+  ],
+  "effects": [
+   {
+    "stat": "fire_rate_mult",
+    "op": "add",
+    "value": 0.03
+   }
+  ],
+  "pos": {
+   "x": -117.8,
+   "y": 932.6
+  },
+  "keystone": false,
+  "section": "base"
+ },
+ {
+  "id": "reach_fleck_8",
+  "branch": "reach",
+  "name": "Fleck",
+  "desc": "range mult +0.06 per rank.",
+  "max_rank": 10,
+  "cost": 13398,
+  "cost_growth": 1.15,
+  "lum": 1.87,
+  "requires": [
+   "reach_lux_4"
+  ],
+  "effects": [
+   {
+    "stat": "range_mult",
+    "op": "add",
+    "value": 0.06
+   }
+  ],
+  "pos": {
+   "x": 640.7,
+   "y": 881.8
+  },
+  "keystone": false,
+  "section": "base"
+ },
+ {
+  "id": "reach_grain_9",
+  "branch": "reach",
+  "name": "Grain",
+  "desc": "fire rate mult +0.03 per rank.",
+  "max_rank": 6,
+  "cost": 14738,
+  "cost_growth": 1.15,
+  "lum": 2.28,
+  "requires": [
+   "reach_ember_5"
+  ],
+  "effects": [
+   {
+    "stat": "fire_rate_mult",
+    "op": "add",
+    "value": 0.03
+   }
+  ],
+  "pos": {
+   "x": 401.3,
+   "y": 1013.5
+  },
+  "keystone": false,
+  "section": "base"
+ },
+ {
+  "id": "reach_mote_10",
+  "branch": "reach",
+  "name": "Mote",
+  "desc": "range mult +0.06 per rank.",
+  "max_rank": 8,
+  "cost": 16078,
+  "cost_growth": 1.15,
+  "lum": 2.04,
+  "requires": [
+   "reach_cinder_6"
+  ],
+  "effects": [
+   {
+    "stat": "range_mult",
+    "op": "add",
+    "value": 0.06
+   }
+  ],
+  "pos": {
+   "x": 136.6,
+   "y": 1081.4
+  },
+  "keystone": false,
+  "section": "base"
+ },
+ {
+  "id": "reach_shard_11",
+  "branch": "reach",
+  "name": "Shard",
+  "desc": "fire rate mult +0.03 per rank.",
+  "max_rank": 10,
+  "cost": 17418,
+  "cost_growth": 1.15,
+  "lum": 2.48,
+  "requires": [
+   "reach_scoria_7"
+  ],
+  "effects": [
+   {
+    "stat": "fire_rate_mult",
+    "op": "add",
+    "value": 0.03
+   }
+  ],
+  "pos": {
+   "x": -136.6,
+   "y": 1081.4
+  },
+  "keystone": false,
+  "section": "base"
+ },
+ {
+  "id": "reach_ash_12",
+  "branch": "reach",
+  "name": "Ash",
+  "desc": "range mult +0.06 per rank.",
+  "max_rank": 6,
+  "cost": 32826,
+  "cost_growth": 1.15,
+  "lum": 2.21,
+  "requires": [
+   "reach_fleck_8"
+  ],
+  "effects": [
+   {
+    "stat": "range_mult",
+    "op": "add",
+    "value": 0.06
+   }
+  ],
+  "pos": {
+   "x": 728.9,
+   "y": 1003.2
+  },
+  "keystone": false,
+  "section": "base"
+ },
+ {
+  "id": "reach_tinder_13",
+  "branch": "reach",
+  "name": "Tinder",
+  "desc": "fire rate mult +0.03 per rank.",
+  "max_rank": 8,
+  "cost": 35171,
+  "cost_growth": 1.15,
+  "lum": 2.67,
+  "requires": [
+   "reach_grain_9"
+  ],
+  "effects": [
+   {
+    "stat": "fire_rate_mult",
+    "op": "add",
+    "value": 0.03
+   }
+  ],
+  "pos": {
+   "x": 456.5,
+   "y": 1152.9
+  },
+  "keystone": false,
+  "section": "base"
+ },
+ {
+  "id": "reach_coal_14",
+  "branch": "reach",
+  "name": "Coal",
+  "desc": "range mult +0.06 per rank.",
+  "max_rank": 10,
+  "cost": 37516,
+  "cost_growth": 1.15,
+  "lum": 2.38,
+  "requires": [
+   "reach_mote_10"
+  ],
+  "effects": [
+   {
+    "stat": "range_mult",
+    "op": "add",
+    "value": 0.06
+   }
+  ],
+  "pos": {
+   "x": 155.4,
+   "y": 1230.2
+  },
+  "keystone": false,
+  "section": "base"
+ },
+ {
+  "id": "reach_wick_15",
+  "branch": "reach",
+  "name": "Wick",
+  "desc": "fire rate mult +0.03 per rank.",
+  "max_rank": 6,
+  "cost": 39860,
+  "cost_growth": 1.15,
+  "lum": 2.87,
+  "requires": [
+   "reach_shard_11"
+  ],
+  "effects": [
+   {
+    "stat": "fire_rate_mult",
+    "op": "add",
+    "value": 0.03
+   }
+  ],
+  "pos": {
+   "x": -155.4,
+   "y": 1230.2
+  },
+  "keystone": false,
+  "section": "base"
+ },
+ {
+  "id": "reach_glim_16",
+  "branch": "reach",
+  "name": "Glim",
+  "desc": "range mult +0.06 per rank.",
+  "max_rank": 8,
+  "cost": 73859,
+  "cost_growth": 1.15,
+  "lum": 2.54,
+  "requires": [
+   "reach_ash_12"
+  ],
+  "effects": [
+   {
+    "stat": "range_mult",
+    "op": "add",
+    "value": 0.06
+   }
+  ],
+  "pos": {
+   "x": 817.0,
+   "y": 1124.5
+  },
+  "keystone": false,
+  "section": "base"
+ },
+ {
+  "id": "reach_spark_17",
+  "branch": "reach",
+  "name": "Spark",
+  "desc": "fire rate mult +0.03 per rank.",
+  "max_rank": 10,
+  "cost": 77962,
+  "cost_growth": 1.15,
+  "lum": 3.07,
+  "requires": [
+   "reach_tinder_13"
+  ],
+  "effects": [
+   {
+    "stat": "fire_rate_mult",
+    "op": "add",
+    "value": 0.03
+   }
+  ],
+  "pos": {
+   "x": 511.7,
+   "y": 1292.4
+  },
+  "keystone": false,
+  "section": "base"
+ },
+ {
+  "id": "reach_char_18",
+  "branch": "reach",
+  "name": "Char",
+  "desc": "range mult +0.06 per rank.",
+  "max_rank": 6,
+  "cost": 82065,
+  "cost_growth": 1.15,
+  "lum": 2.71,
+  "requires": [
+   "reach_coal_14"
+  ],
+  "effects": [
+   {
+    "stat": "range_mult",
+    "op": "add",
+    "value": 0.06
+   }
+  ],
+  "pos": {
+   "x": 174.2,
+   "y": 1379.0
+  },
+  "keystone": false,
+  "section": "base"
+ },
+ {
+  "id": "reach_kindle_19",
+  "branch": "reach",
+  "name": "Kindle",
+  "desc": "fire rate mult +0.03 per rank.",
+  "max_rank": 8,
+  "cost": 86169,
+  "cost_growth": 1.15,
+  "lum": 3.26,
+  "requires": [
+   "reach_wick_15"
+  ],
+  "effects": [
+   {
+    "stat": "fire_rate_mult",
+    "op": "add",
+    "value": 0.03
+   }
+  ],
+  "pos": {
+   "x": -174.2,
+   "y": 1379.0
+  },
+  "keystone": false,
+  "section": "base"
+ },
+ {
+  "id": "reach_flint_20",
+  "branch": "reach",
+  "name": "Flint",
+  "desc": "range mult +0.06 per rank.",
+  "max_rank": 10,
+  "cost": 157976,
+  "cost_growth": 1.15,
+  "lum": 2.88,
+  "requires": [
+   "reach_glim_16"
+  ],
+  "effects": [
+   {
+    "stat": "range_mult",
+    "op": "add",
+    "value": 0.06
+   }
+  ],
+  "pos": {
+   "x": 905.2,
+   "y": 1245.9
+  },
+  "keystone": false,
+  "section": "base"
+ },
+ {
+  "id": "reach_longshot",
+  "branch": "reach",
+  "name": "Longshot",
+  "desc": "Range x2.5 and projectiles pierce. Fire rate halved.",
+  "max_rank": 1,
+  "cost": 6000,
+  "cost_growth": 1.0,
+  "lum": 2.0,
+  "requires": [
+   "reach_flint_20"
+  ],
+  "effects": [
+   {
+    "op": "rule",
+    "rule": "longshot"
+   }
+  ],
+  "pos": {
+   "x": 0.0,
+   "y": 1690.0
+  },
+  "keystone": true,
+  "section": "base"
+ }
+]

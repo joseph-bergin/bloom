@@ -1,157 +1,148 @@
 extends Control
-## Luminance is on screen at all times. It is the only thing anything
-## out there can see, so it never leaves the frame.
+## Luminance is on screen at all times, and the line that says what it is
+## doing to the field sits directly under it. Everything depends on the
+## player connecting those two by minute four.
 
-signal sweep_pressed()
 signal tree_pressed()
-signal ember_pressed()
+signal retire_pressed()
 signal settings_pressed()
 
+const REFRESH := 1.0 / 15.0
+
 var _lum: Label
-var _lum_bar: ProgressBar
-var _lum_detail: Label
+var _cause: Label
 var _motes: Label
-var _signal: Label
-var _facets: Label
 var _embers: Label
-var _redundancy: Label
-var _pressure: Label
+var _shields: Label
+var _dps: Label
 var _clock: Label
-var _sweep_btn: Button
-var _tree_btn: Button
-var _ember_btn: Button
-var _contacts: Label
-var _hunter: Label
+var _douse_bar: ProgressBar
+var _douse_label: Label
+var _retire: Button
+var _refresh: float = 0.0
 
 func _ready() -> void:
-	set_anchors_preset(Control.PRESET_FULL_RECT)
-	mouse_filter = Control.MOUSE_FILTER_IGNORE
-	_build()
-
-func _build() -> void:
-	# --- top-left: luminance, the permanent readout ---
+	# Anchor the panels, never this wrapper — its preset comes from Main.tscn.
 	var top := UITheme.make_panel()
+	top.set_anchors_preset(Control.PRESET_TOP_LEFT)
 	top.position = Vector2(14, 12)
-	top.custom_minimum_size = Vector2(288, 0)
-	top.mouse_filter = Control.MOUSE_FILTER_PASS
+	top.custom_minimum_size = Vector2(300, 0)
 	add_child(top)
 	var col := VBoxContainer.new()
-	col.add_theme_constant_override("separation", 2)
+	col.add_theme_constant_override("separation", 3)
 	top.add_child(col)
 
-	_lum = UITheme.label("LUMINANCE 0.0", UITheme.LUM, 19)
+	_lum = UITheme.label("LUMINANCE 0", UITheme.LUM, 22)
 	col.add_child(_lum)
-	_lum_bar = ProgressBar.new()
-	_lum_bar.custom_minimum_size = Vector2(0, 5)
-	_lum_bar.show_percentage = false
-	_lum_bar.max_value = 1.0
-	var fill := StyleBoxFlat.new()
-	fill.bg_color = UITheme.LUM
-	_lum_bar.add_theme_stylebox_override("fill", fill)
-	var bg := StyleBoxFlat.new()
-	bg.bg_color = Color(0.12, 0.11, 0.09)
-	_lum_bar.add_theme_stylebox_override("background", bg)
-	col.add_child(_lum_bar)
-	_lum_detail = UITheme.label("", UITheme.TEXT_DIM, 11)
-	col.add_child(_lum_detail)
+	# The causation line. This is the most important text in the game.
+	_cause = UITheme.label("spawn x1.0   tier 0   speed 18", UITheme.TEXT_DIM, 12)
+	col.add_child(_cause)
+	col.add_child(HSeparator.new())
+	_motes = UITheme.label("0 motes", UITheme.MOTES, 16)
+	col.add_child(_motes)
+	_shields = UITheme.label("Shields 3", UITheme.GOOD, 14)
+	col.add_child(_shields)
+	_dps = UITheme.label("", UITheme.TEXT_DIM, 11)
+	col.add_child(_dps)
 
-	var grid := GridContainer.new()
-	grid.columns = 2
-	grid.add_theme_constant_override("h_separation", 16)
-	col.add_child(grid)
-	_motes = UITheme.label("0 motes", UITheme.MOTES, 13)
-	_signal = UITheme.label("0 signal", UITheme.SIGNAL, 13)
-	_facets = UITheme.label("0 facets", UITheme.FACETS, 13)
-	_embers = UITheme.label("0 embers", UITheme.EMBERS, 13)
-	for l in [_motes, _signal, _facets, _embers]:
-		grid.add_child(l)
-
-	_redundancy = UITheme.label("Redundancy 1", UITheme.TEXT, 13)
-	col.add_child(_redundancy)
-
-	# --- top-right: field state ---
 	var right := UITheme.make_panel()
 	right.set_anchors_preset(Control.PRESET_TOP_RIGHT)
-	right.position = Vector2(-232, 12)
-	right.custom_minimum_size = Vector2(218, 0)
-	right.mouse_filter = Control.MOUSE_FILTER_PASS
+	right.position = Vector2(-206, 12)
+	right.custom_minimum_size = Vector2(192, 0)
 	add_child(right)
 	var rc := VBoxContainer.new()
-	rc.add_theme_constant_override("separation", 2)
+	rc.add_theme_constant_override("separation", 3)
 	right.add_child(rc)
 	_clock = UITheme.label("0s", UITheme.TEXT_DIM, 12)
-	_pressure = UITheme.label("Field pressure 0.00", UITheme.TEXT, 13)
-	_contacts = UITheme.label("0 contacts", UITheme.TEXT_DIM, 12)
-	_hunter = UITheme.label("", UITheme.BAD, 12)
-	for l in [_clock, _pressure, _contacts, _hunter]:
-		rc.add_child(l)
+	rc.add_child(_clock)
+	_embers = UITheme.label("0 embers", UITheme.EMBERS, 14)
+	rc.add_child(_embers)
+	_retire = UITheme.button("Retire  +0", UITheme.EMBERS)
+	_retire.custom_minimum_size = Vector2(0, 28)
+	_retire.tooltip_text = "Bank embers now. Always worth more than dying."
+	_retire.pressed.connect(func(): retire_pressed.emit())
+	rc.add_child(_retire)
 
-	# --- bottom-left: actions ---
+	# Douse meter, bottom centre, where a panic button belongs.
+	var douse := UITheme.make_panel()
+	douse.set_anchors_preset(Control.PRESET_CENTER_BOTTOM)
+	douse.position = Vector2(-130, -78)
+	douse.custom_minimum_size = Vector2(260, 0)
+	add_child(douse)
+	var dc := VBoxContainer.new()
+	dc.add_theme_constant_override("separation", 2)
+	douse.add_child(dc)
+	_douse_label = UITheme.label("DOUSE  [hold Space]", UITheme.TEXT_DIM, 12)
+	_douse_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	dc.add_child(_douse_label)
+	_douse_bar = ProgressBar.new()
+	_douse_bar.custom_minimum_size = Vector2(0, 8)
+	_douse_bar.show_percentage = false
+	_douse_bar.max_value = 1.0
+	_douse_bar.value = 1.0
+	var fill := StyleBoxFlat.new()
+	fill.bg_color = Color(0.45, 0.65, 1.0)
+	_douse_bar.add_theme_stylebox_override("fill", fill)
+	var bg := StyleBoxFlat.new()
+	bg.bg_color = Color(0.10, 0.11, 0.14)
+	_douse_bar.add_theme_stylebox_override("background", bg)
+	dc.add_child(_douse_bar)
+
 	var bar := HBoxContainer.new()
 	bar.set_anchors_preset(Control.PRESET_BOTTOM_LEFT)
 	bar.position = Vector2(14, -46)
 	bar.add_theme_constant_override("separation", 8)
 	add_child(bar)
-	_sweep_btn = UITheme.button("Sweep  [Space]", UITheme.SIGNAL)
-	_sweep_btn.custom_minimum_size = Vector2(150, 32)
-	_sweep_btn.pressed.connect(func(): sweep_pressed.emit())
-	bar.add_child(_sweep_btn)
-	_tree_btn = UITheme.button("Tree  [T]", UITheme.TEXT)
-	_tree_btn.custom_minimum_size = Vector2(110, 32)
-	_tree_btn.pressed.connect(func(): tree_pressed.emit())
-	bar.add_child(_tree_btn)
-	_ember_btn = UITheme.button("Ember out", UITheme.EMBERS)
-	_ember_btn.custom_minimum_size = Vector2(120, 32)
-	_ember_btn.pressed.connect(func(): ember_pressed.emit())
-	bar.add_child(_ember_btn)
-	var settings_btn := UITheme.button("Settings  [Esc]", UITheme.TEXT_DIM)
-	settings_btn.custom_minimum_size = Vector2(130, 32)
-	settings_btn.pressed.connect(func(): settings_pressed.emit())
-	bar.add_child(settings_btn)
-
-const REFRESH := 1.0 / 15.0
-var _refresh: float = 0.0
+	var tree_btn := UITheme.button("Tree  [T]", UITheme.TEXT_BRIGHT)
+	tree_btn.custom_minimum_size = Vector2(130, 32)
+	tree_btn.pressed.connect(func(): tree_pressed.emit())
+	bar.add_child(tree_btn)
+	var set_btn := UITheme.button("Settings  [Esc]", UITheme.TEXT_DIM)
+	set_btn.custom_minimum_size = Vector2(140, 32)
+	set_btn.pressed.connect(func(): settings_pressed.emit())
+	bar.add_child(set_btn)
 
 func _process(delta: float) -> void:
 	_refresh -= delta
 	if _refresh > 0.0:
 		return
 	_refresh = REFRESH
-	var d: GameStateData = GameState.data
-	var l: float = d.luminance_effective()
-	_lum.text = "LUMINANCE %s" % UITheme.fmt(l, 1)
-	_lum_bar.value = clampf(l / 400.0, 0.0, 1.0)
-	var shroud_pct: int = int(round(Stats.shroud * 100.0))
-	_lum_detail.text = "structural %s   transient %s   shroud %d%%" % [
-		UITheme.fmt(d.luminance_structural, 1),
-		UITheme.fmt(d.luminance_transient, 1), shroud_pct]
+	var s: GameStateData = GameState.s
+	var l: float = s.effective_luminance()
 
-	_motes.text = "%s motes" % UITheme.fmt(d.motes)
-	_signal.text = "%s signal" % UITheme.fmt(d.signal_c)
-	_facets.text = "%s facets" % UITheme.fmt(d.facets)
-	_embers.text = "%s embers" % UITheme.fmt(d.embers)
-	_redundancy.text = "Redundancy %d / %d" % [maxi(d.redundancy, 0), Stats.max_redundancy]
-	_redundancy.add_theme_color_override("font_color",
-		UITheme.BAD if d.redundancy <= 1 else UITheme.TEXT)
+	_lum.text = "LUMINANCE %s" % UITheme.fmt(l)
+	_lum.add_theme_color_override("font_color",
+		Color(0.45, 0.65, 1.0) if s.is_dousing() else UITheme.LUM)
 
-	_clock.text = UITheme.fmt_time(d.t) + ("   cycle %d" % d.ember_count if d.ember_count > 0 else "")
-	_pressure.text = "Field pressure %.2f" % d.field_pressure
-	_contacts.text = "%d contacts   %d tracked" % [d.contacts.size(), _tracked(d)]
-	_hunter.text = "HUNTER IN THE FIELD" if d.has_hunter() else ""
-
-	if Stats.can_sweep():
-		var cd: float = d.sweep_cooldown
-		_sweep_btn.disabled = cd > 0.0
-		_sweep_btn.text = "Sweep  [Space]" if cd <= 0.0 else "Sweep  %.1fs" % cd
+	var pressure: float = Spawning.spawn_pressure(l)
+	var arrow: String = "v" if s.is_dousing() else "^"
+	if pressure <= 0.0:
+		_cause.text = "%s  nothing is spawning" % arrow
+		_cause.add_theme_color_override("font_color", UITheme.GOOD)
 	else:
-		_sweep_btn.disabled = true
-		_sweep_btn.text = "Sweep — Nullwake"
+		_cause.text = "%s spawn x%.1f   max tier %d   speed %d" % [
+			arrow, pressure, Spawning.max_tier(l), int(Spawning.drift_speed(l))]
+		_cause.add_theme_color_override("font_color",
+			UITheme.BAD if pressure > 4.0 else UITheme.TEXT_DIM)
 
-	_ember_btn.text = "Ember out  +%s" % UITheme.fmt(Ember.total_payout(d), 1)
+	_motes.text = "%s motes" % UITheme.fmt(s.motes)
+	_shields.text = "Shields %d / %d" % [maxi(s.shields, 0), Stats.max_shields]
+	_shields.add_theme_color_override("font_color",
+		UITheme.BAD if s.shields <= 1 else UITheme.GOOD)
+	_dps.text = "%s dps   %d range   %d contacts" % [
+		UITheme.fmt(Stats.dps()), int(Stats.turret_range), s.contacts.size()]
 
-func _tracked(d: GameStateData) -> int:
-	var n: int = 0
-	for c in d.contacts:
-		if Sensing.is_displayable(c, d.t):
-			n += 1
-	return n
+	_clock.text = UITheme.fmt_time(s.t) + ("   cycle %d" % s.ember_count if s.ember_count > 0 else "")
+	_embers.text = "%s embers" % UITheme.fmt(s.embers)
+	_retire.text = "Retire  +%s" % UITheme.fmt(GameState.embers_on_retire())
+
+	_douse_bar.value = s.douse_meter
+	if s.is_dousing():
+		_douse_label.text = "DOUSING — earning nothing"
+		_douse_label.add_theme_color_override("font_color", Color(0.55, 0.75, 1.0))
+	elif s.douse_meter < 0.2:
+		_douse_label.text = "DOUSE  refilling"
+		_douse_label.add_theme_color_override("font_color", UITheme.WARN)
+	else:
+		_douse_label.text = "DOUSE  [hold Space]"
+		_douse_label.add_theme_color_override("font_color", UITheme.TEXT_DIM)

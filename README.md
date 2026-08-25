@@ -12,9 +12,17 @@ Godot 4, GDScript, statically typed. Built from `BLOOM-spec-simple.md`.
 /Applications/Godot.app/Contents/MacOS/Godot --path .
 ```
 
-**Hold Space** to Douse — luminance drops to 10%, spawning slows hard, and you
-earn nothing while you hold it. **T** opens the tree. **Esc** for settings.
-That is the entire active game; everything else is the tree.
+**Aim with the mouse.** The turret fires on its own whenever anything is
+inside its range, but it fires where you point — so choosing what to kill
+next is the active decision. An assist cone steers shots onto whatever you
+are pointing near, and Reach nodes widen it. Point at empty dark and you
+miss. The HUD says `ON TARGET` when the trigger has something.
+
+**Hold Space to hide.** Luminance drops to 10%, spawning nearly stops, and
+you earn nothing while you hold it. It is the panic button and the greed
+dial at once.
+
+**T** opens the tree, **Esc** settings.
 
 ### Headless tools
 
@@ -40,7 +48,7 @@ python3 tools/gen_tree.py
 | Phase | Criterion | Result |
 |---|---|---|
 | 0 | A circle at HDR brightness visibly blooms | pass |
-| 1 | 60fps with 300 contacts; loop playable with zero tree | pass — 103fps on an M2 |
+| 1 | 60fps with 300 contacts; loop playable with zero tree | pass — 112fps on an M2 |
 | 2 | Luminance drives spawn rate, tier and drift; Douse works | pass |
 | 3 | Purchasing a node grows the bloom within one frame; validator passes | pass |
 | 4 | Retiring early beats dying at every point on the curve | pass — asserted across six orders of magnitude |
@@ -55,6 +63,24 @@ And the two checks from §10 "things that will kill this":
 - **Shroud must not be a trap or an autobuy.** Verified in the runner: a
   mixed build banks 10 embers against 6 for pure-Burn, 6 for Reach, 9 for
   Root and 5 for pure-Shroud. Mixed beats every extreme.
+
+## Aiming, and the field scale
+
+The first build auto-targeted the nearest contact and drew the field at 57%
+scale. Both were wrong: the player had nothing to do, and everything was too
+small to read.
+
+The turret now fires along the aim vector. It still pulls the trigger itself
+and every upgrade still applies — the player supplies target selection, which
+is the decision that was missing. `GameStateData.aim` is set by the input
+layer and only read by the sim, so the simulation still never touches the
+scene tree, and the headless runner falls back to nearest-target so balance
+comparisons stay valid.
+
+The field shrank from 640 units to 440 with every other length scaled by the
+same factor, which leaves the simulation identical in relative terms while
+drawing everything roughly 1.5x larger. Contact radii deliberately did not
+scale down — that is the actual zoom.
 
 ## Balance, and how it got there
 

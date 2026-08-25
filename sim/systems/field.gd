@@ -3,8 +3,6 @@ extends RefCounted
 ## Contact movement and breaches. A contact reaching the centre destroys
 ## itself and one shield.
 
-const BREACH_RADIUS := 22.0
-
 static func move_contacts(s: GameStateData, delta: float) -> void:
 	for c in s.contacts:
 		c.pos += c.vel * delta
@@ -14,7 +12,7 @@ static func check_breaches(s: GameStateData) -> void:
 		return
 	var breached: Array[Contact] = []
 	for c in s.contacts:
-		if c.pos.length_squared() <= BREACH_RADIUS * BREACH_RADIUS:
+		if c.pos.length_squared() <= Constants.BREACH_RADIUS * Constants.BREACH_RADIUS:
 			breached.append(c)
 	for c in breached:
 		s.contacts.erase(c)

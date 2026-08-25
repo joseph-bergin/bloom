@@ -24,8 +24,9 @@ func _draw() -> void:
 		var col: Color = TIER_COLOUR[clampi(c.tier, 0, 7)]
 		var hurt: float = c.hp / maxf(c.max_hp, 0.001)
 		# Brightness falls as it takes damage, so you can read the field
-		# without reading any numbers.
-		_add_square(pts, cols, idx, c.pos, c.radius, col * (0.9 + hurt * 0.9))
+		# without reading any numbers. Kept near 1.0 so the tier colour
+		# survives the bloom instead of clipping to a white core.
+		_add_square(pts, cols, idx, c.pos, c.radius, col * (0.62 + hurt * 0.48))
 		if hurt < 0.999:
 			var w: float = c.radius * 1.6
 			var y: float = c.pos.y - c.radius - 5.0

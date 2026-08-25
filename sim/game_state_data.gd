@@ -19,6 +19,14 @@ var purchase_version: int = 0
 var spawn_timer: float = 0.0
 var fire_timer: float = 0.0
 var wildfire_lum: float = 0.0
+## Unit vector the player is pointing the turret along. Set by the input
+## layer each frame; the sim only ever reads it. When aim_auto is on (the
+## headless runner, or before the first mouse move) the turret falls back
+## to the nearest contact.
+var aim: Vector2 = Vector2.RIGHT
+var aim_auto: bool = true
+var locked_id: int = 0
+
 var run_over: bool = false
 var run_end_reason: String = ""
 var unlocked_sections: PackedStringArray = []

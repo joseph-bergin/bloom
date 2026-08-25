@@ -10,6 +10,7 @@ var open_tree: bool = false
 var _n: int = 0
 var _seeded: bool = false
 var _fps: Array[float] = []
+var _aim_target: Vector2 = Vector2.ZERO
 
 func _ready() -> void:
 	for a in OS.get_cmdline_user_args():
@@ -22,6 +23,9 @@ func _ready() -> void:
 			"contacts": contacts = int(kv[1])
 			"lum": lum = float(kv[1])
 			"tree": open_tree = int(kv[1]) != 0
+	# Measure real headroom, not the refresh rate.
+	DisplayServer.window_set_vsync_mode(DisplayServer.VSYNC_DISABLED)
+	Engine.max_fps = 0
 	add_child(load("res://scenes/Main.tscn").instantiate())
 
 func _process(_delta: float) -> void:
@@ -29,6 +33,10 @@ func _process(_delta: float) -> void:
 	if not _seeded and _n == 4:
 		_seeded = true
 		_seed()
+	if _aim_target != Vector2.ZERO and _n % 20 == 0:
+		var fv: Node2D = get_node("Main/FieldView")
+		var xf: Transform2D = fv.get_viewport().get_canvas_transform()
+		get_viewport().warp_mouse(xf * _aim_target)
 	if _n > 50:
 		_fps.append(Engine.get_frames_per_second())
 	if _n >= frames:
@@ -67,7 +75,14 @@ func _seed() -> void:
 		s.motes = 800.0
 	for _i in range(contacts):
 		Spawning.spawn_one(s, s.effective_luminance())
-		s.contacts[-1].pos *= randf_range(0.35, 1.0)
+		s.contacts[-1].pos *= randf_range(0.30, 1.0)
+	# Point the turret at something so the reticle and lock bracket show.
+	if not s.contacts.is_empty():
+		var best: Contact = s.contacts[0]
+		for c in s.contacts:
+			if c.pos.length() < best.pos.length():
+				best = c
+		_aim_target = best.pos
 	if open_tree:
 		s.motes = 5.0e5
 		for _p in range(10):

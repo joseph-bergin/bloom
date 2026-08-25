@@ -16,7 +16,11 @@ func _process(delta: float) -> void:
 func _draw() -> void:
 	var s: GameStateData = GameState.s
 	var l: float = s.effective_luminance()
-	var r: float = 14.0 + sqrt(l) * 3.2
+	# The spec's curve was written for a 640-unit field. Scaled to the
+	# current radius so the bloom occupies the same fraction of it and does
+	# not swallow the contacts closing on you.
+	var k: float = Constants.FIELD_RADIUS / 640.0
+	var r: float = (14.0 + sqrt(l) * 3.2) * k
 	var i: float = 1.2 + sqrt(l) * 0.22
 	r *= 1.0 + 0.03 * sin(_t * 1.8)
 
@@ -28,9 +32,9 @@ func _draw() -> void:
 	draw_circle(Vector2.ZERO, r * 0.45, Color(1.0, 0.95, 0.8) * i * 1.5)
 
 	# Shields read as shells. Losing one is visible without looking away.
-	for k in range(maxi(s.shields, 0)):
-		draw_arc(Vector2.ZERO, r + 10.0 + float(k) * 6.0, 0.0, TAU, 36,
-			Color(0.55, 0.85, 1.0) * 1.1, 1.2, true)
+	for shell in range(maxi(s.shields, 0)):
+		draw_arc(Vector2.ZERO, r + 9.0 + float(shell) * 6.0, 0.0, TAU, 36,
+			Color(0.55, 0.85, 1.0) * 1.3, 1.4, true)
 
 	if s.is_dousing():
 		draw_arc(Vector2.ZERO, r + 4.0, 0.0, TAU, 40, Color(0.35, 0.55, 0.9) * 1.3, 2.0, true)

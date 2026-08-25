@@ -18,6 +18,7 @@ var projectile_count: int = 1
 var turret_range: float = Constants.TURRET_RANGE_BASE
 var pierce: int = 0
 var chain: int = 0
+var aim_assist: float = Constants.AIM_ASSIST_CONE
 
 # --- root ---
 var max_shields: int = Constants.START_SHIELDS
@@ -88,6 +89,7 @@ func _resolve() -> void:
 	turret_range = Constants.TURRET_RANGE_BASE * (1.0 + _g("range_mult", 0.0))
 	pierce = int(_g("pierce", 0.0))
 	chain = int(_g("chain", 0.0))
+	aim_assist = Constants.AIM_ASSIST_CONE * (1.0 + _g("aim_assist", 0.0))
 
 	max_shields = Constants.START_SHIELDS + int(_g("shields", 0.0))
 	mote_mult = _g("mote_mult", 1.0)

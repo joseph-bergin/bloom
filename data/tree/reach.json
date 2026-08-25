@@ -69,8 +69,8 @@
    }
   ],
   "pos": {
-   "x": 0.0,
-   "y": 340.0
+   "x": 70.7,
+   "y": 332.6
   },
   "keystone": false,
   "section": "base"
@@ -97,6 +97,32 @@
     "stat": "fire_rate_mult",
     "op": "add",
     "value": 0.04
+   }
+  ],
+  "pos": {
+   "x": -70.7,
+   "y": 332.6
+  },
+  "keystone": false,
+  "section": "base"
+ },
+ {
+  "id": "reach_track",
+  "branch": "reach",
+  "name": "Tracking",
+  "desc": "Aim assist cone +12% per rank. Easier to stay on target.",
+  "max_rank": 6,
+  "cost": 260,
+  "cost_growth": 1.15,
+  "lum": 1.0,
+  "requires": [
+   "reach_entry"
+  ],
+  "effects": [
+   {
+    "stat": "aim_assist",
+    "op": "add",
+    "value": 0.12
    }
   ],
   "pos": {
@@ -159,6 +185,32 @@
   "section": "base"
  },
  {
+  "id": "reach_lockon",
+  "branch": "reach",
+  "name": "Lock On",
+  "desc": "Aim assist cone +18% per rank.",
+  "max_rank": 6,
+  "cost": 1400,
+  "cost_growth": 1.15,
+  "lum": 1.6,
+  "requires": [
+   "reach_lead"
+  ],
+  "effects": [
+   {
+    "stat": "aim_assist",
+    "op": "add",
+    "value": 0.18
+   }
+  ],
+  "pos": {
+   "x": -101.9,
+   "y": 479.3
+  },
+  "keystone": false,
+  "section": "base"
+ },
+ {
   "id": "reach_further",
   "branch": "reach",
   "name": "Further",
@@ -168,7 +220,7 @@
   "cost_growth": 1.08,
   "lum": 0.1,
   "requires": [
-   "reach_pierce"
+   "reach_track"
   ],
   "effects": [
    {
@@ -178,8 +230,8 @@
    }
   ],
   "pos": {
-   "x": -101.9,
-   "y": 479.3
+   "x": -288.0,
+   "y": 396.4
   },
   "keystone": false,
   "section": "base"
@@ -757,58 +809,6 @@
   "section": "base"
  },
  {
-  "id": "reach_kindle_19",
-  "branch": "reach",
-  "name": "Kindle",
-  "desc": "fire rate mult +0.03 per rank.",
-  "max_rank": 8,
-  "cost": 86169,
-  "cost_growth": 1.15,
-  "lum": 3.26,
-  "requires": [
-   "reach_wick_15"
-  ],
-  "effects": [
-   {
-    "stat": "fire_rate_mult",
-    "op": "add",
-    "value": 0.03
-   }
-  ],
-  "pos": {
-   "x": -174.2,
-   "y": 1379.0
-  },
-  "keystone": false,
-  "section": "base"
- },
- {
-  "id": "reach_flint_20",
-  "branch": "reach",
-  "name": "Flint",
-  "desc": "range mult +0.06 per rank.",
-  "max_rank": 10,
-  "cost": 157976,
-  "cost_growth": 1.15,
-  "lum": 2.88,
-  "requires": [
-   "reach_glim_16"
-  ],
-  "effects": [
-   {
-    "stat": "range_mult",
-    "op": "add",
-    "value": 0.06
-   }
-  ],
-  "pos": {
-   "x": 905.2,
-   "y": 1245.9
-  },
-  "keystone": false,
-  "section": "base"
- },
- {
   "id": "reach_longshot",
   "branch": "reach",
   "name": "Longshot",
@@ -818,7 +818,7 @@
   "cost_growth": 1.0,
   "lum": 2.0,
   "requires": [
-   "reach_flint_20"
+   "reach_char_18"
   ],
   "effects": [
    {
@@ -828,7 +828,7 @@
   ],
   "pos": {
    "x": 0.0,
-   "y": 1690.0
+   "y": 1540.0
   },
   "keystone": true,
   "section": "base"

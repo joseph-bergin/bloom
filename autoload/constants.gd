@@ -4,7 +4,7 @@ extends Node
 ## These are `var`, not `const`, so tools/sim_runner.gd can sweep them with
 ## --set=KEY=VALUE. Nothing else may write to them.
 
-var FIELD_RADIUS: float = 640.0
+var FIELD_RADIUS: float = 440.0
 
 var SPAWN_INTERVAL_BASE: float = 3.0
 var SPAWN_LUM_SCALE: float = 50.0
@@ -14,15 +14,15 @@ var MAX_TIER: int = 7
 ## field feels like it is escalating rather than averaging out.
 var TIER_TOP_THIRD_BIAS: float = 0.45
 
-var DRIFT_BASE: float = 18.0
-var DRIFT_LUM_SCALE: float = 0.25
+var DRIFT_BASE: float = 12.38
+var DRIFT_LUM_SCALE: float = 0.1719
 
 var HP_BASE: float = 10.0
 var HP_TIER_MULT: float = 2.2
 var MOTE_BASE: float = 3.0
 var MOTE_TIER_MULT: float = 1.9
-var RADIUS_BASE: float = 6.0
-var RADIUS_TIER_STEP: float = 2.0
+var RADIUS_BASE: float = 11.0
+var RADIUS_TIER_STEP: float = 3.5
 
 var SHROUD_CAP: float = 0.80
 var DOUSE_FACTOR: float = 0.10
@@ -39,10 +39,16 @@ var EMBER_DIVISOR: float = 80.0
 ## Retiring early must always beat dying.
 var RETIRE_BONUS: float = 0.25
 
-var TURRET_RANGE_BASE: float = 260.0
+## How wide a cone the turret will steer a shot into. Aiming is target
+## selection, not a twitch test — the assist makes pointing near a contact
+## enough, and Reach widens it.
+var AIM_ASSIST_CONE: float = 0.16
+var BREACH_RADIUS: float = 15.0
+
+var TURRET_RANGE_BASE: float = 178.8
 var TURRET_DAMAGE_BASE: float = 4.0
 var TURRET_RATE_BASE: float = 2.0    # shots per second
-var PROJECTILE_SPEED: float = 520.0
+var PROJECTILE_SPEED: float = 357.5
 var PROJECTILE_LIFETIME: float = 3.0
 var CRIT_MULT_BASE: float = 2.0
 

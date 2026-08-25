@@ -1,4 +1,4 @@
-[gd_scene load_steps=8 format=3]
+[gd_scene load_steps=9 format=3]
 
 [ext_resource type="Script" path="res://scenes/field/FieldView.gd" id="1_fv"]
 [ext_resource type="Script" path="res://scenes/field/GlowRig.gd" id="2_glow"]
@@ -6,7 +6,8 @@
 [ext_resource type="Script" path="res://scenes/field/ContactLayer.gd" id="4_contact"]
 [ext_resource type="Script" path="res://scenes/field/ProjectileLayer.gd" id="5_proj"]
 [ext_resource type="Script" path="res://scenes/field/PlayerBloom.gd" id="6_bloom"]
-[ext_resource type="Script" path="res://scenes/field/OverlayLayer.gd" id="7_overlay"]
+[ext_resource type="Script" path="res://scenes/field/ReticleLayer.gd" id="7_reticle"]
+[ext_resource type="Script" path="res://scenes/field/OverlayLayer.gd" id="8_overlay"]
 
 [node name="FieldView" type="Node2D"]
 script = ExtResource("1_fv")
@@ -28,5 +29,8 @@ script = ExtResource("5_proj")
 [node name="PlayerBloom" type="Node2D" parent="."]
 script = ExtResource("6_bloom")
 
+[node name="ReticleLayer" type="Node2D" parent="."]
+script = ExtResource("7_reticle")
+
 [node name="OverlayLayer" type="Node2D" parent="."]
-script = ExtResource("7_overlay")
+script = ExtResource("8_overlay")

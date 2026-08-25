@@ -1,17 +1,53 @@
 class_name Turret
 extends RefCounted
-## Auto-targets the nearest contact within range. Fires on a timer.
+## Fires along the direction the player is aiming, whenever anything is in
+## range. Choosing what to point at is the game's active decision — the
+## turret handles the trigger, the player handles the target.
 
 static func tick(s: GameStateData, delta: float) -> void:
+	s.locked_id = 0
+	var target: Contact = acquire(s)
+	if target != null:
+		s.locked_id = target.get_instance_id()
+
 	s.fire_timer -= delta
 	var interval: float = 1.0 / maxf(Stats.fire_rate, 0.01)
 	while s.fire_timer <= 0.0:
 		s.fire_timer += interval
-		if not _fire(s):
-			# Nothing in range — do not bank shots against an empty field.
+		if not _fire(s, target):
+			# Nothing in range: hold the trigger rather than banking shots
+			# against an empty field.
 			s.fire_timer = maxf(s.fire_timer, 0.0)
 			return
 
+## The contact the turret will steer onto: nearest to the aim line, within
+## the assist cone and within range. Pointing at empty dark hits nothing.
+static func acquire(s: GameStateData) -> Contact:
+	if s.aim_auto:
+		return nearest(s)
+	var range_sq: float = Stats.turret_range * Stats.turret_range
+	var best: Contact = null
+	var best_score: float = INF
+	for c in s.contacts:
+		var d_sq: float = c.pos.length_squared()
+		if d_sq > range_sq:
+			continue
+		var dir: Vector2 = c.pos.normalized()
+		var off: float = absf(dir.angle_to(s.aim))
+		# A big contact is easier to point at than a small one.
+		var forgiveness: float = Stats.aim_assist + atan(c.radius / maxf(c.pos.length(), 1.0))
+		if off > forgiveness:
+			continue
+		# Prefer what the player is pointing most directly at, then what is
+		# closest — so a near threat wins a near-tie.
+		var score: float = off + sqrt(d_sq) / maxf(Stats.turret_range, 1.0) * 0.15
+		if score < best_score:
+			best_score = score
+			best = c
+	return best
+
+## Any contact in range, ignoring aim. Used for the auto fallback and to
+## decide whether the turret has anything to shoot at.
 static func nearest(s: GameStateData) -> Contact:
 	var best: Contact = null
 	var best_d: float = Stats.turret_range * Stats.turret_range
@@ -22,13 +58,22 @@ static func nearest(s: GameStateData) -> Contact:
 			best = c
 	return best
 
-static func _fire(s: GameStateData) -> bool:
-	var target: Contact = nearest(s)
-	if target == null:
+static func anything_in_range(s: GameStateData) -> bool:
+	var range_sq: float = Stats.turret_range * Stats.turret_range
+	for c in s.contacts:
+		if c.pos.length_squared() <= range_sq:
+			return true
+	return false
+
+static func _fire(s: GameStateData, target: Contact) -> bool:
+	# The turret only spends a shot when something is actually out there,
+	# but it fires where the player points, hit or miss.
+	if not anything_in_range(s):
 		return false
-	var base_dir: Vector2 = target.pos.normalized()
+	var base_dir: Vector2 = target.pos.normalized() if target != null else s.aim
+	if base_dir == Vector2.ZERO:
+		base_dir = Vector2.RIGHT
 	var count: int = Stats.projectile_count
-	# Extra projectiles fan out around the aim line rather than stacking.
 	var spread: float = 0.10
 	for i in range(count):
 		var offset: float = 0.0 if count == 1 else (float(i) - float(count - 1) * 0.5) * spread
@@ -76,7 +121,7 @@ static func _collide(s: GameStateData, p: Projectile) -> bool:
 
 static func _nearest_other(s: GameStateData, from: Vector2, exclude: Array[int]) -> Contact:
 	var best: Contact = null
-	var best_d: float = 240.0 * 240.0
+	var best_d: float = 165.0 * 165.0
 	for c in s.contacts:
 		if exclude.has(c.get_instance_id()):
 			continue

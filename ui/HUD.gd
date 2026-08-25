@@ -15,9 +15,13 @@ var _motes: Label
 var _embers: Label
 var _shields: Label
 var _dps: Label
+var _aim: Label
 var _clock: Label
 var _douse_bar: ProgressBar
 var _douse_label: Label
+var _douse_sub: Label
+var _hint: Label
+var _hint_until: float = 0.0
 var _retire: Button
 var _refresh: float = 0.0
 
@@ -44,6 +48,8 @@ func _ready() -> void:
 	col.add_child(_shields)
 	_dps = UITheme.label("", UITheme.TEXT_DIM, 11)
 	col.add_child(_dps)
+	_aim = UITheme.label("", UITheme.TEXT_DIM, 12)
+	col.add_child(_aim)
 
 	var right := UITheme.make_panel()
 	right.set_anchors_preset(Control.PRESET_TOP_RIGHT)
@@ -72,9 +78,13 @@ func _ready() -> void:
 	var dc := VBoxContainer.new()
 	dc.add_theme_constant_override("separation", 2)
 	douse.add_child(dc)
-	_douse_label = UITheme.label("DOUSE  [hold Space]", UITheme.TEXT_DIM, 12)
+	_douse_label = UITheme.label("HOLD SPACE TO HIDE", UITheme.TEXT_DIM, 13)
 	_douse_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	dc.add_child(_douse_label)
+	_douse_sub = UITheme.label("light drops to 10% · spawning slows · you earn nothing",
+		UITheme.TEXT_DIM * 0.85, 10)
+	_douse_sub.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	dc.add_child(_douse_sub)
 	_douse_bar = ProgressBar.new()
 	_douse_bar.custom_minimum_size = Vector2(0, 8)
 	_douse_bar.show_percentage = false
@@ -87,6 +97,12 @@ func _ready() -> void:
 	bg.bg_color = Color(0.10, 0.11, 0.14)
 	_douse_bar.add_theme_stylebox_override("background", bg)
 	dc.add_child(_douse_bar)
+	_hint = UITheme.label("", UITheme.WARN, 13)
+	_hint.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	dc.add_child(_hint)
+	# The spec introduces Douse the first time a shield goes, not before.
+	EventBus.shield_breached.connect(func(_r: int):
+		_hint_until = 8.0)
 
 	var bar := HBoxContainer.new()
 	bar.set_anchors_preset(Control.PRESET_BOTTOM_LEFT)
@@ -131,6 +147,15 @@ func _process(delta: float) -> void:
 		UITheme.BAD if s.shields <= 1 else UITheme.GOOD)
 	_dps.text = "%s dps   %d range   %d contacts" % [
 		UITheme.fmt(Stats.dps()), int(Stats.turret_range), s.contacts.size()]
+	if s.locked_id != 0:
+		_aim.text = "ON TARGET"
+		_aim.add_theme_color_override("font_color", UITheme.GOOD)
+	elif Turret.anything_in_range(s):
+		_aim.text = "aim at something in range"
+		_aim.add_theme_color_override("font_color", UITheme.WARN)
+	else:
+		_aim.text = "nothing in range"
+		_aim.add_theme_color_override("font_color", UITheme.TEXT_DIM)
 
 	_clock.text = UITheme.fmt_time(s.t) + ("   cycle %d" % s.ember_count if s.ember_count > 0 else "")
 	_embers.text = "%s embers" % UITheme.fmt(s.embers)
@@ -138,11 +163,17 @@ func _process(delta: float) -> void:
 
 	_douse_bar.value = s.douse_meter
 	if s.is_dousing():
-		_douse_label.text = "DOUSING — earning nothing"
+		_douse_label.text = "HIDDEN"
 		_douse_label.add_theme_color_override("font_color", Color(0.55, 0.75, 1.0))
-	elif s.douse_meter < 0.2:
-		_douse_label.text = "DOUSE  refilling"
+		_douse_sub.text = "spawning almost stopped · earning nothing"
+	elif s.douse_meter < 0.25:
+		_douse_label.text = "OUT OF BREATH"
 		_douse_label.add_theme_color_override("font_color", UITheme.WARN)
+		_douse_sub.text = "wait for the meter to refill"
 	else:
-		_douse_label.text = "DOUSE  [hold Space]"
+		_douse_label.text = "HOLD SPACE TO HIDE"
 		_douse_label.add_theme_color_override("font_color", UITheme.TEXT_DIM)
+		_douse_sub.text = "light drops to 10% · spawning slows · you earn nothing"
+
+	_hint_until = maxf(_hint_until - REFRESH, 0.0)
+	_hint.text = "Losing shields? Hold Space." if _hint_until > 0.0 else ""

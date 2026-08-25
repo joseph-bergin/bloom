@@ -10,6 +10,7 @@ extends Node
 func _ready() -> void:
 	hud.tree_pressed.connect(func(): tree_view.toggle())
 	hud.settings_pressed.connect(func(): settings.toggle())
+	EventBus.run_started.connect(func(): field.set_aiming(true))
 	hud.retire_pressed.connect(func():
 		GameState.paused = true
 		run_end.open_modal(false))
@@ -24,6 +25,11 @@ func _ready() -> void:
 		run_end.open_modal(true, reason))
 	EventBus.contact_killed.connect(func(tier: int, _at: Vector2, _m: float):
 		GameState.hitstop(tier))
+
+func _process(_delta: float) -> void:
+	# Aiming only applies while the player is looking at the field.
+	field.set_aiming(not tree_view.visible and not run_end.visible
+		and not settings.visible and not GameState.s.run_over)
 
 func _unhandled_input(event: InputEvent) -> void:
 	if event.is_action_pressed("toggle_tree"):

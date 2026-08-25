@@ -18,7 +18,7 @@ const TIER_COLOUR: Array[Color] = [
 	Color(0.85, 0.25, 0.60), Color(0.75, 0.35, 0.95)]
 ## Punched out of hollow markers to fake a ring with two filled discs.
 const BACKDROP := Color(0.02, 0.025, 0.035)
-const DISC_SEGMENTS := 12
+const DISC_SEGMENTS := 14
 const AWARENESS_SEGMENTS := 10
 const AWARENESS_MIN := 0.08
 
@@ -92,8 +92,12 @@ func _draw() -> void:
 			else Color(0.5, 0.8, 0.75) * 1.1
 		draw_arc(p, r, 0.0, TAU, 24, col, 1.2, true)
 
+## Field units. The camera fits a 2000-unit field into ~800px, so these are
+## roughly a third this size on screen — small enough already that the
+## marker language (solid / hollow / angular) has to be drawn generously
+## to read at all.
 func _size_of(c: Contact) -> float:
-	return 6.5 + float(c.known_tier) * 2.6
+	return 15.0 + float(c.known_tier) * 4.5
 
 func _build_contact(data: GameStateData, c: Contact, t: float) -> void:
 	var p: Vector2 = Sensing.believed_position(c, t)
@@ -121,7 +125,7 @@ func _build_contact(data: GameStateData, c: Contact, t: float) -> void:
 	else:
 		# Hollow outline. You know roughly where, not exactly what.
 		_add_disc(p, size, hot * (0.85 * fade + 0.3))
-		_add_disc(p, size - 1.8, BACKDROP)
+		_add_disc(p, size - 3.6, BACKDROP)
 
 	if c.state == Contact.State.FLEEING:
 		_add_ring_lines(p, size + 6.0, 10, Color(0.4, 0.7, 0.9) * 0.8, 0.0)

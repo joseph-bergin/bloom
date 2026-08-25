@@ -13,6 +13,7 @@ var _level_bar: ProgressBar
 var _level_sub: Label
 var _lum: Label
 var _cause: Label
+var _sight: Label
 var _motes: Label
 var _pips: Control
 var _clock: Label
@@ -53,6 +54,9 @@ func _build_status() -> void:
 	# to the field, live.
 	_cause = UITheme.label("", UITheme.TEXT_DIM, UITheme.TINY)
 	col.add_child(_cause)
+	# Which of the two radii is binding. Range past your sight is wasted.
+	_sight = UITheme.label("", UITheme.TEXT_FAINT, UITheme.TINY)
+	col.add_child(_sight)
 
 	col.add_child(UITheme.rule())
 	_motes = UITheme.label("0", UITheme.MOTES, UITheme.LARGE)
@@ -140,6 +144,10 @@ func _process(delta: float) -> void:
 	else:
 		_tint(_cause, "SPAWN x%.1f  TIER %d" % [pressure, Spawning.max_tier(l)],
 			UITheme.BAD if pressure > 4.0 else UITheme.TEXT_DIM)
+	var sight: float = Sight.radius(s)
+	var blind: bool = sight < Stats.turret_range
+	_tint(_sight, "SEE %d   GUN %d" % [int(sight), int(Stats.turret_range)],
+		UITheme.WARN if blind else UITheme.TEXT_FAINT)
 
 	_motes.text = UITheme.fmt(s.motes)
 

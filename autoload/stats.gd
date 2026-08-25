@@ -19,6 +19,9 @@ var turret_range: float = Constants.TURRET_RANGE_BASE
 var pierce: int = 0
 var chain: int = 0
 var aim_assist: float = Constants.AIM_ASSIST_CONE
+## Sight that does not come from emitting: the Shroud branch's answer to
+## going dark. Without it, running dark means running blind.
+var vision_add: float = 0.0
 
 # --- root ---
 var max_shields: int = Constants.START_SHIELDS
@@ -89,6 +92,7 @@ func _resolve() -> void:
 	pierce = int(_g("pierce", 0.0))
 	chain = int(_g("chain", 0.0))
 	aim_assist = Constants.AIM_ASSIST_CONE * (1.0 + _g("aim_assist", 0.0))
+	vision_add = _g("vision", 0.0)
 
 	max_shields = Constants.START_SHIELDS + int(_g("shields", 0.0))
 	# Capped nodes multiply; uncapped sinks add. Mixing the two lets a sink

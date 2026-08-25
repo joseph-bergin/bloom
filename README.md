@@ -26,6 +26,31 @@ mash the key at zero.
 **T** opens the tree — **between levels only.** Upgrades are a phase, not
 something you do mid-fight. **Esc** settings.
 
+## Sight
+
+**What your light reaches, you can fight. What it does not, you cannot.**
+
+Two radii matter and they come from different places. *Sight* is bought with
+light — brightness is literally how far you can see. *Range* is bought with
+Reach. The turret needs both: it will not lock, and its shots will not
+touch, anything outside your light. Contacts out there draw as hollow
+brackets — you know something is coming, not what.
+
+That makes brightness a two-sided trade rather than a straight cost. Bright
+means more enemies and the ability to fight them; dark means fewer enemies
+you cannot see coming. Range past your sight is wasted, so the HUD shows
+both numbers and warns when sight is the binding one.
+
+It also gives Shroud a job. **Dark Adaptation** buys sight that costs no
+light to have — the branch's answer to the one thing going dark takes from
+you. Before this, Shroud bought safety and nothing else, and the runner
+showed a pure-Burn build performing *worse than buying nothing at all*.
+With sight in play Burn moved from level 5.0 to 7.0, and burn + shroud from
+6.0 to 8.0.
+
+A boss is always visible however dark it is. Losing track of the thing the
+level is about would read as a bug rather than as darkness.
+
 ## Levels
 
 A run is a ladder of levels. Each level is a kill quota, then a **boss**.
@@ -149,13 +174,14 @@ commits. Over a single run (four seeds averaged, score is level reached):
 
 | build | level | motes | dps |
 |---|---|---|---|
-| burn + reach | 8.7 | 14.2K | 102 |
-| mixed (all four) | 8.3 | 24.2K | 74 |
-| reach | 8.0 | 9.7K | 16 |
+| burn + reach | 8.3 | 12.3K | 73 |
+| mixed (all four) | 8.0 | 12.8K | 34 |
+| burn + shroud | 8.0 | 9.8K | 23 |
+| reach | 8.0 | 9.8K | 8 |
+| burn | 7.0 | 11.7K | 129 |
 | shroud | 7.0 | 5.6K | 8 |
 | **buy nothing** | **7.0** | **5.6K** | **8** |
-| root | 6.0 | 8.5K | 8 |
-| burn | 5.0 | 2.5K | 18 |
+| root | 6.0 | 10.1K | 8 |
 
 Committed builds clearly beat idling, and the curve is smooth rather than
 the cliff it used to be — the boss now keeps the damage you did to it
@@ -163,9 +189,12 @@ across attempts, so a wall you cannot clear outright can be ground down at
 a shield apiece. Before that the run was bistable: break through and
 compound forever, or stall at level 6 with nothing in between.
 
-Pure Burn is still *worse than buying nothing*: its luminance costs more
-than its damage returns unless Reach is there to give the turret time to
-use it. Shroud still does not pay for itself.
+Sight fixed the two branches that were not paying rent. Burn went from
+*worse than buying nothing* to par, because the light it generates now buys
+sight as well as danger, and Shroud pairs into a real build for the first
+time. What is left is that a **pure** Shroud build still only ties with
+idling — which is arguably correct, since it has no damage at all — and
+Root has slipped to the bottom.
 
 So the shape is right — commitment beats dabbling beats idling — but the
 floor is too high and two of the four branches are not carrying their

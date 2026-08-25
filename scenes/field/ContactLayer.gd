@@ -19,9 +19,16 @@ func _draw() -> void:
 	var bar_cols := PackedColorArray()
 
 	var boss: Contact = null
+	var unseen := PackedVector2Array()
+	var unseen_cols := PackedColorArray()
 	for c in s.contacts:
 		if c.is_boss:
 			boss = c
+			continue
+		if not Sight.can_see(s, c):
+			# Out past the light: you know something is there and nothing
+			# more. No tier, no health, and the turret will not take it.
+			_add_silhouette(unseen, unseen_cols, c)
 			continue
 		var col: Color = UITheme.tier_colour(c.tier)
 		var hurt: float = c.hp / maxf(c.max_hp, 0.001)
@@ -43,6 +50,8 @@ func _draw() -> void:
 		RenderingServer.canvas_item_add_triangle_array(get_canvas_item(), idx, pts, cols)
 	if not bars.is_empty():
 		draw_multiline_colors(bars, bar_cols, 2.0)
+	if not unseen.is_empty():
+		draw_multiline_colors(unseen, unseen_cols, 1.6)
 	if boss != null:
 		_draw_boss(boss)
 
@@ -67,6 +76,22 @@ func _draw_boss(c: Contact) -> void:
 	# Its own health ring, so progress is readable without the top bar.
 	draw_arc(c.pos, ring, -PI * 0.5, -PI * 0.5 + TAU * hurt, 40,
 		Color(1.0, 0.55, 0.35) * 1.25, 3.0, true)
+
+## An unseen contact is drawn as an open bracket rather than a filled
+## square: the same footprint, none of the information.
+func _add_silhouette(pts: PackedVector2Array, cols: PackedColorArray, c: Contact) -> void:
+	var r: float = c.radius
+	var col := Color(0.34, 0.30, 0.34)
+	var corners: Array[Vector2] = [
+		Vector2(-r, -r), Vector2(r, -r), Vector2(r, r), Vector2(-r, r)]
+	for i in range(4):
+		var a: Vector2 = c.pos + corners[i]
+		var b: Vector2 = c.pos + corners[(i + 1) % 4]
+		var d: Vector2 = (b - a) * 0.34
+		pts.append(a); pts.append(a + d)
+		cols.append(col)
+		pts.append(b - d); pts.append(b)
+		cols.append(col)
 
 func _add_square(pts: PackedVector2Array, cols: PackedColorArray,
 		idx: PackedInt32Array, centre: Vector2, r: float, col: Color) -> void:

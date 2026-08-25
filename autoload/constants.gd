@@ -88,6 +88,12 @@ var START_SHIELDS: int = 3
 var AIM_ASSIST_CONE: float = 0.16
 var BREACH_RADIUS: float = 15.0
 
+## Sight is bought with light. At zero luminance you see less than the
+## turret can shoot, so the opening is vision-limited; past roughly 60
+## luminance the turret's range becomes the binding constraint instead.
+var VISION_BASE: float = 150.0
+var VISION_LUM_SCALE: float = 15.0
+
 var TURRET_RANGE_BASE: float = 240.0
 var TURRET_DAMAGE_BASE: float = 4.0
 var TURRET_RATE_BASE: float = 2.0    # shots per second

@@ -38,7 +38,7 @@ static func acquire(s: GameStateData) -> Contact:
 	var best_score: float = INF
 	for c in s.contacts:
 		var d_sq: float = c.pos.length_squared()
-		if d_sq > range_sq:
+		if d_sq > range_sq or not Sight.can_see(s, c):
 			continue
 		var dir: Vector2 = c.pos.normalized()
 		var off: float = absf(dir.angle_to(s.aim))
@@ -61,15 +61,16 @@ static func nearest(s: GameStateData) -> Contact:
 	var best_d: float = Stats.turret_range * Stats.turret_range
 	for c in s.contacts:
 		var d: float = c.pos.length_squared()
-		if d <= best_d:
+		if d <= best_d and Sight.can_see(s, c):
 			best_d = d
 			best = c
 	return best
 
+## Something the turret could actually hit — seen and in range.
 static func anything_in_range(s: GameStateData) -> bool:
 	var range_sq: float = Stats.turret_range * Stats.turret_range
 	for c in s.contacts:
-		if c.pos.length_squared() <= range_sq:
+		if c.pos.length_squared() <= range_sq and Sight.can_see(s, c):
 			return true
 	return false
 
@@ -106,7 +107,7 @@ static func move_projectiles(s: GameStateData, delta: float) -> void:
 static func _collide(s: GameStateData, p: Projectile) -> bool:
 	for c in s.contacts:
 		var id: int = c.get_instance_id()
-		if p.hit_ids.has(id):
+		if p.hit_ids.has(id) or not Sight.can_see(s, c):
 			continue
 		if p.pos.distance_squared_to(c.pos) > c.radius * c.radius:
 			continue

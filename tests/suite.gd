@@ -173,6 +173,71 @@ func test_tier_rolls_bias_toward_the_top() -> void:
 	ok(float(high) / float(trials) > 0.50,
 		"escalating field, not an averaging one (got %.2f)" % (float(high) / float(trials)))
 
+# --- sight ---------------------------------------------------------------
+
+## The mechanic the whole design was pitched on: what your light reaches,
+## you can fight. What it does not, you cannot.
+func test_sight_grows_with_light() -> void:
+	var s := fresh()
+	GameState.s = s
+	var dark: float = Sight.radius(s)
+	near(dark, Constants.VISION_BASE, 0.001, "you see something at zero light")
+	own(s, &"burn_entry", 10)
+	Luminance.tick(s, 0.0)
+	ok(Sight.radius(s) > dark, "and further the brighter you burn")
+
+func test_the_turret_cannot_touch_what_it_cannot_see() -> void:
+	var s := fresh()
+	GameState.s = s
+	var far := Contact.make(0, Vector2(Sight.radius(s) + 40.0, 0.0), 0.0)
+	s.contacts.append(far)
+	ok(not Sight.can_see(s, far), "past the light it is unseen")
+	ok(Turret.nearest(s) == null, "so the turret will not lock it")
+	ok(not Turret.anything_in_range(s), "and holds its fire")
+
+	var near_c := Contact.make(0, Vector2(Sight.radius(s) - 20.0, 0.0), 0.0)
+	s.contacts.append(near_c)
+	ok(Sight.can_see(s, near_c), "inside the light it is seen")
+	ok(Turret.nearest(s) == near_c, "and the turret takes it")
+
+func test_shots_pass_through_the_unseen() -> void:
+	var s := fresh()
+	GameState.s = s
+	var ghost := Contact.make(0, Vector2(Sight.radius(s) + 60.0, 0.0), 0.0)
+	s.contacts.append(ghost)
+	var p := Projectile.make(Vector2.ZERO, Vector2.RIGHT, 9999.0, false)
+	p.pos = ghost.pos
+	s.projectiles.append(p)
+	Turret.move_projectiles(s, 0.001)
+	near(ghost.hp, ghost.max_hp, 0.001, "an unseen contact takes no damage")
+
+## Otherwise losing the boss in the dark would read as a bug, not darkness.
+func test_a_boss_is_always_visible() -> void:
+	var s := fresh()
+	GameState.s = s
+	var b := Contact.make_boss(3, Vector2(Constants.FIELD_RADIUS, 0.0), 10.0)
+	ok(Sight.can_see(s, b), "the boss announces itself however dark it is")
+
+## Range you cannot see past is wasted, which is what makes the two
+## branches that buy them a real choice rather than a stacking order.
+func test_engagement_is_the_nearer_of_sight_and_range() -> void:
+	var s := fresh()
+	GameState.s = s
+	near(Sight.engagement(s), minf(Sight.radius(s), Stats.turret_range), 0.001,
+		"engagement is whichever binds")
+	ok(Sight.radius(s) < Stats.turret_range,
+		"a dark opening is sight-limited, so light is worth buying")
+
+## Shroud's answer to going dark: sight that costs no light to have.
+func test_shroud_buys_sight_without_emitting() -> void:
+	var s := fresh()
+	GameState.s = s
+	var before: float = Sight.radius(s)
+	own(s, &"shroud_adapt", 8)
+	Luminance.tick(s, 0.0)
+	ok(Sight.radius(s) > before, "dark adaptation extends sight")
+	near(s.luminance, 0.0, 0.001, "and emits nothing doing it")
+
 # --- turret --------------------------------------------------------------
 
 func test_turret_targets_the_nearest_contact_in_range() -> void:

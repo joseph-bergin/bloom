@@ -69,8 +69,34 @@
    }
   ],
   "pos": {
-   "x": 340.0,
-   "y": 0.0
+   "x": 332.6,
+   "y": -70.7
+  },
+  "keystone": false,
+  "section": "base"
+ },
+ {
+  "id": "shroud_adapt",
+  "branch": "shroud",
+  "name": "Dark Adaptation",
+  "desc": "See 22 further per rank without emitting a thing.",
+  "max_rank": 8,
+  "cost": 110,
+  "cost_growth": 1.15,
+  "lum": 0.0,
+  "requires": [
+   "shroud_entry"
+  ],
+  "effects": [
+   {
+    "stat": "vision",
+    "op": "add",
+    "value": 22.0
+   }
+  ],
+  "pos": {
+   "x": 332.6,
+   "y": 70.7
   },
   "keystone": false,
   "section": "base"
@@ -147,8 +173,34 @@
    }
   ],
   "pos": {
-   "x": 479.3,
-   "y": -101.9
+   "x": 466.0,
+   "y": -151.4
+  },
+  "keystone": false,
+  "section": "base"
+ },
+ {
+  "id": "shroud_nightsight",
+  "branch": "shroud",
+  "name": "Night Sight",
+  "desc": "See 34 further per rank without emitting a thing.",
+  "max_rank": 8,
+  "cost": 620,
+  "cost_growth": 1.15,
+  "lum": 0.0,
+  "requires": [
+   "shroud_hold"
+  ],
+  "effects": [
+   {
+    "stat": "vision",
+    "op": "add",
+    "value": 34.0
+   }
+  ],
+  "pos": {
+   "x": 490.0,
+   "y": 0.0
   },
   "keystone": false,
   "section": "base"
@@ -157,13 +209,13 @@
   "id": "shroud_hush",
   "branch": "shroud",
   "name": "Hush",
-  "desc": "Luminance reduced 0.4%. No cap.",
+  "desc": "Light reduced 0.4%. No cap.",
   "max_rank": -1,
   "cost": 320,
   "cost_growth": 1.08,
   "lum": 0.0,
   "requires": [
-   "shroud_hold"
+   "shroud_adapt"
   ],
   "effects": [
    {
@@ -173,8 +225,34 @@
    }
   ],
   "pos": {
-   "x": 479.3,
-   "y": 101.9
+   "x": 466.0,
+   "y": 151.4
+  },
+  "keystone": false,
+  "section": "base"
+ },
+ {
+  "id": "shroud_peer",
+  "branch": "shroud",
+  "name": "Peer",
+  "desc": "See 3 further. No cap.",
+  "max_rank": -1,
+  "cost": 380,
+  "cost_growth": 1.08,
+  "lum": 0.0,
+  "requires": [
+   "shroud_recover"
+  ],
+  "effects": [
+   {
+    "stat": "vision",
+    "op": "add",
+    "value": 3.0
+   }
+  ],
+  "pos": {
+   "x": 396.4,
+   "y": 288.0
   },
   "keystone": false,
   "section": "base"
@@ -232,6 +310,32 @@
   "section": "base"
  },
  {
+  "id": "shroud_pupil",
+  "branch": "shroud",
+  "name": "Wide Pupil",
+  "desc": "See 48 further per rank without emitting a thing.",
+  "max_rank": 8,
+  "cost": 2100,
+  "cost_growth": 1.15,
+  "lum": 0.0,
+  "requires": [
+   "shroud_nightsight"
+  ],
+  "effects": [
+   {
+    "stat": "vision",
+    "op": "add",
+    "value": 48.0
+   }
+  ],
+  "pos": {
+   "x": 640.0,
+   "y": 0.0
+  },
+  "keystone": false,
+  "section": "base"
+ },
+ {
   "id": "shroud_still",
   "branch": "shroud",
   "name": "Stillness",
@@ -241,7 +345,7 @@
   "cost_growth": 1.08,
   "lum": 0.0,
   "requires": [
-   "shroud_deepen"
+   "shroud_hush"
   ],
   "effects": [
    {
@@ -251,8 +355,8 @@
    }
   ],
   "pos": {
-   "x": 640.0,
-   "y": 0.0
+   "x": 608.7,
+   "y": 197.8
   },
   "keystone": false,
   "section": "base"
@@ -319,7 +423,7 @@
   "cost_growth": 1.15,
   "lum": 0.0,
   "requires": [
-   "shroud_still"
+   "shroud_pupil"
   ],
   "effects": [
    {
@@ -700,120 +804,16 @@
   "section": "base"
  },
  {
-  "id": "shroud_grain_16",
-  "branch": "shroud",
-  "name": "Grain",
-  "desc": "douse efficiency +0.05 per rank.",
-  "max_rank": 8,
-  "cost": 73859,
-  "cost_growth": 1.15,
-  "lum": 0.0,
-  "requires": [
-   "shroud_ember_12"
-  ],
-  "effects": [
-   {
-    "stat": "douse_efficiency",
-    "op": "add",
-    "value": 0.05
-   }
-  ],
-  "pos": {
-   "x": 1124.5,
-   "y": -817.0
-  },
-  "keystone": false,
-  "section": "base"
- },
- {
-  "id": "shroud_mote_17",
-  "branch": "shroud",
-  "name": "Mote",
-  "desc": "douse refill +0.08 per rank.",
-  "max_rank": 10,
-  "cost": 77962,
-  "cost_growth": 1.15,
-  "lum": 0.0,
-  "requires": [
-   "shroud_cinder_13"
-  ],
-  "effects": [
-   {
-    "stat": "douse_refill",
-    "op": "add",
-    "value": 0.08
-   }
-  ],
-  "pos": {
-   "x": 1292.4,
-   "y": -511.7
-  },
-  "keystone": false,
-  "section": "base"
- },
- {
-  "id": "shroud_shard_18",
-  "branch": "shroud",
-  "name": "Shard",
-  "desc": "shroud +0.02 per rank.",
-  "max_rank": 6,
-  "cost": 82065,
-  "cost_growth": 1.15,
-  "lum": 0.0,
-  "requires": [
-   "shroud_scoria_14"
-  ],
-  "effects": [
-   {
-    "stat": "shroud",
-    "op": "add",
-    "value": 0.02
-   }
-  ],
-  "pos": {
-   "x": 1379.0,
-   "y": -174.2
-  },
-  "keystone": false,
-  "section": "base"
- },
- {
-  "id": "shroud_ash_19",
-  "branch": "shroud",
-  "name": "Ash",
-  "desc": "douse efficiency +0.05 per rank.",
-  "max_rank": 8,
-  "cost": 86169,
-  "cost_growth": 1.15,
-  "lum": 0.0,
-  "requires": [
-   "shroud_fleck_15"
-  ],
-  "effects": [
-   {
-    "stat": "douse_efficiency",
-    "op": "add",
-    "value": 0.05
-   }
-  ],
-  "pos": {
-   "x": 1379.0,
-   "y": 174.2
-  },
-  "keystone": false,
-  "section": "base"
- },
- {
   "id": "shroud_cinder",
   "branch": "shroud",
   "name": "Cinder",
-  "desc": "Below 20 luminance nothing spawns at all. Above it, spawn rate doubles.",
+  "desc": "Below 20 light nothing spawns at all. Above it, spawn rate doubles.",
   "max_rank": 1,
   "cost": 6000,
   "cost_growth": 1.0,
   "lum": 0.0,
   "requires": [
-   "shroud_shard_18"
+   "shroud_scoria_14"
   ],
   "effects": [
    {
@@ -822,7 +822,7 @@
    }
   ],
   "pos": {
-   "x": 1540.0,
+   "x": 1390.0,
    "y": 0.0
   },
   "keystone": true,

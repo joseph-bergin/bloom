@@ -385,6 +385,34 @@ func test_fog_reveals_neighbours_only() -> void:
 
 # --- tree integrity ------------------------------------------------------
 
+## Thirteen Root nodes once granted a stat that had been removed with the
+## prestige system. They still cost motes and light and did nothing at all.
+## Nothing in the tree may reference a stat or rule the sim never reads.
+func test_every_node_effect_is_actually_read() -> void:
+	var live: Dictionary = {}
+	for key in ["damage_mult", "damage_scale", "fire_rate_mult", "crit_chance",
+			"crit_mult", "projectiles", "shroud", "douse_efficiency",
+			"douse_refill", "range_mult", "pierce", "chain", "aim_assist",
+			"vision", "shields", "mote_mult", "mote_add"]:
+		live[key] = true
+	var rules: Dictionary = {}
+	for key in ["wildfire", "cinder", "longshot", "diaspora"]:
+		rules[key] = true
+
+	var dead: PackedStringArray = []
+	for id in TreeDB.all_ids():
+		var n: TreeNode = TreeDB.get_node_def(id)
+		for e in n.effects:
+			if typeof(e) != TYPE_DICTIONARY:
+				continue
+			var d: Dictionary = e
+			if str(d.get("op", "add")) == "rule":
+				if not rules.has(str(d.get("rule", ""))):
+					dead.append("%s -> rule %s" % [n.display_name, d.get("rule", "")])
+			elif not live.has(str(d.get("stat", ""))):
+				dead.append("%s -> %s" % [n.display_name, d.get("stat", "")])
+	ok(dead.is_empty(), "nodes with effects nothing reads: " + ", ".join(dead))
+
 func test_tree_validates() -> void:
 	var errs: PackedStringArray = TreeDB.validate()
 	ok(errs.is_empty(), "tree validation:\n" + "\n".join(errs))

@@ -118,15 +118,11 @@ TEMPLATES = {
  ("entry","Anchor","+9% mote yield per rank.",[eff("mote_mult",0.09,"mul")],8,50,2.0,0),
  ("shield","Second Skin","+1 shield per rank.",[eff("shields",1.0)],2,400,2.5,1),
  ("gather","Gather","+11% mote yield per rank.",[eff("mote_mult",0.11,"mul")],8,180,2.2,1),
- ("bank","Bank","+5% embers banked per rank.",[eff("ember_mult",0.05,"mul")],6,600,2.4,1),
  ("thick","Thicken","+1 shield per rank.",[eff("shields",1.0)],2,2200,3.0,2),
  ("harvest","Harvest","+13% mote yield per rank.",[eff("mote_mult",0.13,"mul")],8,900,2.8,2),
- ("deepbank","Deep Bank","+6% embers banked per rank.",
-  [eff("ember_mult",0.06,"mul")],6,2400,2.6,3),
  ("bounty","Bounty","+16% mote yield per rank.",[eff("mote_mult",0.16,"mul")],8,3200,3.2,3),
  ("lastwall","Last Wall","+1 shield per rank.",[eff("shields",1.0)],1,9000,3.4,4),
  ("thrift","Thrift","+1% mote yield. No cap.",[eff("mote_mult",0.01,"mul")],-1,340,0.2,2),
- ("keep","Keep","+1% embers banked. No cap.",[eff("ember_mult",0.01,"mul")],-1,1200,0.2,3),
 ],
 }
 
@@ -152,7 +148,7 @@ DEEPEN = {
  "shroud": [("shroud",0.02,"add",0.0),("douse_efficiency",0.05,"add",0.0),
             ("douse_refill",0.08,"add",0.0)],
  "reach":  [("range_mult",0.06,"add",1.2),("fire_rate_mult",0.03,"add",1.4)],
- "root":   [("mote_mult",0.05,"mul",2.1),("ember_mult",0.05,"mul",2.3)],
+ "root":   [("mote_mult",0.05,"mul",2.1),("mote_add",0.06,"add",1.9)],
 }
 WORDS = ["Ash","Tinder","Coal","Wick","Glim","Spark","Char","Kindle","Flint",
          "Slag","Fume","Brand","Taper","Torch","Pyre","Soot","Lumen","Nit",

@@ -1,0 +1,28 @@
+name: checks
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    container: barichello/godot-ci:4.3
+    steps:
+      - uses: actions/checkout@v4
+
+      # Not optional on a fresh checkout: autoloads compile before the
+      # class_name globals exist, so without this the suite cannot find
+      # its own types. Same step the README documents for humans.
+      - name: Build the script class cache
+        run: timeout 300 godot --headless --import
+
+      - name: Unit suite
+        run: timeout 600 godot --headless --script res://tests/test_runner.gd
+
+      # The suite runs synchronously and never gets a frame, so scene
+      # wiring is invisible to it. This boots the real Main scene.
+      - name: Pause probe
+        run: timeout 300 godot --headless --script res://tools/dev/PauseProbe.gd

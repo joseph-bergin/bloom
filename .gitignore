@@ -5,3 +5,8 @@ export_presets.cfg
 *.translation
 build/
 .DS_Store
+
+# macOS Finder duplicates. Two of these were committed and went stale — a
+# GlowRig carrying a feature the rebuild dropped, and a test runner from
+# before the parse-error guard.
+* [0-9].*

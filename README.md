@@ -4,7 +4,7 @@ A small incremental game. One screen, one loop, one big skill tree.
 Every upgrade you buy makes you brighter, and brightness is the thing that
 spawns the enemies.
 
-Godot 4, GDScript, statically typed. Built from `BLOOM-spec-simple.md`.
+Godot 4, GDScript, statically typed.
 
 ## Running it
 
@@ -66,6 +66,27 @@ there is something in range you are not pointed at.
 boss arrives. Clear it and the tree opens — spend what the level paid, then
 press *Begin level 2*. Three shields gone ends the run, and the level you
 reached is the score. Nothing carries between runs except your best level.
+
+## Working on it
+
+`main` is the trunk and is always releasable: the suite and the pause probe
+both pass on every commit that lands there. History is linear — rebase onto
+`main` rather than merging, so the log stays a readable sequence of changes
+rather than a braid.
+
+```bash
+git switch -c fix/short-description main   # anything non-trivial or risky
+# ... work, commit ...
+git rebase main && git switch main && git merge --ff-only -
+```
+
+Small, obviously-safe changes go straight to `main`. Anything that could
+leave the game unrunnable — a rendering change, a save-format change, a
+balance pass — gets a branch, because `main` staying green is what makes
+the tag below mean something.
+
+Releases are tags on `main`: `v0.1.0`, `v0.2.0`. Published history on `main`
+is never rewritten.
 
 ## Checking it
 

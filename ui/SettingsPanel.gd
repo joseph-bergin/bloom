@@ -28,7 +28,7 @@ func _ready() -> void:
 
 	var rm := CheckBox.new()
 	rm.text = "Reduced motion"
-	rm.tooltip_text = "Disables screenshake."
+	rm.tooltip_text = "Disables screenshake and UI animation."
 	rm.button_pressed = Audio.reduced_motion
 	rm.toggled.connect(func(on: bool):
 		set_reduced_motion(on)

@@ -47,7 +47,15 @@ func _process(delta: float) -> void:
 			if GameState.upgrading() and not GameState.s.run_over:
 				tree_view.open_view()
 
-	# Aiming only applies while the player is looking at the field.
+	# The settings panel is the pause menu, so it has to actually pause.
+	# Nothing was setting this outside the title screen, so the sim kept
+	# running behind the menu *and* aiming fell back to auto below — the
+	# turret became a perfect auto-targeting gun for as long as it was open.
+	GameState.paused = settings.visible
+
+	# Aiming only applies while the player is looking at the field. Every
+	# case here also stops the tick (upgrading, run over, paused), so the
+	# auto fallback can never fire on the player's behalf.
 	field.set_aiming(not tree_view.visible and not run_end.visible
 		and not settings.visible and not GameState.s.run_over)
 

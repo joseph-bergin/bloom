@@ -484,6 +484,20 @@ func test_every_cue_has_audible_signal() -> void:
 		ok(peak > 0.05, "%s is audible (peak %.3f)" % [name, peak])
 		ok(peak < 0.999, "%s does not clip (peak %.3f)" % [name, peak])
 
+## The pause menu used to leave the sim ticking while aiming fell back to
+## auto, so holding it open turned the turret into a gun that never missed.
+## Pausing has to stop the tick outright.
+func test_pausing_stops_the_tick() -> void:
+	var s := fresh()
+	s.phase = GameStateData.Phase.FIGHTING
+	GameState.paused = true
+	GameState._physics_process(0.5)
+	near(s.t, 0.0, 1e-6, "no time passes while paused")
+	ok(s.contacts.is_empty(), "and nothing spawns behind the menu")
+	GameState.paused = false
+	GameState._physics_process(0.5)
+	ok(s.t > 0.0, "time passes again once unpaused")
+
 func test_tree_is_the_right_size() -> void:
 	var n: int = TreeDB.nodes.size()
 	ok(n >= 125 and n <= 140, "~130 nodes (got %d)" % n)

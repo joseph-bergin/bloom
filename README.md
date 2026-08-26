@@ -70,8 +70,12 @@ reached is the score. Nothing carries between runs except your best level.
 ## Checking it
 
 ```bash
-# 257 assertions over the simulation, the tree and the save format
+# 347 assertions over the simulation, the tree, the audio and the save format
 godot --headless --script res://tests/test_runner.gd
+
+# menus vs. the sim, checked against the real scene — the suite above runs
+# synchronously and never gets a frame, so scene wiring is invisible to it
+godot --headless --script res://tools/dev/PauseProbe.gd
 
 # balance: every build compared over a full run
 godot --headless --script res://tools/sim_runner.gd -- --minutes=45 --runs=3

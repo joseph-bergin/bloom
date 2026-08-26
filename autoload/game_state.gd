@@ -58,19 +58,11 @@ func can_purchase(n: TreeNode) -> bool:
 		return false
 	return s.motes >= next_cost(n)
 
-## Fog with silhouettes: you always half-see one step past the frontier, so
-## there is something out there to want. Showing only what is immediately
-## buyable makes an unbought tree look like four dots.
+## Visible only once the prerequisites are bought. This used to show one
+## step past the *buyable* frontier, which meant you could see nodes whose
+## parent you had not unlocked yet — the tree spoiled its own shape.
 func is_revealed(n: TreeNode) -> bool:
-	if n.requires.is_empty() or requirements_met(n):
-		return true
-	for r in n.requires:
-		if rank_of(r) > 0:
-			return true
-		var parent: TreeNode = TreeDB.get_node_def(r)
-		if parent != null and requirements_met(parent):
-			return true
-	return false
+	return rank_of(n.id) > 0 or requirements_met(n)
 
 func purchase(id: StringName) -> bool:
 	var n: TreeNode = TreeDB.get_node_def(id)

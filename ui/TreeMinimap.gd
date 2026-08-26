@@ -14,7 +14,7 @@ func _process(_delta: float) -> void:
 func _draw() -> void:
 	if bounds.size.x <= 0.0 or bounds.size.y <= 0.0:
 		return
-	draw_rect(Rect2(Vector2.ZERO, size), Color(0.026, 0.034, 0.048, 0.92))
+	draw_rect(Rect2(Vector2.ZERO, size), UITheme.PANEL)
 	draw_rect(Rect2(Vector2.ZERO, size), UITheme.EDGE, false, 1.0)
 	var s: GameStateData = GameState.s
 	var pad := 6.0
@@ -24,9 +24,13 @@ func _draw() -> void:
 	for key in TreeDB.nodes.keys():
 		var n: TreeNode = TreeDB.nodes[key]
 		var p: Vector2 = off + (n.pos - bounds.position) * sc
+		# Only what the tree itself shows. Plotting all 130 here gave away the
+		# shape the tree is meant to reveal one purchase at a time.
+		if not GameState.is_revealed(n):
+			continue
 		var owned: bool = int(s.purchased.get(String(n.id), 0)) > 0
 		draw_circle(p, 2.2 if owned else 1.6,
-			UITheme.branch_colour(n.branch) * (2.0 if owned else 0.55))
+			UITheme.branch_colour(n.branch) * (2.0 if owned else 0.7))
 	if view_rect.size != Vector2.ZERO:
 		draw_rect(Rect2(off + (view_rect.position - bounds.position) * sc,
-			view_rect.size * sc), Color(0.85, 0.95, 1.0, 0.75), false, 1.0)
+			view_rect.size * sc), Color(UITheme.LIGHT, 0.75), false, 1.0)

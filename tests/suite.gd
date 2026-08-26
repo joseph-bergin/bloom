@@ -371,17 +371,24 @@ func test_respec_is_free_and_total() -> void:
 	near(s.motes, start, 1e-4, "every rank refunded at the price paid")
 	ok(s.purchased.is_empty(), "and the tree is unbuilt")
 
-func test_fog_reveals_neighbours_only() -> void:
+func test_nothing_shows_until_its_prerequisite_is_bought() -> void:
 	var s := fresh()
 	ok(GameState.is_revealed(TreeDB.get_node_def(&"burn_entry")), "roots are visible")
 	var deep: TreeNode = TreeDB.get_node_def(&"burn_furnace")
-	ok(not GameState.is_revealed(deep), "distant nodes stay fogged")
-	own(s, &"burn_entry", 1)
+	ok(not GameState.is_revealed(deep), "distant nodes stay hidden")
 	var kids: Array = TreeDB.children_of(&"burn_entry")
 	ok(not kids.is_empty(), "burn_entry leads somewhere")
 	for k in kids:
+		ok(not GameState.is_revealed(TreeDB.get_node_def(k)),
+			"a buyable-but-unbought parent reveals nothing")
+	own(s, &"burn_entry", 1)
+	for k in kids:
 		ok(GameState.is_revealed(TreeDB.get_node_def(k)),
 			"owning a node reveals what it leads to")
+		# ...and no further. The grandchildren wait their turn.
+		for gk in TreeDB.children_of(k):
+			ok(not GameState.is_revealed(TreeDB.get_node_def(gk)),
+				"reveal stops at the children of what you own")
 
 # --- tree integrity ------------------------------------------------------
 

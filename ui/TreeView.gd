@@ -258,16 +258,10 @@ func _rebind(view: Rect2) -> void:
 		var n: TreeNode = TreeDB.nodes[key]
 		if not cull.has_point(n.pos) or i >= _pool.size():
 			continue
-		var rank: int = int(s.purchased.get(String(n.id), 0))
-		var state: int = 0
-		if rank > 0:
-			state = 3
-		elif GameState.requirements_met(n):
-			state = 2
-		elif GameState.is_revealed(n):
-			state = 1
-		if state == 0:
+		if not GameState.is_revealed(n):
 			continue
+		var rank: int = int(s.purchased.get(String(n.id), 0))
+		var state: int = 3 if rank > 0 else 2
 		var b: TreeNodeButton = _pool[i]
 		b.compact = dots
 		b.mouse_filter = Control.MOUSE_FILTER_IGNORE if dots else Control.MOUSE_FILTER_STOP

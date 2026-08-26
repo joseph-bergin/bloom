@@ -15,7 +15,7 @@ const BORDER := 2.0
 
 var node_def: TreeNode = null
 var rank: int = 0
-var state: int = 0        # 0 hidden, 1 silhouette, 2 available, 3 owned
+var state: int = 0        # 0 hidden, 2 available, 3 owned
 var affordable: bool = false
 var compact: bool = false
 var _hover: bool = false
@@ -43,7 +43,7 @@ func bind(n: TreeNode, p_rank: int, p_state: int, p_afford: bool) -> void:
 	queue_redraw()
 
 func _gui_input(event: InputEvent) -> void:
-	if node_def == null or state <= 1:
+	if node_def == null or state < 2:
 		return
 	if event is InputEventMouseButton and event.pressed \
 			and (event as InputEventMouseButton).button_index == MOUSE_BUTTON_LEFT:
@@ -62,15 +62,14 @@ func _notification(what: int) -> void:
 			unhovered.emit(node_def.id)
 		queue_redraw()
 
-## Border colour is the whole state readout: dim red locked, branch colour
-## available, bright and filled when owned, amber once it is maxed.
+## Border colour is the whole state readout: dim when you cannot afford it,
+## branch colour when you can, bright and filled when owned, amber at max.
 func border_colour() -> Color:
 	var base: Color = UITheme.branch_colour(node_def.branch)
 	var maxed: bool = not node_def.is_infinite() and rank >= node_def.max_rank
-	match state:
-		3: return UITheme.LIGHT * 1.5 if maxed else base * 1.6
-		2: return base * (1.35 if affordable else 0.7)
-		_: return UITheme.EDGE
+	if state == 3:
+		return UITheme.LIGHT * 1.5 if maxed else base * 1.6
+	return base * (1.35 if affordable else 0.85)
 
 func _draw() -> void:
 	if node_def == null:
@@ -84,27 +83,21 @@ func _draw() -> void:
 		# Zoomed out: lit points, no chrome to read.
 		var dot: float = 8.0 if owned else 5.0
 		draw_rect(Rect2(box.get_center() - Vector2(dot, dot) * 0.5, Vector2(dot, dot)),
-			base * (1.6 if owned else (0.5 if state == 2 else 0.22)))
+			base * (1.6 if owned else 0.5))
 		return
 
 	# Ground, then a 2px frame in the state colour. Whole pixels only.
 	var fill: Color = base * 0.16 if owned else Color(0.086, 0.055, 0.063)
-	if state == 1:
-		fill = Color(0.063, 0.043, 0.047)
 	draw_rect(box, fill)
 	_frame(box, border_colour(), BORDER)
 
 	# Kept near 1.0. Pushing an owned icon toward white clipped every sprite
 	# to the same pale blob and the shapes stopped being distinguishable.
-	# Locked tiles keep their sprite, just barely — you can tell a shield from
-	# a flame before you can reach it, which is the point of a tree.
 	var icon: Color = base
 	if owned:
 		icon = base * 1.15
-	elif state == 1:
-		icon = base * 0.22
 	elif not affordable:
-		icon = base * 0.45
+		icon = base * 0.55
 	TreeIcons.draw_icon(self, _kind, box.position + Vector2(4, 4), TILE - 8.0, icon)
 
 	# Rank as a bar across the bottom of the tile — countable without

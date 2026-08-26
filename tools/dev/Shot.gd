@@ -7,6 +7,7 @@ var out_path: String = "user://shot.png"
 var contacts: int = 0
 var lum: float = 0.0
 var open_tree: bool = false
+var hover_node: String = ""
 var force_boss: bool = false
 var force_cleared: bool = false
 var force_hide: bool = false
@@ -17,6 +18,7 @@ var _n: int = 0
 var _seeded: bool = false
 var _fps: Array[float] = []
 var _aim_target: Vector2 = Vector2.ZERO
+var _hover_pending: String = ""
 
 func _ready() -> void:
 	for a in OS.get_cmdline_user_args():
@@ -29,6 +31,7 @@ func _ready() -> void:
 			"contacts": contacts = int(kv[1])
 			"lum": lum = float(kv[1])
 			"tree": open_tree = int(kv[1]) != 0
+			"hover": hover_node = kv[1]
 			"boss": force_boss = int(kv[1]) != 0
 			"cleared": force_cleared = int(kv[1]) != 0
 			"hide": force_hide = int(kv[1]) != 0
@@ -62,6 +65,20 @@ func _process(_delta: float) -> void:
 		_fps.append(Engine.get_frames_per_second())
 	if force_hide:
 		GameState.s.dousing = true
+	if _hover_pending != "" and _n % 12 == 0:
+		var tv: Node = get_node("Main/UILayer/TreeView")
+		for b in tv.find_children("*", "TreeNodeButton", true, false):
+			if b.node_def != null and String(b.node_def.id) == _hover_pending:
+				var xf: Transform2D = b.get_global_transform_with_canvas()
+				var at: Vector2 = xf * (b.size * 0.5)
+				get_viewport().warp_mouse(at)
+				# warp_mouse alone does not always deliver MOUSE_ENTER to an
+				# unfocused window, so push the motion through Input as well.
+				var mm := InputEventMouseMotion.new()
+				mm.position = at
+				mm.global_position = at
+				Input.parse_input_event(mm)
+				break
 	if _n >= frames:
 		var img: Image = get_viewport().get_texture().get_image()
 		img.save_png(out_path)
@@ -131,3 +148,5 @@ func _seed() -> void:
 				if GameState.can_purchase(TreeDB.get_node_def(id)):
 					GameState.purchase(id)
 		get_node("Main").tree_view.open_view()
+		if hover_node != "":
+			_hover_pending = hover_node

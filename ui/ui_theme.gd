@@ -136,9 +136,11 @@ static func button(text: String, col: Color = TEXT) -> Button:
 		PixelPanel.new(Color(0.192, 0.118, 0.125), col * 0.8, col))
 	b.add_theme_stylebox_override("pressed",
 		PixelPanel.new(col * 0.28, col, col))
+	# The disabled frame still has to read as a frame. At the old value it
+	# vanished into the ground and the button looked like a bare label.
 	b.add_theme_stylebox_override("disabled",
 		PixelPanel.new(Color(0.075, 0.051, 0.055),
-			Color(0.157, 0.106, 0.114), Color(0.20, 0.15, 0.15)))
+			Color(0.247, 0.153, 0.161), Color(0.20, 0.15, 0.15)))
 	return b
 
 ## A primary action: brighter fill, same frame. No extra chrome.

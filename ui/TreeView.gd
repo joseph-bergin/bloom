@@ -12,7 +12,7 @@ var _cam: Camera2D
 var _edges: Node2D
 var _pool: Array[TreeNodeButton] = []
 var _minimap: Control
-var _detail: VBoxContainer
+var _tip: Control
 var _respec: Button
 var _filters: HBoxContainer
 
@@ -28,6 +28,7 @@ var _refresh: float = 0.0
 var _next_box: PanelContainer
 var _next_label: Label
 var _next_btn: Button
+var _motes: Label
 
 func _ready() -> void:
 	visible = false
@@ -69,7 +70,13 @@ func _build() -> void:
 		b.clicked.connect(_on_click)
 		b.hovered.connect(func(id: StringName):
 			_hovered = id
-			_render_detail())
+			var hn: TreeNode = TreeDB.get_node_def(id)
+			if hn != null:
+				_tip.show_node(hn))
+		b.unhovered.connect(func(id: StringName):
+			if _hovered == id:
+				_hovered = &""
+				_tip.hide_node())
 		host.add_child(b)
 		_pool.append(b)
 
@@ -84,7 +91,13 @@ func _build() -> void:
 	top.position = Vector2(16, 12)
 	top.add_theme_constant_override("separation", 10)
 	add_child(top)
-	top.add_child(UITheme.label("THE TREE", UITheme.TEXT_BRIGHT, UITheme.LARGE))
+	var title := UITheme.make_panel(UITheme.LIGHT)
+	title.add_child(UITheme.label("UPGRADES", UITheme.TEXT_BRIGHT, UITheme.BODY))
+	top.add_child(title)
+	var purse := UITheme.make_panel(UITheme.MOTES)
+	_motes = UITheme.label("0", UITheme.MOTES, UITheme.BODY)
+	purse.add_child(_motes)
+	top.add_child(purse)
 	var close := UITheme.button("CLOSE", UITheme.TEXT)
 	close.custom_minimum_size = Vector2(100, 26)
 	close.pressed.connect(close_view)
@@ -101,14 +114,12 @@ func _build() -> void:
 	_filters.add_theme_constant_override("separation", 5)
 	add_child(_filters)
 
-	var pair: Array = UITheme.make_section("node", UITheme.ACCENT)
-	var side: PanelContainer = pair[0]
-	side.set_anchors_preset(Control.PRESET_TOP_RIGHT)
-	side.position = Vector2(-312, 88)
-	side.custom_minimum_size = Vector2(296, 210)
-	add_child(side)
-	_detail = pair[1]
-	_detail.add_theme_constant_override("separation", 4)
+	_tip = preload("res://ui/TreeTooltip.gd").new()
+	_tip.set_anchors_preset(Control.PRESET_FULL_RECT)
+	# Above everything else this view draws — the next-level box is created
+	# after it and would otherwise sit on top of the readout.
+	_tip.z_index = 20
+	add_child(_tip)
 
 	var mm := UITheme.make_panel()
 	mm.set_anchors_preset(Control.PRESET_BOTTOM_RIGHT)
@@ -181,7 +192,6 @@ func _compute_bounds() -> void:
 func open_view() -> void:
 	visible = true
 	_build_filters()
-	_render_detail()
 	_dirty = true
 
 func close_view() -> void:
@@ -240,6 +250,7 @@ func _process(delta: float) -> void:
 
 func _rebind(view: Rect2) -> void:
 	var s: GameStateData = GameState.s
+	_motes.text = str(int(s.motes))
 	var cull := view.grow(90.0)
 	var dots: bool = _zoom < LABEL_ZOOM
 	var i: int = 0
@@ -258,7 +269,7 @@ func _rebind(view: Rect2) -> void:
 		if state == 0:
 			continue
 		var b: TreeNodeButton = _pool[i]
-		b.show_label = not dots
+		b.compact = dots
 		b.mouse_filter = Control.MOUSE_FILTER_IGNORE if dots else Control.MOUSE_FILTER_STOP
 		b.bind(n, rank, state, s.motes >= GameState.next_cost(n))
 		i += 1
@@ -270,53 +281,6 @@ func _on_click(id: StringName) -> void:
 	if not GameState.purchase(id):
 		Audio.play("click", -16.0)
 	_dirty = true
-	_render_detail()
-
-func _render_detail() -> void:
-	for c in _detail.get_children():
-		c.queue_free()
-	var id: StringName = _hovered if _hovered != &"" else _selected
 	var n: TreeNode = TreeDB.get_node_def(id)
-	var s: GameStateData = GameState.s
-	if n == null:
-		_detail.add_child(UITheme.label("hover a node to read it", UITheme.TEXT_DIM, UITheme.TINY))
-		_detail.add_child(UITheme.wrapped(
-			"Everything you build adds light, and light is what makes the "
-			+ "field spawn faster and stronger. Shroud is the only branch "
-			+ "that costs none.", UITheme.TEXT_FAINT, UITheme.TINY, 268))
-		return
-	var rank: int = int(s.purchased.get(String(n.id), 0))
-	_detail.add_child(UITheme.label(n.display_name, UITheme.branch_colour(n.branch), UITheme.BODY))
-	_detail.add_child(UITheme.label("%s%s   rank %d/%s" % [String(n.branch),
-		"   KEYSTONE" if n.keystone else "", rank,
-		"inf" if n.is_infinite() else str(n.max_rank)], UITheme.TEXT_DIM, 11))
-	var d := UITheme.label(n.desc, UITheme.TEXT, UITheme.TINY)
-	d.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
-	d.custom_minimum_size = Vector2(266, 0)
-	_detail.add_child(d)
-
-	if n.lum > 0.0:
-		_detail.add_child(UITheme.label("+%.1f light per rank" % n.lum, UITheme.LUM, UITheme.TINY))
-	else:
-		_detail.add_child(UITheme.label("no light", UITheme.GOOD, UITheme.TINY))
-
-	var maxed: bool = not n.is_infinite() and rank >= n.max_rank
-	if maxed:
-		_detail.add_child(UITheme.label("fully built", UITheme.GOOD, UITheme.BODY))
-	else:
-		var cost: float = GameState.next_cost(n)
-		_detail.add_child(UITheme.label("%s motes" % UITheme.fmt(cost),
-			UITheme.MOTES if s.motes >= cost else UITheme.TEXT_DIM, 14))
-
-	if not n.requires.is_empty():
-		var req: PackedStringArray = []
-		for r in n.requires:
-			var rn: TreeNode = TreeDB.get_node_def(r)
-			req.append(rn.display_name if rn != null else String(r))
-		_detail.add_child(UITheme.label("needs: " + ", ".join(req), UITheme.TEXT_DIM, UITheme.TINY))
-
-	var buy := UITheme.button("Build", UITheme.TEXT_BRIGHT)
-	buy.custom_minimum_size = Vector2(0, 28)
-	buy.disabled = not GameState.can_purchase(n)
-	buy.pressed.connect(func(): _on_click(n.id))
-	_detail.add_child(buy)
+	if n != null:
+		_tip.show_node(n)

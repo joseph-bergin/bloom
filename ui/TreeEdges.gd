@@ -18,20 +18,16 @@ func _draw() -> void:
 				continue
 			var owned_child: bool = int(s.purchased.get(String(n.id), 0)) > 0
 			var owned_parent: bool = int(s.purchased.get(String(p.id), 0)) > 0
-			# Edges are structure, not content: kept under 1.0 so the glow
-			# rig never picks them up and the nodes stay the subject.
-			var col: Color
-			if owned_child:
-				col = UITheme.branch_colour(n.branch) * 0.55
-			elif owned_parent:
-				col = UITheme.branch_colour(n.branch) * 0.26
-			else:
-				col = Color(0.15, 0.19, 0.24)
-			pts.append(p.pos)
-			pts.append(n.pos)
-			cols.append(col)
+			# A route you have not opened is not drawn at all. Pre-drawing
+			# the whole graph gave the map away and made the tree read as a
+			# diagram rather than as something you are cutting into.
+			if not owned_parent:
+				continue
+			pts.append(p.pos.round())
+			pts.append(n.pos.round())
+			cols.append(UITheme.LIGHT * (0.85 if owned_child else 0.30))
 	if not pts.is_empty():
-		draw_multiline_colors(pts, cols, 1.4)
+		draw_multiline_colors(pts, cols, 2.0)
 
 func _visible(a: Vector2, b: Vector2) -> bool:
 	if visible_rect.size == Vector2.ZERO:

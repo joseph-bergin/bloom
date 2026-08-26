@@ -85,11 +85,11 @@ func _build() -> void:
 	top.add_theme_constant_override("separation", 10)
 	add_child(top)
 	top.add_child(UITheme.label("THE TREE", UITheme.TEXT_BRIGHT, UITheme.LARGE))
-	var close := UITheme.button("Close  [T]", UITheme.TEXT)
+	var close := UITheme.button("CLOSE", UITheme.TEXT)
 	close.custom_minimum_size = Vector2(100, 26)
 	close.pressed.connect(close_view)
 	top.add_child(close)
-	_respec = UITheme.button("Respec (free)", UITheme.GOOD)
+	_respec = UITheme.button("RESPEC", UITheme.LIGHT)
 	_respec.custom_minimum_size = Vector2(130, 26)
 	_respec.pressed.connect(func():
 		GameState.respec()
@@ -132,7 +132,7 @@ func _build() -> void:
 	var nb := VBoxContainer.new()
 	nb.add_theme_constant_override("separation", 3)
 	_next_box.add_child(nb)
-	_next_label = UITheme.label("", UITheme.GOOD, UITheme.BODY)
+	_next_label = UITheme.label("", UITheme.LIGHT, UITheme.BODY)
 	_next_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	nb.add_child(_next_label)
 	_next_btn = UITheme.button("", UITheme.TEXT_BRIGHT)

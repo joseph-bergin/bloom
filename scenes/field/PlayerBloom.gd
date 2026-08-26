@@ -34,7 +34,7 @@ func _draw() -> void:
 	# Shields read as shells. Losing one is visible without looking away.
 	for shell in range(maxi(s.shields, 0)):
 		draw_arc(Vector2.ZERO, r + 9.0 + float(shell) * 6.0, 0.0, TAU, 36,
-			Color(0.55, 0.85, 1.0) * 1.3, 1.4, true)
+			UITheme.COOL * 1.5, 1.6, true)
 
 	if s.is_dousing():
-		draw_arc(Vector2.ZERO, r + 4.0, 0.0, TAU, 40, Color(0.35, 0.55, 0.9) * 1.3, 2.0, true)
+		draw_arc(Vector2.ZERO, r + 4.0, 0.0, TAU, 40, UITheme.COOL * 1.6, 2.0, true)

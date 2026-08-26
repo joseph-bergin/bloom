@@ -21,7 +21,7 @@ func _draw() -> void:
 	for i in range(total):
 		var c := Vector2(PIP * 0.5 + float(i) * (PIP + GAP), PIP * 0.5 + 2.0)
 		var lit: bool = i < have
-		var col: Color = UITheme.COOL if lit else Color(0.16, 0.20, 0.26)
+		var col: Color = UITheme.LIGHT if lit else Color(0.208, 0.129, 0.137)
 		if lit and have <= 1:
 			# The last one breathes, so losing it is not a quiet event.
 			col = UITheme.BAD * (1.1 + 0.35 * sin(_t * 5.0))

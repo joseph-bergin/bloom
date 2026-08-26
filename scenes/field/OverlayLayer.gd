@@ -74,7 +74,7 @@ func _draw_veil() -> void:
 	# blue wash on top of it only lifted the darkness back up.
 	var r: float = R * 2.2
 	draw_rect(Rect2(-r, -r, r * 2.0, r * 2.0),
-		Color(0.04, 0.08, 0.16, 0.16 * _veil))
+		Color(0.12, 0.07, 0.16, 0.18 * _veil))
 
 ## Darkens the corners so the eye is pulled to the middle, where the game is.
 func _draw_vignette() -> void:

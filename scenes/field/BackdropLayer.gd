@@ -33,9 +33,9 @@ func _ready() -> void:
 			# A handful sit above 1.0 so the glow rig catches them and the
 			# field reads as deep space rather than a black rectangle.
 			var b: float = lerpf(0.45, 1.35, depth) * rng.randf_range(0.5, 1.0)
-			var tint := Color(0.62, 0.76, 0.98)
+			var tint := Color(0.78, 0.66, 0.62)
 			if rng.randf() < 0.07:
-				tint = Color(1.0, 0.86, 0.72)
+				tint = Color(1.0, 0.80, 0.58)
 				b *= 1.5
 			cols.append(tint * b)
 		_stars.append(pts)
@@ -57,7 +57,7 @@ func _draw() -> void:
 		draw_multiline_colors(pts, _star_cols[layer], 1.0)
 
 	# --- polar grid: spokes and rings, echoing the shape of the field ---
-	var grid := Color(0.16, 0.26, 0.33)
+	var grid := Color(0.263, 0.157, 0.165)
 	var spokes := PackedVector2Array()
 	var spoke_cols := PackedColorArray()
 	for i in range(SPOKES):
@@ -74,16 +74,16 @@ func _draw() -> void:
 		draw_arc(Vector2.ZERO, rr, 0.0, TAU, 72, grid * 0.55, 1.0, false)
 
 	# --- the boundary things come out of ---
-	draw_arc(Vector2.ZERO, R, 0.0, TAU, 96, Color(0.30, 0.46, 0.56), 1.8, true)
+	draw_arc(Vector2.ZERO, R, 0.0, TAU, 96, Color(0.416, 0.243, 0.251), 2.0, true)
 	# A faint inner glow just inside the rim, so the edge reads as an edge.
-	draw_arc(Vector2.ZERO, R - 5.0, 0.0, TAU, 96, Color(0.09, 0.15, 0.19), 3.0, false)
+	draw_arc(Vector2.ZERO, R - 5.0, 0.0, TAU, 96, Color(0.145, 0.086, 0.090), 3.0, false)
 
 	# --- the pool of light you actually see by ---
 	var s: GameStateData = GameState.s
 	var sight: float = Sight.radius(s)
 	var hidden: bool = s.is_dousing()
 	# Warm when you are burning, cold when you have pulled the light in.
-	var tint: Color = Color(0.30, 0.44, 0.72) if hidden else Color(1.0, 0.74, 0.34)
+	var tint: Color = UITheme.COOL if hidden else UITheme.LIGHT
 	# The pool itself is drawn by the darkness shader as one smooth
 	# gradient; stacked arcs banded visibly. Only the rim is drawn here.
 	draw_arc(Vector2.ZERO, sight, 0.0, TAU, 96, tint * 0.7, 1.6, true)
@@ -92,7 +92,7 @@ func _draw() -> void:
 	var reach: float = Stats.turret_range
 	var pulse: float = 0.85 + 0.15 * sin(_t * 1.1)
 	draw_arc(Vector2.ZERO, reach, 0.0, TAU, 96,
-		Color(0.20, 0.44, 0.40) * pulse, 1.4, true)
+		Color(0.451, 0.278, 0.267) * pulse, 1.6, true)
 	# Ticks on the reach ring give it a machined feel rather than a plain circle.
 	var ticks := PackedVector2Array()
 	var tick_cols := PackedColorArray()
@@ -101,5 +101,5 @@ func _draw() -> void:
 		var d := Vector2(cos(a), sin(a))
 		ticks.append(d * (reach - 5.0))
 		ticks.append(d * (reach + 5.0))
-		tick_cols.append(Color(0.24, 0.50, 0.46) * pulse)
+		tick_cols.append(Color(0.522, 0.325, 0.302) * pulse)
 	draw_multiline_colors(ticks, tick_cols, 1.0)

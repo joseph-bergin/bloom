@@ -29,7 +29,7 @@ func _ready() -> void:
 		_stars.append(p)
 		_stars.append(p + Vector2(1.4, 0))
 		var b: float = _rng.randf_range(0.25, 1.15)
-		_star_cols.append(Color(0.62, 0.76, 0.98) * b)
+		_star_cols.append(Color(0.78, 0.66, 0.62) * b)
 
 func _process(delta: float) -> void:
 	_t += delta
@@ -49,4 +49,4 @@ func _draw() -> void:
 	var br: float = 36.0 * pulse
 	draw_circle(Vector2.ZERO, br, Color(0.95, 0.72, 0.35) * 2.0)
 	draw_circle(Vector2.ZERO, br * 0.45, Color(1.0, 0.95, 0.8) * 3.0)
-	draw_arc(Vector2.ZERO, sight, 0.0, TAU, 96, Color(1.0, 0.74, 0.34) * 0.55, 1.6, true)
+	draw_arc(Vector2.ZERO, sight, 0.0, TAU, 96, UITheme.LIGHT * 0.6, 2.0, true)

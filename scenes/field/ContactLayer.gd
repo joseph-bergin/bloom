@@ -29,9 +29,12 @@ func _draw() -> void:
 		# Brightness falls as it takes damage, so you can read the field
 		# without reading any numbers. Kept near 1.0 so the tier colour
 		# survives the bloom instead of clipping to a white core.
-		var shade: Color = col * (0.62 + hurt * 0.48)
+		var shade: Color = col * (0.78 + hurt * 0.55)
 		if c.flash > 0.0:
 			shade = shade.lerp(Color(1.0, 0.98, 0.9), c.flash * 0.75) * (1.0 + c.flash * 0.9)
+		# Outline first, body over it: a hot square on a warm ground needs
+		# the separation or it dissolves into the light pool.
+		_add_square(pts, cols, idx, c.pos, c.radius + 2.0, UITheme.OUTLINE)
 		_add_square(pts, cols, idx, c.pos, c.radius, shade)
 		if hurt < 0.999:
 			var w: float = c.radius * 1.6

@@ -5,7 +5,7 @@ const PATH := "user://settings.cfg"
 
 func _ready() -> void:
 	visible = false
-	var pair: Array = UITheme.make_section("settings", UITheme.COOL)
+	var pair: Array = UITheme.make_section("settings", UITheme.ACCENT)
 	var panel: PanelContainer = pair[0]
 	panel.set_anchors_preset(Control.PRESET_CENTER)
 	panel.position = Vector2(-160, -120)

@@ -85,11 +85,11 @@ func _build_menu() -> void:
 	var s: GameStateData = GameState.s
 	var resumable: bool = SaveManager.has_save() and not s.run_over and s.level > 1
 	if resumable:
-		_continue = _action("CONTINUE  LEVEL %d" % s.level, UITheme.GOOD, true)
+		_continue = _action("CONTINUE  LEVEL %d" % s.level, UITheme.LIGHT, true)
 		_continue.pressed.connect(_resume)
 		_menu.add_child(_continue)
 
-	var start := _action("NEW RUN" if resumable else "BEGIN", UITheme.LUM, not resumable)
+	var start := _action("NEW RUN" if resumable else "BEGIN", UITheme.ACCENT, not resumable)
 	start.pressed.connect(_begin)
 	_menu.add_child(start)
 

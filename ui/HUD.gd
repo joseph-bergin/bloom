@@ -31,7 +31,7 @@ func _ready() -> void:
 	_build_bar()
 
 func _build_status() -> void:
-	var pair: Array = UITheme.make_section("level", UITheme.GOOD)
+	var pair: Array = UITheme.make_section("level", UITheme.ACCENT)
 	var panel: PanelContainer = pair[0]
 	var col: VBoxContainer = pair[1]
 	panel.set_anchors_preset(Control.PRESET_TOP_LEFT)
@@ -41,7 +41,7 @@ func _build_status() -> void:
 
 	_level = UITheme.label("1", UITheme.TEXT_BRIGHT, UITheme.HUGE)
 	col.add_child(_level)
-	_level_bar = UITheme.meter(UITheme.GOOD, 7)
+	_level_bar = UITheme.meter(UITheme.LIGHT, 8)
 	col.add_child(_level_bar)
 	_level_sub = UITheme.label("", UITheme.TEXT_DIM, UITheme.TINY)
 	col.add_child(_level_sub)
@@ -65,7 +65,7 @@ func _build_status() -> void:
 	col.add_child(_pips)
 
 func _build_run() -> void:
-	var pair: Array = UITheme.make_section("run", UITheme.COOL)
+	var pair: Array = UITheme.make_section("run", UITheme.ACCENT)
 	var panel: PanelContainer = pair[0]
 	var col: VBoxContainer = pair[1]
 	panel.set_anchors_preset(Control.PRESET_TOP_RIGHT)
@@ -74,7 +74,7 @@ func _build_run() -> void:
 	add_child(panel)
 	_clock = UITheme.label("", UITheme.TEXT_DIM, UITheme.TINY)
 	col.add_child(_clock)
-	_next = UITheme.cta("BEGIN LEVEL 2", UITheme.GOOD)
+	_next = UITheme.cta("BEGIN LEVEL 2", UITheme.LIGHT)
 	_next.custom_minimum_size = Vector2(0, 40)
 	_next.visible = false
 	_next.pressed.connect(func(): next_level_pressed.emit())
@@ -104,7 +104,7 @@ func _build_bar() -> void:
 	bar.position = Vector2(16, -50)
 	bar.add_theme_constant_override("separation", 8)
 	add_child(bar)
-	_tree_btn = UITheme.button("TREE", UITheme.ACCENT)
+	_tree_btn = UITheme.button("TREE", UITheme.LIGHT)
 	_tree_btn.custom_minimum_size = Vector2(150, 34)
 	_tree_btn.tooltip_text = "Upgrades happen between levels."
 	_tree_btn.pressed.connect(func(): tree_pressed.emit())

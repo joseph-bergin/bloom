@@ -32,5 +32,5 @@ func _process(delta: float) -> void:
 	# Cold when the light has been pulled in, warm when it is burning.
 	var hidden: bool = GameState.s.is_dousing()
 	_mat.set_shader_parameter("warm",
-		Color(0.36, 0.52, 0.82) if hidden else Color(1.0, 0.74, 0.34))
+		UITheme.COOL if hidden else UITheme.LIGHT)
 	_mat.set_shader_parameter("warm_amount", 0.10 if hidden else 0.13)

@@ -154,11 +154,20 @@ multiples of the cell, canvas filtering is nearest, and the font's
 fixed-size bitmap font renders at its native 7px at every requested size,
 which looks like the font never loaded at all.
 
-One frame shape, used everywhere: a chamfered panel with corner ticks and
-an accent rule down the left edge, drawn by `ui/ChamferBox.gd`. Every panel,
-button, meter and modal comes from `ui/ui_theme.gd`. Colour always means the
-same thing — amber is motes and light, green is progress, red is threat,
-blue is Douse.
+One frame shape, used everywhere: a pixel-art panel with a hard two-pixel
+border, a one-pixel bevel and a flat fill, drawn by `ui/PixelPanel.gd`.
+Everything snaps to whole pixels on the 8px font cell. An earlier pass used
+chamfered corners, corner ticks and an accent rail — generic sci-fi HUD
+chrome that read as templated rather than as part of this game.
+
+The palette is warm and dark: near-black with a red bias, dark brown
+panels, amber for light and motes, and a hot red for threat. It used to sit
+on blue-grey neutrals, which read as cold and belonged to a different game.
+The one cool thing left on screen is hiding — a dusty violet, and it reads
+precisely because nothing else is that colour.
+
+Contacts are drawn with a dark outline behind them. On a warm ground a hot
+square in the same register dissolves into the light pool.
 
 **The HUD says as little as it can.** Shields are pips you count, not
 "shields 3 / 3". Douse is a bare bar; the words appear once, the first time

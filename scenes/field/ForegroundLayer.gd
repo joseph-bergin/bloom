@@ -18,7 +18,7 @@ func _draw() -> void:
 
 func _draw_horizon() -> void:
 	var R: float = Constants.FIELD_RADIUS
-	draw_arc(Vector2.ZERO, R, 0.0, TAU, 96, Color(0.13, 0.20, 0.26, 0.55), 1.4, true)
+	draw_arc(Vector2.ZERO, R, 0.0, TAU, 96, Color(0.235, 0.141, 0.149, 0.65), 1.4, true)
 	var spokes := PackedVector2Array()
 	var cols := PackedColorArray()
 	for i in range(4):
@@ -26,7 +26,7 @@ func _draw_horizon() -> void:
 		var d := Vector2(cos(a), sin(a))
 		spokes.append(d * (R * 0.90))
 		spokes.append(d * R)
-		cols.append(Color(0.16, 0.24, 0.30, 0.5))
+		cols.append(Color(0.290, 0.176, 0.184, 0.6))
 	draw_multiline_colors(spokes, cols, 1.0)
 
 func _draw_boss() -> void:
@@ -43,6 +43,13 @@ func _draw_boss() -> void:
 	for i in range(5):
 		var t: float = float(i) / 5.0
 		draw_circle(c.pos, r * (1.6 + t * 2.4), col * (0.06 * (1.0 - t)))
+
+	# The boss gets the same treatment, one size up.
+	var back := PackedVector2Array()
+	for i in range(4):
+		var ab: float = _t * 0.6 + float(i) * PI * 0.5 + PI * 0.25
+		back.append(c.pos + Vector2(cos(ab), sin(ab)) * (r + 3.0))
+	draw_colored_polygon(back, UITheme.OUTLINE)
 
 	var body := PackedVector2Array()
 	for i in range(4):

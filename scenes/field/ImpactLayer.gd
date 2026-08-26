@@ -111,4 +111,4 @@ func _draw() -> void:
 	if _ripple >= 0.0:
 		var t: float = _ripple / 0.55
 		draw_arc(Vector2.ZERO, 30.0 + t * Constants.FIELD_RADIUS * 0.9, 0.0, TAU, 72,
-			Color(0.45, 0.70, 1.0) * (2.2 * (1.0 - t)), 3.0 * (1.0 - t) + 0.8, true)
+			UITheme.COOL * (2.4 * (1.0 - t)), 3.0 * (1.0 - t) + 0.8, true)

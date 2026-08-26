@@ -388,10 +388,10 @@
   "section": "base"
  },
  {
-  "id": "shroud_kindle_0",
+  "id": "shroud_dimming_0",
   "branch": "shroud",
-  "name": "Kindle",
-  "desc": "shroud +0.02 per rank.",
+  "name": "Dimming",
+  "desc": "Luminance reduced 2% per rank.",
   "max_rank": 6,
   "cost": 875,
   "cost_growth": 1.15,
@@ -414,10 +414,10 @@
   "section": "base"
  },
  {
-  "id": "shroud_flint_1",
+  "id": "shroud_lungs_1",
   "branch": "shroud",
-  "name": "Flint",
-  "desc": "douse efficiency +0.05 per rank.",
+  "name": "Lungs",
+  "desc": "Douse drains 5% slower per rank.",
   "max_rank": 8,
   "cost": 1312,
   "cost_growth": 1.15,
@@ -440,10 +440,10 @@
   "section": "base"
  },
  {
-  "id": "shroud_slag_2",
+  "id": "shroud_secondwind_2",
   "branch": "shroud",
-  "name": "Slag",
-  "desc": "douse refill +0.08 per rank.",
+  "name": "Second Wind",
+  "desc": "Douse refills 8% faster per rank.",
   "max_rank": 10,
   "cost": 1750,
   "cost_growth": 1.15,
@@ -466,10 +466,10 @@
   "section": "base"
  },
  {
-  "id": "shroud_fume_3",
+  "id": "shroud_muffle_3",
   "branch": "shroud",
-  "name": "Fume",
-  "desc": "shroud +0.02 per rank.",
+  "name": "Muffle",
+  "desc": "Luminance reduced 2% per rank.",
   "max_rank": 6,
   "cost": 2188,
   "cost_growth": 1.15,
@@ -492,10 +492,10 @@
   "section": "base"
  },
  {
-  "id": "shroud_brand_4",
+  "id": "shroud_composure_4",
   "branch": "shroud",
-  "name": "Brand",
-  "desc": "douse efficiency +0.05 per rank.",
+  "name": "Composure",
+  "desc": "Douse drains 5% slower per rank.",
   "max_rank": 8,
   "cost": 4594,
   "cost_growth": 1.15,
@@ -518,16 +518,16 @@
   "section": "base"
  },
  {
-  "id": "shroud_taper_5",
+  "id": "shroud_respite_5",
   "branch": "shroud",
-  "name": "Taper",
-  "desc": "douse refill +0.08 per rank.",
+  "name": "Respite",
+  "desc": "Douse refills 8% faster per rank.",
   "max_rank": 10,
   "cost": 5359,
   "cost_growth": 1.15,
   "lum": 0.0,
   "requires": [
-   "shroud_kindle_0"
+   "shroud_dimming_0"
   ],
   "effects": [
    {
@@ -544,16 +544,16 @@
   "section": "base"
  },
  {
-  "id": "shroud_torch_6",
+  "id": "shroud_umbra_6",
   "branch": "shroud",
-  "name": "Torch",
-  "desc": "shroud +0.02 per rank.",
+  "name": "Umbra",
+  "desc": "Luminance reduced 2% per rank.",
   "max_rank": 6,
   "cost": 6125,
   "cost_growth": 1.15,
   "lum": 0.0,
   "requires": [
-   "shroud_flint_1"
+   "shroud_lungs_1"
   ],
   "effects": [
    {
@@ -570,16 +570,16 @@
   "section": "base"
  },
  {
-  "id": "shroud_pyre_7",
+  "id": "shroud_ballast_7",
   "branch": "shroud",
-  "name": "Pyre",
-  "desc": "douse efficiency +0.05 per rank.",
+  "name": "Ballast",
+  "desc": "Douse drains 5% slower per rank.",
   "max_rank": 8,
   "cost": 6891,
   "cost_growth": 1.15,
   "lum": 0.0,
   "requires": [
-   "shroud_flint_1"
+   "shroud_lungs_1"
   ],
   "effects": [
    {
@@ -596,16 +596,16 @@
   "section": "base"
  },
  {
-  "id": "shroud_soot_8",
+  "id": "shroud_rally_8",
   "branch": "shroud",
-  "name": "Soot",
-  "desc": "douse refill +0.08 per rank.",
+  "name": "Rally",
+  "desc": "Douse refills 8% faster per rank.",
   "max_rank": 10,
   "cost": 13398,
   "cost_growth": 1.15,
   "lum": 0.0,
   "requires": [
-   "shroud_brand_4"
+   "shroud_composure_4"
   ],
   "effects": [
    {
@@ -622,16 +622,16 @@
   "section": "base"
  },
  {
-  "id": "shroud_lumen_9",
+  "id": "shroud_penumbra_9",
   "branch": "shroud",
-  "name": "Lumen",
-  "desc": "shroud +0.02 per rank.",
+  "name": "Penumbra",
+  "desc": "Luminance reduced 2% per rank.",
   "max_rank": 6,
   "cost": 14738,
   "cost_growth": 1.15,
   "lum": 0.0,
   "requires": [
-   "shroud_taper_5"
+   "shroud_respite_5"
   ],
   "effects": [
    {
@@ -648,16 +648,16 @@
   "section": "base"
  },
  {
-  "id": "shroud_nit_10",
+  "id": "shroud_reserve_10",
   "branch": "shroud",
-  "name": "Nit",
-  "desc": "douse efficiency +0.05 per rank.",
+  "name": "Reserve",
+  "desc": "Douse drains 5% slower per rank.",
   "max_rank": 8,
   "cost": 16078,
   "cost_growth": 1.15,
   "lum": 0.0,
   "requires": [
-   "shroud_torch_6"
+   "shroud_umbra_6"
   ],
   "effects": [
    {
@@ -674,16 +674,16 @@
   "section": "base"
  },
  {
-  "id": "shroud_lux_11",
+  "id": "shroud_gasp_11",
   "branch": "shroud",
-  "name": "Lux",
-  "desc": "douse refill +0.08 per rank.",
+  "name": "Gasp",
+  "desc": "Douse refills 8% faster per rank.",
   "max_rank": 10,
   "cost": 17418,
   "cost_growth": 1.15,
   "lum": 0.0,
   "requires": [
-   "shroud_pyre_7"
+   "shroud_ballast_7"
   ],
   "effects": [
    {
@@ -700,16 +700,16 @@
   "section": "base"
  },
  {
-  "id": "shroud_ember_12",
+  "id": "shroud_gloom_12",
   "branch": "shroud",
-  "name": "Ember",
-  "desc": "shroud +0.02 per rank.",
+  "name": "Gloom",
+  "desc": "Luminance reduced 2% per rank.",
   "max_rank": 6,
   "cost": 32826,
   "cost_growth": 1.15,
   "lum": 0.0,
   "requires": [
-   "shroud_soot_8"
+   "shroud_rally_8"
   ],
   "effects": [
    {
@@ -726,16 +726,16 @@
   "section": "base"
  },
  {
-  "id": "shroud_cinder_13",
+  "id": "shroud_capacity_13",
   "branch": "shroud",
-  "name": "Cinder",
-  "desc": "douse efficiency +0.05 per rank.",
+  "name": "Capacity",
+  "desc": "Douse drains 5% slower per rank.",
   "max_rank": 8,
   "cost": 35171,
   "cost_growth": 1.15,
   "lum": 0.0,
   "requires": [
-   "shroud_lumen_9"
+   "shroud_penumbra_9"
   ],
   "effects": [
    {
@@ -752,16 +752,16 @@
   "section": "base"
  },
  {
-  "id": "shroud_scoria_14",
+  "id": "shroud_reprieve_14",
   "branch": "shroud",
-  "name": "Scoria",
-  "desc": "douse refill +0.08 per rank.",
+  "name": "Reprieve",
+  "desc": "Douse refills 8% faster per rank.",
   "max_rank": 10,
   "cost": 37516,
   "cost_growth": 1.15,
   "lum": 0.0,
   "requires": [
-   "shroud_nit_10"
+   "shroud_reserve_10"
   ],
   "effects": [
    {
@@ -778,16 +778,16 @@
   "section": "base"
  },
  {
-  "id": "shroud_fleck_15",
+  "id": "shroud_curtain_15",
   "branch": "shroud",
-  "name": "Fleck",
-  "desc": "shroud +0.02 per rank.",
+  "name": "Curtain",
+  "desc": "Luminance reduced 2% per rank.",
   "max_rank": 6,
   "cost": 39860,
   "cost_growth": 1.15,
   "lum": 0.0,
   "requires": [
-   "shroud_lux_11"
+   "shroud_gasp_11"
   ],
   "effects": [
    {
@@ -813,7 +813,7 @@
   "cost_growth": 1.0,
   "lum": 0.0,
   "requires": [
-   "shroud_scoria_14"
+   "shroud_reprieve_14"
   ],
   "effects": [
    {

@@ -150,9 +150,45 @@ DEEPEN = {
  "reach":  [("range_mult",0.06,"add",1.2),("fire_rate_mult",0.03,"add",1.4)],
  "root":   [("mote_mult",0.05,"mul",2.1),("mote_add",0.06,"add",1.9)],
 }
-WORDS = ["Ash","Tinder","Coal","Wick","Glim","Spark","Char","Kindle","Flint",
-         "Slag","Fume","Brand","Taper","Torch","Pyre","Soot","Lumen","Nit",
-         "Lux","Ember","Cinder","Scoria","Fleck","Grain","Mote","Shard"]
+# Filler names and descriptions come from the stat the node raises. The old
+# pool cycled one fire vocabulary through every branch regardless of effect,
+# so "Pyre" raised turret range in Reach and mote income in Root, and
+# "Lumen" — a unit of light — was the name on a node that *reduced* light.
+# Names here are unique across the whole tree and none collide with the
+# hand-written nodes above.
+FILLER = {
+ "damage_mult":      ("+{pct}% damage per rank.",
+   ["Sear","Scorch","Scald","Smelt","Kiln","Forge","Temper","Anneal","Blaze",
+    "Swelter","Bake"]),
+ "fire_rate_mult":   ("+{pct}% fire rate per rank.",
+   ["Flicker","Crackle","Stutter","Patter","Cadence","Tempo","Rattle",
+    "Flutter","Quicken","Staccato","Drumfire","Chatter","Ripple","Tick",
+    "Thrum","Volley","Clip","Beat","Churn","Whirr"]),
+ "crit_chance":      ("+{pct}% critical chance per rank.",
+   ["Hairline","Fracture","Faultline","Nick","Cleave","Fissure","Chip",
+    "Rift","Notch","Shatterpoint","Weak Seam"]),
+ "range_mult":       ("+{pct}% turret range per rank.",
+   ["Furlong","Span","Stretch","Carry","Throw","Cast","Outset","Sprawl",
+    "Farsight","Longarm","Overreach"]),
+ "mote_mult":        ("+{pct}% mote yield per rank.",
+   ["Yield","Tithe","Glean","Levy","Tally","Dividend","Interest","Surplus",
+    "Profit","Return","Takings","Rake","Skim","Toll","Cut","Share"]),
+ "mote_add":         ("+{pct}% mote yield per rank, added before the multiplier.",
+   ["Windfall","Trickle","Seep","Runoff","Drip","Alluvium","Silt","Sediment",
+    "Deposit","Sluice","Catchment","Spillover","Gleanings","Dregs","Residue",
+    "Leavings"]),
+ "shroud":           ("Luminance reduced {pct}% per rank.",
+   ["Dimming","Muffle","Umbra","Penumbra","Gloom","Curtain","Shade","Pall",
+    "Screen","Eclipse","Blackout"]),
+ "douse_efficiency": ("Douse drains {pct}% slower per rank.",
+   ["Lungs","Composure","Ballast","Reserve","Capacity","Deep Draw","Patience",
+    "Freediver","Bottled Air","Slow Bleed","Longhold"]),
+ "douse_refill":     ("Douse refills {pct}% faster per rank.",
+   ["Second Wind","Respite","Rally","Gasp","Reprieve","Rebound","Surfacing",
+    "Relief","Catch Up","Quick Fill","Backdraft"]),
+}
+
+used_names = set()
 
 TARGET = {"burn": 33, "shroud": 32, "reach": 32, "root": 33}
 
@@ -186,9 +222,15 @@ for bi, b in enumerate(BRANCHES):
             else:
                 gk = payload
                 stat, val, op, lum = DEEPEN[b][gk % len(DEEPEN[b])]
-                word = WORDS[(gk + bi * 7) % len(WORDS)]
-                add(id=f"{b}_{word.lower()}_{gk}", branch=b, name=word,
-                    desc=f"{stat.replace('_',' ')} +{val} per rank.",
+                fmt, pool = FILLER[stat]
+                word = next((w for w in pool if w not in used_names), None)
+                assert word, f"{stat} name pool exhausted"
+                used_names.add(word)
+                pct = round(val * 100, 1)
+                pct = int(pct) if pct == int(pct) else pct
+                slug = word.lower().replace(" ", "")
+                add(id=f"{b}_{slug}_{gk}", branch=b, name=word,
+                    desc=fmt.format(pct=pct),
                     max_rank=6 + (gk % 3) * 2,
                     cost=round(500 * (1.0 + gk * 0.5) * (1.75 ** (ring - 3))),
                     cost_growth=1.15, lum=round(lum * (1.0 + gk * 0.07), 2),

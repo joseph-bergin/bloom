@@ -315,10 +315,10 @@
   "section": "base"
  },
  {
-  "id": "reach_pyre_0",
+  "id": "reach_furlong_0",
   "branch": "reach",
-  "name": "Pyre",
-  "desc": "range mult +0.06 per rank.",
+  "name": "Furlong",
+  "desc": "+6% turret range per rank.",
   "max_rank": 6,
   "cost": 875,
   "cost_growth": 1.15,
@@ -341,10 +341,10 @@
   "section": "base"
  },
  {
-  "id": "reach_soot_1",
+  "id": "reach_flutter_1",
   "branch": "reach",
-  "name": "Soot",
-  "desc": "fire rate mult +0.03 per rank.",
+  "name": "Flutter",
+  "desc": "+3% fire rate per rank.",
   "max_rank": 8,
   "cost": 1312,
   "cost_growth": 1.15,
@@ -367,10 +367,10 @@
   "section": "base"
  },
  {
-  "id": "reach_lumen_2",
+  "id": "reach_span_2",
   "branch": "reach",
-  "name": "Lumen",
-  "desc": "range mult +0.06 per rank.",
+  "name": "Span",
+  "desc": "+6% turret range per rank.",
   "max_rank": 10,
   "cost": 1750,
   "cost_growth": 1.15,
@@ -393,10 +393,10 @@
   "section": "base"
  },
  {
-  "id": "reach_nit_3",
+  "id": "reach_quicken_3",
   "branch": "reach",
-  "name": "Nit",
-  "desc": "fire rate mult +0.03 per rank.",
+  "name": "Quicken",
+  "desc": "+3% fire rate per rank.",
   "max_rank": 6,
   "cost": 2188,
   "cost_growth": 1.15,
@@ -419,16 +419,16 @@
   "section": "base"
  },
  {
-  "id": "reach_lux_4",
+  "id": "reach_stretch_4",
   "branch": "reach",
-  "name": "Lux",
-  "desc": "range mult +0.06 per rank.",
+  "name": "Stretch",
+  "desc": "+6% turret range per rank.",
   "max_rank": 8,
   "cost": 4594,
   "cost_growth": 1.15,
   "lum": 1.54,
   "requires": [
-   "reach_pyre_0"
+   "reach_furlong_0"
   ],
   "effects": [
    {
@@ -445,16 +445,16 @@
   "section": "base"
  },
  {
-  "id": "reach_ember_5",
+  "id": "reach_staccato_5",
   "branch": "reach",
-  "name": "Ember",
-  "desc": "fire rate mult +0.03 per rank.",
+  "name": "Staccato",
+  "desc": "+3% fire rate per rank.",
   "max_rank": 10,
   "cost": 5359,
   "cost_growth": 1.15,
   "lum": 1.89,
   "requires": [
-   "reach_soot_1"
+   "reach_flutter_1"
   ],
   "effects": [
    {
@@ -471,16 +471,16 @@
   "section": "base"
  },
  {
-  "id": "reach_cinder_6",
+  "id": "reach_carry_6",
   "branch": "reach",
-  "name": "Cinder",
-  "desc": "range mult +0.06 per rank.",
+  "name": "Carry",
+  "desc": "+6% turret range per rank.",
   "max_rank": 6,
   "cost": 6125,
   "cost_growth": 1.15,
   "lum": 1.7,
   "requires": [
-   "reach_lumen_2"
+   "reach_span_2"
   ],
   "effects": [
    {
@@ -497,16 +497,16 @@
   "section": "base"
  },
  {
-  "id": "reach_scoria_7",
+  "id": "reach_drumfire_7",
   "branch": "reach",
-  "name": "Scoria",
-  "desc": "fire rate mult +0.03 per rank.",
+  "name": "Drumfire",
+  "desc": "+3% fire rate per rank.",
   "max_rank": 8,
   "cost": 6891,
   "cost_growth": 1.15,
   "lum": 2.09,
   "requires": [
-   "reach_lumen_2"
+   "reach_span_2"
   ],
   "effects": [
    {
@@ -523,16 +523,16 @@
   "section": "base"
  },
  {
-  "id": "reach_fleck_8",
+  "id": "reach_throw_8",
   "branch": "reach",
-  "name": "Fleck",
-  "desc": "range mult +0.06 per rank.",
+  "name": "Throw",
+  "desc": "+6% turret range per rank.",
   "max_rank": 10,
   "cost": 13398,
   "cost_growth": 1.15,
   "lum": 1.87,
   "requires": [
-   "reach_lux_4"
+   "reach_stretch_4"
   ],
   "effects": [
    {
@@ -549,16 +549,16 @@
   "section": "base"
  },
  {
-  "id": "reach_grain_9",
+  "id": "reach_chatter_9",
   "branch": "reach",
-  "name": "Grain",
-  "desc": "fire rate mult +0.03 per rank.",
+  "name": "Chatter",
+  "desc": "+3% fire rate per rank.",
   "max_rank": 6,
   "cost": 14738,
   "cost_growth": 1.15,
   "lum": 2.28,
   "requires": [
-   "reach_ember_5"
+   "reach_staccato_5"
   ],
   "effects": [
    {
@@ -575,16 +575,16 @@
   "section": "base"
  },
  {
-  "id": "reach_mote_10",
+  "id": "reach_cast_10",
   "branch": "reach",
-  "name": "Mote",
-  "desc": "range mult +0.06 per rank.",
+  "name": "Cast",
+  "desc": "+6% turret range per rank.",
   "max_rank": 8,
   "cost": 16078,
   "cost_growth": 1.15,
   "lum": 2.04,
   "requires": [
-   "reach_cinder_6"
+   "reach_carry_6"
   ],
   "effects": [
    {
@@ -601,16 +601,16 @@
   "section": "base"
  },
  {
-  "id": "reach_shard_11",
+  "id": "reach_ripple_11",
   "branch": "reach",
-  "name": "Shard",
-  "desc": "fire rate mult +0.03 per rank.",
+  "name": "Ripple",
+  "desc": "+3% fire rate per rank.",
   "max_rank": 10,
   "cost": 17418,
   "cost_growth": 1.15,
   "lum": 2.48,
   "requires": [
-   "reach_scoria_7"
+   "reach_drumfire_7"
   ],
   "effects": [
    {
@@ -627,16 +627,16 @@
   "section": "base"
  },
  {
-  "id": "reach_ash_12",
+  "id": "reach_outset_12",
   "branch": "reach",
-  "name": "Ash",
-  "desc": "range mult +0.06 per rank.",
+  "name": "Outset",
+  "desc": "+6% turret range per rank.",
   "max_rank": 6,
   "cost": 32826,
   "cost_growth": 1.15,
   "lum": 2.21,
   "requires": [
-   "reach_fleck_8"
+   "reach_throw_8"
   ],
   "effects": [
    {
@@ -653,16 +653,16 @@
   "section": "base"
  },
  {
-  "id": "reach_tinder_13",
+  "id": "reach_tick_13",
   "branch": "reach",
-  "name": "Tinder",
-  "desc": "fire rate mult +0.03 per rank.",
+  "name": "Tick",
+  "desc": "+3% fire rate per rank.",
   "max_rank": 8,
   "cost": 35171,
   "cost_growth": 1.15,
   "lum": 2.67,
   "requires": [
-   "reach_grain_9"
+   "reach_chatter_9"
   ],
   "effects": [
    {
@@ -679,16 +679,16 @@
   "section": "base"
  },
  {
-  "id": "reach_coal_14",
+  "id": "reach_sprawl_14",
   "branch": "reach",
-  "name": "Coal",
-  "desc": "range mult +0.06 per rank.",
+  "name": "Sprawl",
+  "desc": "+6% turret range per rank.",
   "max_rank": 10,
   "cost": 37516,
   "cost_growth": 1.15,
   "lum": 2.38,
   "requires": [
-   "reach_mote_10"
+   "reach_cast_10"
   ],
   "effects": [
    {
@@ -705,16 +705,16 @@
   "section": "base"
  },
  {
-  "id": "reach_wick_15",
+  "id": "reach_thrum_15",
   "branch": "reach",
-  "name": "Wick",
-  "desc": "fire rate mult +0.03 per rank.",
+  "name": "Thrum",
+  "desc": "+3% fire rate per rank.",
   "max_rank": 6,
   "cost": 39860,
   "cost_growth": 1.15,
   "lum": 2.87,
   "requires": [
-   "reach_shard_11"
+   "reach_ripple_11"
   ],
   "effects": [
    {
@@ -731,16 +731,16 @@
   "section": "base"
  },
  {
-  "id": "reach_glim_16",
+  "id": "reach_farsight_16",
   "branch": "reach",
-  "name": "Glim",
-  "desc": "range mult +0.06 per rank.",
+  "name": "Farsight",
+  "desc": "+6% turret range per rank.",
   "max_rank": 8,
   "cost": 73859,
   "cost_growth": 1.15,
   "lum": 2.54,
   "requires": [
-   "reach_ash_12"
+   "reach_outset_12"
   ],
   "effects": [
    {
@@ -757,16 +757,16 @@
   "section": "base"
  },
  {
-  "id": "reach_spark_17",
+  "id": "reach_volley_17",
   "branch": "reach",
-  "name": "Spark",
-  "desc": "fire rate mult +0.03 per rank.",
+  "name": "Volley",
+  "desc": "+3% fire rate per rank.",
   "max_rank": 10,
   "cost": 77962,
   "cost_growth": 1.15,
   "lum": 3.07,
   "requires": [
-   "reach_tinder_13"
+   "reach_tick_13"
   ],
   "effects": [
    {
@@ -783,16 +783,16 @@
   "section": "base"
  },
  {
-  "id": "reach_char_18",
+  "id": "reach_longarm_18",
   "branch": "reach",
-  "name": "Char",
-  "desc": "range mult +0.06 per rank.",
+  "name": "Longarm",
+  "desc": "+6% turret range per rank.",
   "max_rank": 6,
   "cost": 82065,
   "cost_growth": 1.15,
   "lum": 2.71,
   "requires": [
-   "reach_coal_14"
+   "reach_sprawl_14"
   ],
   "effects": [
    {
@@ -818,7 +818,7 @@
   "cost_growth": 1.0,
   "lum": 2.0,
   "requires": [
-   "reach_char_18"
+   "reach_longarm_18"
   ],
   "effects": [
    {

@@ -19,8 +19,10 @@ var _pips: Control
 var _clock: Label
 var _next: Button
 var _tree_btn: Button
-var _breath: ProgressBar
+var _breath: Control
 var _hint: Label
+var _more: Button
+var _detail: VBoxContainer
 var _hint_until: float = 0.0
 var _refresh: float = 0.0
 
@@ -50,17 +52,34 @@ func _build_status() -> void:
 	col.add_child(UITheme.header("light", UITheme.LUM))
 	_lum = UITheme.label("0", UITheme.LUM, UITheme.HUGE)
 	col.add_child(_lum)
-	# The one line of prose that earns its place: what your light is doing
-	# to the field, live.
+
+	# Spawn pressure and the two radii are worth having, but not worth four
+	# lines of small text on screen at all times. Folded away by default.
+	_more = UITheme.button("SHOW MORE", UITheme.TEXT_DIM)
+	_more.add_theme_font_size_override("font_size", UITheme.TINY)
+	_more.custom_minimum_size = Vector2(0, 20)
+	_more.pressed.connect(func():
+		_detail.visible = not _detail.visible
+		_more.text = "SHOW LESS" if _detail.visible else "SHOW MORE")
+	col.add_child(_more)
+	_detail = VBoxContainer.new()
+	_detail.add_theme_constant_override("separation", 2)
+	_detail.visible = false
+	col.add_child(_detail)
+	# What your light is doing to the field, live.
 	_cause = UITheme.label("", UITheme.TEXT_DIM, UITheme.TINY)
-	col.add_child(_cause)
+	_detail.add_child(_cause)
 	# Which of the two radii is binding. Range past your sight is wasted.
 	_sight = UITheme.label("", UITheme.TEXT_FAINT, UITheme.TINY)
-	col.add_child(_sight)
+	_detail.add_child(_sight)
 
 	col.add_child(UITheme.rule())
+	var purse := HBoxContainer.new()
+	purse.add_theme_constant_override("separation", 8)
+	col.add_child(purse)
+	purse.add_child(PixelIcon.make(TreeIcons.Kind.MOTES, UITheme.MOTES, 20.0))
 	_motes = UITheme.label("0", UITheme.MOTES, UITheme.LARGE)
-	col.add_child(_motes)
+	purse.add_child(_motes)
 	_pips = preload("res://ui/ShieldPips.gd").new()
 	col.add_child(_pips)
 
@@ -80,23 +99,33 @@ func _build_run() -> void:
 	_next.pressed.connect(func(): next_level_pressed.emit())
 	col.add_child(_next)
 
-## Just the bar. Holding Space is discovered once and then it is muscle.
+## Cells, a crescent, and the word. Holding Space is discovered once and
+## then it is muscle, so the gauge has to read at a glance and not before.
 func _build_breath() -> void:
-	var panel := UITheme.make_panel(UITheme.COOL)
-	panel.set_anchors_preset(Control.PRESET_CENTER_BOTTOM)
-	panel.position = Vector2(-130, -78)
-	panel.custom_minimum_size = Vector2(260, 0)
-	add_child(panel)
-	var col := VBoxContainer.new()
-	col.add_theme_constant_override("separation", 3)
-	panel.add_child(col)
-	_breath = UITheme.meter(UITheme.COOL, 10)
-	col.add_child(_breath)
+	var wrap := VBoxContainer.new()
+	wrap.set_anchors_preset(Control.PRESET_CENTER_BOTTOM)
+	wrap.position = Vector2(-150, -88)
+	wrap.custom_minimum_size = Vector2(300, 0)
+	wrap.add_theme_constant_override("separation", 6)
+	wrap.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	add_child(wrap)
+
 	_hint = UITheme.label("", UITheme.WARN, UITheme.BODY)
 	_hint.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
-	col.add_child(_hint)
-	# Douse is introduced the first time a shield goes, and never again.
-	EventBus.shield_breached.connect(func(_r: int): _hint_until = 7.0)
+	_hint.custom_minimum_size = Vector2(300, 0)
+	wrap.add_child(_hint)
+
+	# Label beside the gauge, not above it: stacked, the word read as a
+	# caption for the whole screen rather than a name for the bar.
+	var row := HBoxContainer.new()
+	row.add_theme_constant_override("separation", 8)
+	row.alignment = BoxContainer.ALIGNMENT_CENTER
+	row.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	wrap.add_child(row)
+	row.add_child(PixelIcon.make(TreeIcons.Kind.SHROUD, UITheme.COOL, 16.0))
+	row.add_child(UITheme.label("HIDE", UITheme.COOL, UITheme.TINY))
+	_breath = preload("res://ui/BreathBar.gd").new()
+	row.add_child(_breath)
 
 func _build_bar() -> void:
 	var bar := HBoxContainer.new()
@@ -157,10 +186,6 @@ func _process(delta: float) -> void:
 	_next.text = "BEGIN LEVEL %d" % (s.level + 1)
 	_tree_btn.disabled = not shopping
 
-	_breath.value = s.douse_meter
-	var fill: StyleBoxFlat = _breath.get_theme_stylebox("fill")
-	fill.bg_color = UITheme.BAD if s.douse_spent else (
-		UITheme.TEXT_BRIGHT if s.is_dousing() else UITheme.COOL)
 	_hint_until = maxf(_hint_until - REFRESH, 0.0)
 	_hint.text = "HOLD SPACE TO HIDE" if _hint_until > 0.0 else ""
 

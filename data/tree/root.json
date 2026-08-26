@@ -206,10 +206,10 @@
   "section": "base"
  },
  {
-  "id": "root_scoria_0",
+  "id": "root_yield_0",
   "branch": "root",
-  "name": "Scoria",
-  "desc": "mote mult +0.05 per rank.",
+  "name": "Yield",
+  "desc": "+5% mote yield per rank.",
   "max_rank": 6,
   "cost": 875,
   "cost_growth": 1.15,
@@ -232,10 +232,10 @@
   "section": "base"
  },
  {
-  "id": "root_fleck_1",
+  "id": "root_windfall_1",
   "branch": "root",
-  "name": "Fleck",
-  "desc": "mote add +0.06 per rank.",
+  "name": "Windfall",
+  "desc": "+6% mote yield per rank, added before the multiplier.",
   "max_rank": 8,
   "cost": 1312,
   "cost_growth": 1.15,
@@ -258,10 +258,10 @@
   "section": "base"
  },
  {
-  "id": "root_grain_2",
+  "id": "root_tithe_2",
   "branch": "root",
-  "name": "Grain",
-  "desc": "mote mult +0.05 per rank.",
+  "name": "Tithe",
+  "desc": "+5% mote yield per rank.",
   "max_rank": 10,
   "cost": 1750,
   "cost_growth": 1.15,
@@ -284,10 +284,10 @@
   "section": "base"
  },
  {
-  "id": "root_mote_3",
+  "id": "root_trickle_3",
   "branch": "root",
-  "name": "Mote",
-  "desc": "mote add +0.06 per rank.",
+  "name": "Trickle",
+  "desc": "+6% mote yield per rank, added before the multiplier.",
   "max_rank": 6,
   "cost": 2188,
   "cost_growth": 1.15,
@@ -310,10 +310,10 @@
   "section": "base"
  },
  {
-  "id": "root_shard_4",
+  "id": "root_glean_4",
   "branch": "root",
-  "name": "Shard",
-  "desc": "mote mult +0.05 per rank.",
+  "name": "Glean",
+  "desc": "+5% mote yield per rank.",
   "max_rank": 8,
   "cost": 4594,
   "cost_growth": 1.15,
@@ -336,16 +336,16 @@
   "section": "base"
  },
  {
-  "id": "root_ash_5",
+  "id": "root_seep_5",
   "branch": "root",
-  "name": "Ash",
-  "desc": "mote add +0.06 per rank.",
+  "name": "Seep",
+  "desc": "+6% mote yield per rank, added before the multiplier.",
   "max_rank": 10,
   "cost": 5359,
   "cost_growth": 1.15,
   "lum": 2.56,
   "requires": [
-   "root_scoria_0"
+   "root_yield_0"
   ],
   "effects": [
    {
@@ -362,16 +362,16 @@
   "section": "base"
  },
  {
-  "id": "root_tinder_6",
+  "id": "root_levy_6",
   "branch": "root",
-  "name": "Tinder",
-  "desc": "mote mult +0.05 per rank.",
+  "name": "Levy",
+  "desc": "+5% mote yield per rank.",
   "max_rank": 6,
   "cost": 6125,
   "cost_growth": 1.15,
   "lum": 2.98,
   "requires": [
-   "root_fleck_1"
+   "root_windfall_1"
   ],
   "effects": [
    {
@@ -388,16 +388,16 @@
   "section": "base"
  },
  {
-  "id": "root_coal_7",
+  "id": "root_runoff_7",
   "branch": "root",
-  "name": "Coal",
-  "desc": "mote add +0.06 per rank.",
+  "name": "Runoff",
+  "desc": "+6% mote yield per rank, added before the multiplier.",
   "max_rank": 8,
   "cost": 6891,
   "cost_growth": 1.15,
   "lum": 2.83,
   "requires": [
-   "root_fleck_1"
+   "root_windfall_1"
   ],
   "effects": [
    {
@@ -414,16 +414,16 @@
   "section": "base"
  },
  {
-  "id": "root_wick_8",
+  "id": "root_tally_8",
   "branch": "root",
-  "name": "Wick",
-  "desc": "mote mult +0.05 per rank.",
+  "name": "Tally",
+  "desc": "+5% mote yield per rank.",
   "max_rank": 10,
   "cost": 13398,
   "cost_growth": 1.15,
   "lum": 3.28,
   "requires": [
-   "root_shard_4"
+   "root_glean_4"
   ],
   "effects": [
    {
@@ -440,16 +440,16 @@
   "section": "base"
  },
  {
-  "id": "root_glim_9",
+  "id": "root_drip_9",
   "branch": "root",
-  "name": "Glim",
-  "desc": "mote add +0.06 per rank.",
+  "name": "Drip",
+  "desc": "+6% mote yield per rank, added before the multiplier.",
   "max_rank": 6,
   "cost": 14738,
   "cost_growth": 1.15,
   "lum": 3.1,
   "requires": [
-   "root_ash_5"
+   "root_seep_5"
   ],
   "effects": [
    {
@@ -466,16 +466,16 @@
   "section": "base"
  },
  {
-  "id": "root_spark_10",
+  "id": "root_dividend_10",
   "branch": "root",
-  "name": "Spark",
-  "desc": "mote mult +0.05 per rank.",
+  "name": "Dividend",
+  "desc": "+5% mote yield per rank.",
   "max_rank": 8,
   "cost": 16078,
   "cost_growth": 1.15,
   "lum": 3.57,
   "requires": [
-   "root_tinder_6"
+   "root_levy_6"
   ],
   "effects": [
    {
@@ -492,16 +492,16 @@
   "section": "base"
  },
  {
-  "id": "root_char_11",
+  "id": "root_alluvium_11",
   "branch": "root",
-  "name": "Char",
-  "desc": "mote add +0.06 per rank.",
+  "name": "Alluvium",
+  "desc": "+6% mote yield per rank, added before the multiplier.",
   "max_rank": 10,
   "cost": 17418,
   "cost_growth": 1.15,
   "lum": 3.36,
   "requires": [
-   "root_tinder_6"
+   "root_levy_6"
   ],
   "effects": [
    {
@@ -518,16 +518,16 @@
   "section": "base"
  },
  {
-  "id": "root_kindle_12",
+  "id": "root_interest_12",
   "branch": "root",
-  "name": "Kindle",
-  "desc": "mote mult +0.05 per rank.",
+  "name": "Interest",
+  "desc": "+5% mote yield per rank.",
   "max_rank": 6,
   "cost": 32826,
   "cost_growth": 1.15,
   "lum": 3.86,
   "requires": [
-   "root_wick_8"
+   "root_tally_8"
   ],
   "effects": [
    {
@@ -544,16 +544,16 @@
   "section": "base"
  },
  {
-  "id": "root_flint_13",
+  "id": "root_silt_13",
   "branch": "root",
-  "name": "Flint",
-  "desc": "mote add +0.06 per rank.",
+  "name": "Silt",
+  "desc": "+6% mote yield per rank, added before the multiplier.",
   "max_rank": 8,
   "cost": 35171,
   "cost_growth": 1.15,
   "lum": 3.63,
   "requires": [
-   "root_glim_9"
+   "root_drip_9"
   ],
   "effects": [
    {
@@ -570,16 +570,16 @@
   "section": "base"
  },
  {
-  "id": "root_slag_14",
+  "id": "root_surplus_14",
   "branch": "root",
-  "name": "Slag",
-  "desc": "mote mult +0.05 per rank.",
+  "name": "Surplus",
+  "desc": "+5% mote yield per rank.",
   "max_rank": 10,
   "cost": 37516,
   "cost_growth": 1.15,
   "lum": 4.16,
   "requires": [
-   "root_spark_10"
+   "root_dividend_10"
   ],
   "effects": [
    {
@@ -596,16 +596,16 @@
   "section": "base"
  },
  {
-  "id": "root_fume_15",
+  "id": "root_sediment_15",
   "branch": "root",
-  "name": "Fume",
-  "desc": "mote add +0.06 per rank.",
+  "name": "Sediment",
+  "desc": "+6% mote yield per rank, added before the multiplier.",
   "max_rank": 6,
   "cost": 39860,
   "cost_growth": 1.15,
   "lum": 3.89,
   "requires": [
-   "root_spark_10"
+   "root_dividend_10"
   ],
   "effects": [
    {
@@ -622,16 +622,16 @@
   "section": "base"
  },
  {
-  "id": "root_brand_16",
+  "id": "root_profit_16",
   "branch": "root",
-  "name": "Brand",
-  "desc": "mote mult +0.05 per rank.",
+  "name": "Profit",
+  "desc": "+5% mote yield per rank.",
   "max_rank": 8,
   "cost": 73859,
   "cost_growth": 1.15,
   "lum": 4.45,
   "requires": [
-   "root_kindle_12"
+   "root_interest_12"
   ],
   "effects": [
    {
@@ -648,16 +648,16 @@
   "section": "base"
  },
  {
-  "id": "root_taper_17",
+  "id": "root_deposit_17",
   "branch": "root",
-  "name": "Taper",
-  "desc": "mote add +0.06 per rank.",
+  "name": "Deposit",
+  "desc": "+6% mote yield per rank, added before the multiplier.",
   "max_rank": 10,
   "cost": 77962,
   "cost_growth": 1.15,
   "lum": 4.16,
   "requires": [
-   "root_flint_13"
+   "root_silt_13"
   ],
   "effects": [
    {
@@ -674,16 +674,16 @@
   "section": "base"
  },
  {
-  "id": "root_torch_18",
+  "id": "root_return_18",
   "branch": "root",
-  "name": "Torch",
-  "desc": "mote mult +0.05 per rank.",
+  "name": "Return",
+  "desc": "+5% mote yield per rank.",
   "max_rank": 6,
   "cost": 82065,
   "cost_growth": 1.15,
   "lum": 4.75,
   "requires": [
-   "root_slag_14"
+   "root_surplus_14"
   ],
   "effects": [
    {
@@ -700,16 +700,16 @@
   "section": "base"
  },
  {
-  "id": "root_pyre_19",
+  "id": "root_sluice_19",
   "branch": "root",
-  "name": "Pyre",
-  "desc": "mote add +0.06 per rank.",
+  "name": "Sluice",
+  "desc": "+6% mote yield per rank, added before the multiplier.",
   "max_rank": 8,
   "cost": 86169,
   "cost_growth": 1.15,
   "lum": 4.43,
   "requires": [
-   "root_slag_14"
+   "root_surplus_14"
   ],
   "effects": [
    {
@@ -726,16 +726,16 @@
   "section": "base"
  },
  {
-  "id": "root_soot_20",
+  "id": "root_takings_20",
   "branch": "root",
-  "name": "Soot",
-  "desc": "mote mult +0.05 per rank.",
+  "name": "Takings",
+  "desc": "+5% mote yield per rank.",
   "max_rank": 10,
   "cost": 157976,
   "cost_growth": 1.15,
   "lum": 5.04,
   "requires": [
-   "root_brand_16"
+   "root_profit_16"
   ],
   "effects": [
    {
@@ -752,16 +752,16 @@
   "section": "base"
  },
  {
-  "id": "root_lumen_21",
+  "id": "root_catchment_21",
   "branch": "root",
-  "name": "Lumen",
-  "desc": "mote add +0.06 per rank.",
+  "name": "Catchment",
+  "desc": "+6% mote yield per rank, added before the multiplier.",
   "max_rank": 6,
   "cost": 165157,
   "cost_growth": 1.15,
   "lum": 4.69,
   "requires": [
-   "root_taper_17"
+   "root_deposit_17"
   ],
   "effects": [
    {
@@ -778,16 +778,16 @@
   "section": "base"
  },
  {
-  "id": "root_nit_22",
+  "id": "root_rake_22",
   "branch": "root",
-  "name": "Nit",
-  "desc": "mote mult +0.05 per rank.",
+  "name": "Rake",
+  "desc": "+5% mote yield per rank.",
   "max_rank": 8,
   "cost": 172337,
   "cost_growth": 1.15,
   "lum": 5.33,
   "requires": [
-   "root_torch_18"
+   "root_return_18"
   ],
   "effects": [
    {
@@ -804,16 +804,16 @@
   "section": "base"
  },
  {
-  "id": "root_lux_23",
+  "id": "root_spillover_23",
   "branch": "root",
-  "name": "Lux",
-  "desc": "mote add +0.06 per rank.",
+  "name": "Spillover",
+  "desc": "+6% mote yield per rank, added before the multiplier.",
   "max_rank": 10,
   "cost": 179518,
   "cost_growth": 1.15,
   "lum": 4.96,
   "requires": [
-   "root_torch_18"
+   "root_return_18"
   ],
   "effects": [
    {
@@ -839,7 +839,7 @@
   "cost_growth": 1.0,
   "lum": 3.0,
   "requires": [
-   "root_nit_22"
+   "root_rake_22"
   ],
   "effects": [
    {

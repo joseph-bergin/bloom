@@ -431,6 +431,39 @@ func test_tree_validates() -> void:
 	var errs: PackedStringArray = TreeDB.validate()
 	ok(errs.is_empty(), "tree validation:\n" + "\n".join(errs))
 
+## The suite once passed a full run while HUD.gd had a parse error, because
+## nothing here ever loads a UI script. A UI that will not compile is a
+## broken build whether or not the sim is fine.
+func test_every_script_compiles() -> void:
+	var n: int = 0
+	for dir in ["res://ui", "res://scenes", "res://autoload", "res://sim"]:
+		for path in _gd_files(dir):
+			# CACHE_MODE_IGNORE: a plain load() hands back the copy already
+			# compiled at import time and passes even on a broken file.
+			var scr: Resource = ResourceLoader.load(
+				path, "GDScript", ResourceLoader.CACHE_MODE_IGNORE)
+			ok(scr != null and (scr as GDScript).can_instantiate(),
+				"%s compiles" % path)
+			n += 1
+	ok(n > 20, "found scripts to check (got %d)" % n)
+
+func _gd_files(dir: String) -> Array[String]:
+	var out: Array[String] = []
+	var d := DirAccess.open(dir)
+	if d == null:
+		return out
+	d.list_dir_begin()
+	var name: String = d.get_next()
+	while name != "":
+		var path: String = dir + "/" + name
+		if d.current_is_dir():
+			out.append_array(_gd_files(path))
+		elif name.ends_with(".gd"):
+			out.append(path)
+		name = d.get_next()
+	d.list_dir_end()
+	return out
+
 func test_tree_is_the_right_size() -> void:
 	var n: int = TreeDB.nodes.size()
 	ok(n >= 125 and n <= 140, "~130 nodes (got %d)" % n)

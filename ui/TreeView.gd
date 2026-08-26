@@ -91,12 +91,15 @@ func _build() -> void:
 	top.position = Vector2(16, 12)
 	top.add_theme_constant_override("separation", 10)
 	add_child(top)
-	var title := UITheme.make_panel(UITheme.LIGHT)
-	title.add_child(UITheme.label("UPGRADES", UITheme.TEXT_BRIGHT, UITheme.BODY))
-	top.add_child(title)
+	# No "UPGRADES" plate — the screen is plainly the tree, and the only
+	# things worth space up here are what you can spend and the two verbs.
 	var purse := UITheme.make_panel(UITheme.MOTES)
+	var pr := HBoxContainer.new()
+	pr.add_theme_constant_override("separation", 8)
+	purse.add_child(pr)
+	pr.add_child(PixelIcon.make(TreeIcons.Kind.MOTES, UITheme.MOTES, 18.0))
 	_motes = UITheme.label("0", UITheme.MOTES, UITheme.BODY)
-	purse.add_child(_motes)
+	pr.add_child(_motes)
 	top.add_child(purse)
 	var close := UITheme.button("CLOSE", UITheme.TEXT)
 	close.custom_minimum_size = Vector2(100, 26)
@@ -232,7 +235,7 @@ func _process(delta: float) -> void:
 	var upgrading: bool = GameState.upgrading()
 	_next_box.visible = upgrading
 	if upgrading:
-		_next_label.text = "Level %d cleared — spend what it paid" % GameState.s.level
+		_next_label.text = "Level %d Cleared" % GameState.s.level
 		_next_btn.text = "Begin level %d" % (GameState.s.level + 1)
 	var view := Rect2(_cam.position - _vp.size * 0.5 / _zoom, _vp.size / _zoom)
 	_edges.visible_rect = view

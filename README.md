@@ -91,12 +91,13 @@ is never rewritten.
 ## Checking it
 
 ```bash
-# 347 assertions over the simulation, the tree, the audio and the save format
+# 353 assertions over the simulation, the tree, the audio and the save format
 godot --headless --script res://tests/test_runner.gd
 
-# menus vs. the sim, checked against the real scene — the suite above runs
-# synchronously and never gets a frame, so scene wiring is invisible to it
+# scene wiring, checked against the real scenes — the suite above runs
+# synchronously and never gets a frame, so this is invisible to it
 godot --headless --script res://tools/dev/PauseProbe.gd
+godot --headless --script res://tools/dev/IntroProbe.gd
 
 # balance: every build compared over a full run
 godot --headless --script res://tools/sim_runner.gd -- --minutes=45 --runs=3

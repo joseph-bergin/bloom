@@ -1,3 +1,4 @@
+class_name SettingsPanel
 extends Control
 ## Audio and reduced-motion only. Everything past those is cuttable.
 
@@ -36,6 +37,13 @@ func _ready() -> void:
 	col.add_child(rm)
 
 	col.add_child(UITheme.rule())
+	var replay := UITheme.button("Replay intro", UITheme.TEXT)
+	replay.pressed.connect(func():
+		mark_intro_seen(false)
+		GameState.paused = true
+		get_tree().change_scene_to_file("res://scenes/Intro.tscn"))
+	col.add_child(replay)
+
 	var wipe := UITheme.button("Erase save", UITheme.BAD)
 	wipe.custom_minimum_size = Vector2(0, 26)
 	wipe.pressed.connect(func():
@@ -60,6 +68,21 @@ func set_reduced_motion(on: bool) -> void:
 		overlay.set("reduced_motion", on)
 		if on:
 			overlay.set("shake", 0.0)
+
+## The intro plays once. Kept here rather than in the save file because it
+## is a preference, not run state — erasing your save should not mean
+## sitting through the cutscene again.
+static func intro_seen() -> bool:
+	var cfg := ConfigFile.new()
+	if cfg.load(PATH) != OK:
+		return false
+	return bool(cfg.get_value("intro", "seen", false))
+
+static func mark_intro_seen(seen: bool = true) -> void:
+	var cfg := ConfigFile.new()
+	cfg.load(PATH)   # load-modify-save: this file is shared with the settings
+	cfg.set_value("intro", "seen", seen)
+	cfg.save(PATH)
 
 func save_settings() -> void:
 	var cfg := ConfigFile.new()

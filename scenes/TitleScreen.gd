@@ -19,12 +19,24 @@ func _ready() -> void:
 	RenderingServer.set_default_clear_color(UITheme.VOID)
 	# Nothing should be ticking behind the menu.
 	GameState.paused = true
+	# Once per session, whatever the file says. If settings.cfg cannot be
+	# written the flag never sticks, and without this the two scenes would
+	# hand off to each other forever.
+	if not _intro_done and not SettingsPanel.intro_seen():
+		_intro_done = true
+		# Hidden first: the scene change lands at the end of the frame, and
+		# without this the menu flashes up before the cutscene starts.
+		visible = false
+		call_deferred("_to_intro")
+		return
 	_mat = darkness.material
 	_build_menu()
 	get_viewport().size_changed.connect(_place)
 	call_deferred("_place")
 
 var _placed_for: Vector2 = Vector2.ZERO
+
+static var _intro_done: bool = false
 
 func _place() -> void:
 	var vp: Vector2 = get_viewport_rect().size
@@ -126,6 +138,9 @@ func _spacer(h: int) -> Control:
 	var c := Control.new()
 	c.custom_minimum_size = Vector2(0, h)
 	return c
+
+func _to_intro() -> void:
+	get_tree().change_scene_to_file("res://scenes/Intro.tscn")
 
 func _begin() -> void:
 	GameState.restart_run()

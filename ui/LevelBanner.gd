@@ -43,7 +43,7 @@ func _ready() -> void:
 	_banner.add_child(_banner_sub)
 
 	EventBus.boss_spawned.connect(func(_c: Contact, level: int):
-		_boss_name.text = "LEVEL %d BOSS — kill it to finish the level" % level
+		_boss_name.text = "LEVEL %d BOSS  ·  kill it to finish the level" % level
 		_boss_box.visible = true)
 	EventBus.level_cleared.connect(func(level: int, bonus: float):
 		_boss_box.visible = false

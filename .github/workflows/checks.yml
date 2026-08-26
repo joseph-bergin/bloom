@@ -26,3 +26,6 @@ jobs:
       # wiring is invisible to it. This boots the real Main scene.
       - name: Pause probe
         run: timeout 300 godot --headless --script res://tools/dev/PauseProbe.gd
+
+      - name: Intro routing probe
+        run: timeout 300 godot --headless --script res://tools/dev/IntroProbe.gd

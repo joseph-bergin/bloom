@@ -13,6 +13,8 @@ var force_cleared: bool = false
 var force_hide: bool = false
 var track_nearest: bool = false
 var show_title: bool = false
+var show_intro: bool = false
+var intro_beat: int = -1
 var start_level: int = 1
 var _n: int = 0
 var _seeded: bool = false
@@ -37,12 +39,18 @@ func _ready() -> void:
 			"hide": force_hide = int(kv[1]) != 0
 			"track": track_nearest = int(kv[1]) != 0
 			"title": show_title = int(kv[1]) != 0
+			"intro": show_intro = int(kv[1]) != 0
+			"beat": intro_beat = int(kv[1])
 			"level": start_level = int(kv[1])
 	# Measure real headroom, not the refresh rate.
 	DisplayServer.window_set_vsync_mode(DisplayServer.VSYNC_DISABLED)
 	Engine.max_fps = 0
-	add_child(load("res://scenes/TitleScreen.tscn" if show_title
-		else "res://scenes/Main.tscn").instantiate())
+	var scene: String = "res://scenes/Main.tscn"
+	if show_intro:
+		scene = "res://scenes/Intro.tscn"
+	elif show_title:
+		scene = "res://scenes/TitleScreen.tscn"
+	add_child(load(scene).instantiate())
 
 func _process(_delta: float) -> void:
 	_n += 1
@@ -61,6 +69,15 @@ func _process(_delta: float) -> void:
 		var fv: Node2D = get_node("Main/FieldView")
 		var xf: Transform2D = fv.get_viewport().get_canvas_transform()
 		get_viewport().warp_mouse(xf * _aim_target)
+	# The harness runs uncapped, so real seconds pass far faster than frames
+	# suggest. Pin the beat instead of trying to land on it by frame count.
+	if intro_beat >= 0:
+		var intro: Node = get_child(get_child_count() - 1)
+		if _n == 2:
+			intro.set("_i", intro_beat)
+			intro.call("_apply", intro.get("BEATS")[intro_beat])
+		intro.set("_i", intro_beat)
+		intro.set("_t", float(intro.get("BEATS")[intro_beat]["hold"]) * 0.5)
 	if _n > 50:
 		_fps.append(Engine.get_frames_per_second())
 	if force_hide:

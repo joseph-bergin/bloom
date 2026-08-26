@@ -498,6 +498,47 @@ func test_pausing_stops_the_tick() -> void:
 	GameState._physics_process(0.5)
 	ok(s.t > 0.0, "time passes again once unpaused")
 
+## The pixel font covers ASCII plus four symbols. Anything else renders as
+## a blank box, which is how "LEVEL 3 BOSS - kill it" shipped with a broken
+## glyph where its em-dash was.
+func test_ui_text_stays_inside_the_font() -> void:
+	var allowed: Dictionary = {}
+	for line in FileAccess.get_file_as_string("res://ui/font/pixel.fnt").split("\n"):
+		if not line.begins_with("char "):
+			continue
+		var at: int = line.find("id=")
+		if at >= 0:
+			allowed[int(line.substr(at + 3).split(" ")[0])] = true
+	ok(allowed.size() > 90, "read the font charset (%d glyphs)" % allowed.size())
+	var checked: int = 0
+	for path in _gd_files("res://ui") + _gd_files("res://scenes"):
+		var n: int = 0
+		for raw in FileAccess.get_file_as_string(path).split("\n"):
+			n += 1
+			# Comments are not drawn, and they use em-dashes freely.
+			var hash_at: int = raw.find("#")
+			var code_only: String = raw.substr(0, hash_at) if hash_at >= 0 else raw
+			for c in code_only:
+				var u: int = c.unicode_at(0)
+				if u > 126 and not allowed.has(u):
+					ok(false, "%s:%d draws U+%04X, which the font lacks" % [path, n, u])
+		checked += 1
+	ok(checked > 15, "scanned the ui and scene scripts (%d files)" % checked)
+
+## The intro plays once. If the flag does not round-trip, either every
+## launch replays the cutscene or the first one never sees it.
+func test_the_intro_flag_round_trips() -> void:
+	var was: bool = SettingsPanel.intro_seen()
+	SettingsPanel.mark_intro_seen(false)
+	ok(not SettingsPanel.intro_seen(), "cleared")
+	SettingsPanel.mark_intro_seen(true)
+	ok(SettingsPanel.intro_seen(), "set")
+	# It shares settings.cfg, so setting it must not wipe the audio keys.
+	var cfg := ConfigFile.new()
+	cfg.load("user://settings.cfg")
+	ok(cfg.has_section("intro"), "the flag is written")
+	SettingsPanel.mark_intro_seen(was)
+
 func test_tree_is_the_right_size() -> void:
 	var n: int = TreeDB.nodes.size()
 	ok(n >= 125 and n <= 140, "~130 nodes (got %d)" % n)

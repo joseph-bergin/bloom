@@ -11,7 +11,7 @@ jobs:
     runs-on: ubuntu-latest
     container: barichello/godot-ci:4.3
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
 
       # Not optional on a fresh checkout: autoloads compile before the
       # class_name globals exist, so without this the suite cannot find

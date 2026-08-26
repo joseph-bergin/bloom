@@ -14,7 +14,6 @@ var _pool: Array[TreeNodeButton] = []
 var _minimap: Control
 var _tip: Control
 var _respec: Button
-var _filters: HBoxContainer
 
 var _zoom: float = 1.15
 var _pan: bool = false
@@ -82,7 +81,7 @@ func _build() -> void:
 
 	var header := ColorRect.new()
 	header.set_anchors_preset(Control.PRESET_TOP_WIDE)
-	header.custom_minimum_size = Vector2(0, 82)
+	header.custom_minimum_size = Vector2(0, 50)
 	header.color = Color(UITheme.VOID.r, UITheme.VOID.g, UITheme.VOID.b, 0.96)
 	header.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	add_child(header)
@@ -111,11 +110,6 @@ func _build() -> void:
 		GameState.respec()
 		_dirty = true)
 	top.add_child(_respec)
-
-	_filters = HBoxContainer.new()
-	_filters.position = Vector2(16, 46)
-	_filters.add_theme_constant_override("separation", 5)
-	add_child(_filters)
 
 	_tip = preload("res://ui/TreeTooltip.gd").new()
 	_tip.set_anchors_preset(Control.PRESET_FULL_RECT)
@@ -156,30 +150,6 @@ func _build() -> void:
 			close_view())
 	nb.add_child(_next_btn)
 
-func _build_filters() -> void:
-	for c in _filters.get_children():
-		c.queue_free()
-	var all := UITheme.button("all", UITheme.TEXT)
-	all.custom_minimum_size = Vector2(44, 22)
-	all.pressed.connect(func(): _focus(Vector2.ZERO))
-	_filters.add_child(all)
-	for b in TreeDB.branches:
-		var btn := UITheme.button(String(b), UITheme.branch_colour(b))
-		btn.custom_minimum_size = Vector2(0, 22)
-		var bb: StringName = b
-		btn.pressed.connect(func():
-			var centre := Vector2.ZERO
-			var n_count: int = 0
-			for n in TreeDB.branch_nodes(bb):
-				centre += n.pos
-				n_count += 1
-			_focus(centre / maxf(float(n_count), 1.0)))
-		_filters.add_child(btn)
-
-func _focus(at: Vector2) -> void:
-	_cam.position = at
-	_dirty = true
-
 func _compute_bounds() -> void:
 	var first: bool = true
 	for key in TreeDB.nodes.keys():
@@ -194,7 +164,6 @@ func _compute_bounds() -> void:
 
 func open_view() -> void:
 	visible = true
-	_build_filters()
 	_dirty = true
 
 func close_view() -> void:

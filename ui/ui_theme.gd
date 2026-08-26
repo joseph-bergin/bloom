@@ -138,10 +138,41 @@ static func button(text: String, col: Color = TEXT) -> Button:
 		PixelPanel.new(col * 0.28, col, col))
 	# The disabled frame still has to read as a frame. At the old value it
 	# vanished into the ground and the button looked like a bare label.
+	# Without this, keyboard focus falls back to Godot's default outline,
+	# which is a rounded blue box in the middle of a pixel-art screen.
+	b.add_theme_stylebox_override("focus", PixelPanel.new(
+		Color(0, 0, 0, 0), col * 0.9, col))
+	_juice(b)
 	b.add_theme_stylebox_override("disabled",
 		PixelPanel.new(Color(0.075, 0.051, 0.055),
 			Color(0.247, 0.153, 0.161), Color(0.20, 0.15, 0.15)))
 	return b
+
+## Sound and a lift on every button. Buttons live inside containers, which
+## overwrite position each layout pass, so the lift is done with modulate
+## and pivoted scale rather than by moving the Control.
+static func _juice(b: Button) -> void:
+	b.pivot_offset = Vector2.ZERO
+	b.mouse_entered.connect(func():
+		if b.disabled:
+			return
+		Audio.hover()
+		_to(b, 1.14, 1.0))
+	b.mouse_exited.connect(func(): _to(b, 1.0, 1.0))
+	b.button_down.connect(func():
+		Audio.play("press", -13.0, randf_range(0.97, 1.05))
+		_to(b, 1.3, 0.97))
+	b.button_up.connect(func(): _to(b, 1.0, 1.0))
+
+static func _to(b: Button, bright: float, scale: float) -> void:
+	if Audio.reduced_motion:
+		b.modulate = Color(bright, bright, bright)
+		return
+	b.pivot_offset = b.size * 0.5
+	var t := b.create_tween().set_parallel(true)
+	t.set_trans(Tween.TRANS_CUBIC).set_ease(Tween.EASE_OUT)
+	t.tween_property(b, "modulate", Color(bright, bright, bright), 0.10)
+	t.tween_property(b, "scale", Vector2(scale, scale), 0.10)
 
 ## A primary action: brighter fill, same frame. No extra chrome.
 static func cta(text: String, col: Color = ACCENT) -> Button:

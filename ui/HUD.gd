@@ -178,7 +178,12 @@ func _process(delta: float) -> void:
 	_tint(_sight, "SEE %d   GUN %d" % [int(sight), int(Stats.turret_range)],
 		UITheme.WARN if blind else UITheme.TEXT_FAINT)
 
-	_motes.text = UITheme.fmt(s.motes)
+	var purse_now: String = UITheme.fmt(s.motes)
+	if purse_now != _motes.text:
+		_motes.text = purse_now
+		if not Audio.reduced_motion:
+			_motes.modulate = Color(1.5, 1.5, 1.5)
+			create_tween().tween_property(_motes, "modulate", Color(1, 1, 1), 0.3)
 
 	_clock.text = "BEST %d" % maxi(s.best_level, s.level)
 	var shopping: bool = GameState.upgrading()

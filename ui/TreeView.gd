@@ -165,9 +165,15 @@ func _compute_bounds() -> void:
 func open_view() -> void:
 	visible = true
 	_dirty = true
+	Audio.play("open", -14.0)
+	if not Audio.reduced_motion:
+		modulate = Color(1, 1, 1, 0)
+		create_tween().tween_property(self, "modulate:a", 1.0, 0.16)
 
 func close_view() -> void:
 	visible = false
+	modulate = Color(1, 1, 1, 1)
+	Audio.play("close", -16.0)
 
 func toggle() -> void:
 	if visible:
@@ -222,7 +228,13 @@ func _process(delta: float) -> void:
 
 func _rebind(view: Rect2) -> void:
 	var s: GameStateData = GameState.s
-	_motes.text = str(int(s.motes))
+	var shown: String = str(int(s.motes))
+	if shown != _motes.text:
+		_motes.text = shown
+		if not Audio.reduced_motion:
+			_motes.modulate = Color(1.6, 1.6, 1.6)
+			create_tween().tween_property(_motes, "modulate",
+				Color(1, 1, 1), 0.25)
 	var cull := view.grow(90.0)
 	var dots: bool = _zoom < LABEL_ZOOM
 	var i: int = 0
@@ -244,8 +256,13 @@ func _rebind(view: Rect2) -> void:
 
 func _on_click(id: StringName) -> void:
 	_selected = id
-	if not GameState.purchase(id):
-		Audio.play("click", -16.0)
+	if GameState.purchase(id):
+		for b in _pool:
+			if b.visible and b.node_def != null and b.node_def.id == id:
+				b.celebrate()
+				break
+	else:
+		Audio.play("denied", -12.0)
 	_dirty = true
 	var n: TreeNode = TreeDB.get_node_def(id)
 	if n != null:

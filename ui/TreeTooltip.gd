@@ -92,8 +92,10 @@ func show_node(n: TreeNode) -> void:
 		_set_bar(UITheme.GOOD if can else UITheme.BAD)
 		# Floored: motes are spent whole, and "862.7" is noise in a pixel panel.
 		_cost.text = "%s / %s" % [UITheme.fmt(floorf(have)), UITheme.fmt(cost)]
-		_cost.add_theme_color_override("font_color",
-			UITheme.TEXT_BRIGHT if can else UITheme.TEXT_DIM)
+		# Bright either way: the label sits on top of the bar fill, and dim
+		# text on the red half was unreadable at exactly the moment you most
+		# want to know what a rank costs.
+		_cost.add_theme_color_override("font_color", UITheme.TEXT_BRIGHT)
 
 	if not GameState.requirements_met(n):
 		var missing: PackedStringArray = []

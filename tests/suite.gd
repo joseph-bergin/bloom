@@ -464,6 +464,26 @@ func _gd_files(dir: String) -> Array[String]:
 	d.list_dir_end()
 	return out
 
+## A cue whose envelope is wrong is silent, and silence is not a test
+## failure anywhere else. Every voice has to carry signal without clipping.
+func test_every_cue_has_audible_signal() -> void:
+	var cues := {
+		"hover": Synth.hover(), "press": Synth.press(),
+		"denied": Synth.denied(), "click": Synth.click(),
+		"purchase": Synth.purchase(), "breach": Synth.breach(),
+		"cleared": Synth.cleared(), "boss": Synth.boss(),
+		"open": Synth.whoosh(true), "close": Synth.whoosh(false),
+	}
+	for name in cues:
+		var w: AudioStreamWAV = cues[name]
+		var n: int = w.data.size() / 2
+		ok(n > 100, "%s has samples" % name)
+		var peak: float = 0.0
+		for i in range(n):
+			peak = maxf(peak, absf(float(w.data.decode_s16(i * 2)) / 32767.0))
+		ok(peak > 0.05, "%s is audible (peak %.3f)" % [name, peak])
+		ok(peak < 0.999, "%s does not clip (peak %.3f)" % [name, peak])
+
 func test_tree_is_the_right_size() -> void:
 	var n: int = TreeDB.nodes.size()
 	ok(n >= 125 and n <= 140, "~130 nodes (got %d)" % n)

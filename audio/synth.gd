@@ -27,6 +27,18 @@ static func _env(i: int, n: int, attack: float, decay: float) -> float:
 		return x / maxf(attack, 0.0001)
 	return pow(maxf(1.0 - (x - attack) / maxf(decay, 0.0001), 0.0), 2.0)
 
+## Scales a buffer so its loudest sample sits at `peak`.
+static func _normalise(buf: PackedFloat32Array, peak: float) -> PackedFloat32Array:
+	var hi: float = 0.0
+	for v in buf:
+		hi = maxf(hi, absf(v))
+	if hi <= 0.0001:
+		return buf
+	var g: float = peak / hi
+	for i in range(buf.size()):
+		buf[i] *= g
+	return buf
+
 ## Short bright pop. Pitch rises with the kill streak.
 static func kill(tier: int) -> AudioStreamWAV:
 	var n: int = int(RATE * (0.13 + 0.02 * float(tier)))
@@ -175,6 +187,64 @@ static func ambient() -> AudioStreamWAV:
 		buf[i] *= g
 		buf[n - 1 - i] *= g
 	return _wav(buf, true)
+
+## Cursor crossing something you can press. Has to sit under everything —
+## you hear a dozen of these a second sweeping across the tree.
+static func hover() -> AudioStreamWAV:
+	var n: int = int(RATE * 0.022)
+	var buf := PackedFloat32Array(); buf.resize(n)
+	for i in range(n):
+		var x: float = float(i) / float(n)
+		var f: float = lerpf(1500.0, 1900.0, x)
+		buf[i] = sin(TAU * f * float(i) / RATE) * 0.09 * _env(i, n, 0.05, 0.95)
+	return _wav(buf)
+
+## A button going down. A tick of noise for the contact, a short body under
+## it so it lands rather than just ticking.
+static func press() -> AudioStreamWAV:
+	var n: int = int(RATE * 0.07)
+	var buf := PackedFloat32Array(); buf.resize(n)
+	var rng := RandomNumberGenerator.new()
+	rng.seed = 9137
+	for i in range(n):
+		var x: float = float(i) / float(n)
+		var body: float = sin(TAU * 620.0 * float(i) / RATE) * 0.34
+		body += sin(TAU * 310.0 * float(i) / RATE) * 0.16
+		var tick: float = rng.randf_range(-1.0, 1.0) * 0.30 * pow(1.0 - x, 14.0)
+		buf[i] = (body * _env(i, n, 0.002, 0.9) + tick)
+	return _wav(buf)
+
+## No. A short flat buzz, low enough that it never reads as a reward.
+static func denied() -> AudioStreamWAV:
+	var n: int = int(RATE * 0.13)
+	var buf := PackedFloat32Array(); buf.resize(n)
+	for i in range(n):
+		var x: float = float(i) / float(n)
+		var f: float = lerpf(190.0, 140.0, x)
+		var p: float = TAU * f * float(i) / RATE
+		# Square-ish: the harmonics are what make it read as a refusal.
+		var v: float = signf(sin(p)) * 0.26 + sin(p * 2.0) * 0.08
+		buf[i] = v * _env(i, n, 0.004, 0.92)
+	return _wav(buf)
+
+## The tree sliding in or out. Filtered noise, no pitch to clash with the
+## ambient bed.
+static func whoosh(up: bool) -> AudioStreamWAV:
+	var n: int = int(RATE * 0.26)
+	var buf := PackedFloat32Array(); buf.resize(n)
+	var rng := RandomNumberGenerator.new()
+	rng.seed = 2255
+	var lp: float = 0.0
+	for i in range(n):
+		var x: float = float(i) / float(n)
+		# Sweeping the filter is the whole effect: bright opening, dull closing.
+		var cut: float = lerpf(0.04, 0.42, x if up else 1.0 - x)
+		lp = lerpf(lp, rng.randf_range(-1.0, 1.0), cut)
+		buf[i] = lp * _env(i, n, 0.12, 0.86)
+	# The lowpass eats most of the amplitude, and by how much depends on the
+	# sweep direction — opening came out half the level of closing. Normalise
+	# rather than hand-tuning two gains that drift apart.
+	return _wav(_normalise(buf, 0.5))
 
 static func click() -> AudioStreamWAV:
 	var n: int = int(RATE * 0.04)

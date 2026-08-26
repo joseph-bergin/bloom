@@ -21,6 +21,8 @@ var compact: bool = false
 var _hover: bool = false
 var _kind: TreeIcons.Kind = TreeIcons.Kind.GENERIC
 var _t: float = 0.0
+var _lift: float = 0.0     # 0..1, eases the tile up under the cursor
+var _flash: float = 0.0    # 1..0, fires on purchase
 
 func _ready() -> void:
 	custom_minimum_size = Vector2(HIT, HIT)
@@ -28,11 +30,30 @@ func _ready() -> void:
 	mouse_filter = Control.MOUSE_FILTER_STOP
 
 func _process(delta: float) -> void:
+	var want: float = 1.0 if _hover and state >= 2 else 0.0
+	if Audio.reduced_motion:
+		_lift = want
+	else:
+		_lift = move_toward(_lift, want, delta * 7.0)
+	if _flash > 0.0:
+		_flash = maxf(_flash - delta * 2.4, 0.0)
+		queue_redraw()
 	if _hover:
 		_t += delta
+	if _hover or not is_equal_approx(_lift, want):
 		queue_redraw()
 
+## Called when this node is bought, so the tile you clicked is the thing
+## that answers rather than a number somewhere else on screen.
+func celebrate() -> void:
+	_flash = 1.0
+
 func bind(n: TreeNode, p_rank: int, p_state: int, p_afford: bool) -> void:
+	# Pool slots are reused. A flash left running when the slot changes hands
+	# would fire on whichever node landed here next.
+	if node_def != n:
+		_flash = 0.0
+		_lift = 0.0
 	node_def = n
 	rank = p_rank
 	state = p_state
@@ -54,6 +75,8 @@ func _notification(what: int) -> void:
 	if what == NOTIFICATION_MOUSE_ENTER:
 		_hover = true
 		if node_def != null:
+			if state >= 2:
+				Audio.hover()
 			hovered.emit(node_def.id)
 		queue_redraw()
 	elif what == NOTIFICATION_MOUSE_EXIT:
@@ -76,6 +99,8 @@ func _draw() -> void:
 		return
 	var box := Rect2(((Vector2(HIT, HIT) - Vector2(TILE, TILE)) * 0.5).round(),
 		Vector2(TILE, TILE))
+	# Whole pixels only — a fractional lift makes a pixel tile shimmer.
+	box.position.y -= round(_lift * 2.0)
 	var base: Color = UITheme.branch_colour(node_def.branch)
 	var owned: bool = state == 3
 
@@ -108,8 +133,13 @@ func _draw() -> void:
 		draw_rect(Rect2(box.position.x + BORDER, y,
 			(box.size.x - BORDER * 2.0) * frac, 3.0), UITheme.LIGHT * 1.4)
 
-	if _hover:
-		_frame(box.grow(3.0), Color(1, 1, 1) * (1.2 + 0.3 * sin(_t * 7.0)), 1.0)
+	if _lift > 0.05:
+		_frame(box.grow(3.0), Color(1, 1, 1)
+			* (1.2 + 0.3 * sin(_t * 7.0)) * _lift, 1.0)
+	if _flash > 0.0:
+		# A ring pushing out of the tile, brightest at the moment of purchase.
+		var g: float = (1.0 - _flash) * 14.0
+		_frame(box.grow(2.0 + g), Color(UITheme.LIGHT, _flash), 2.0)
 
 func _frame(r: Rect2, col: Color, w: float) -> void:
 	draw_rect(Rect2(r.position, Vector2(r.size.x, w)), col)

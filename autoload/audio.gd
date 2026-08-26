@@ -18,6 +18,7 @@ var _duck_until: float = 0.0
 var _streak: int = 0
 var _last_kill: float = -99.0
 var _last_hit: float = -99.0
+var _last_hover: float = -99.0
 
 func _ready() -> void:
 	_buses()
@@ -30,6 +31,11 @@ func _ready() -> void:
 	_streams["boss"] = Synth.boss()
 	_streams["cleared"] = Synth.cleared()
 	_streams["click"] = Synth.click()
+	_streams["hover"] = Synth.hover()
+	_streams["press"] = Synth.press()
+	_streams["denied"] = Synth.denied()
+	_streams["open"] = Synth.whoosh(true)
+	_streams["close"] = Synth.whoosh(false)
 	for t in range(Constants.MAX_TIER + 1):
 		_kill_streams.append(Synth.kill(t))
 
@@ -81,6 +87,15 @@ func play(key: String, db: float = -6.0, pitch: float = 1.0) -> void:
 	if not _streams.has(key):
 		return
 	_emit(_streams[key], db, pitch)
+
+## Hover fires as fast as the cursor moves. Without a gate, sweeping across
+## the tree machine-guns the pool and drowns out everything else.
+func hover() -> void:
+	var now: float = float(Time.get_ticks_msec()) / 1000.0
+	if now - _last_hover < 0.045:
+		return
+	_last_hover = now
+	play("hover", -26.0, randf_range(0.94, 1.06))
 
 func _emit(stream: AudioStream, db: float, pitch: float) -> void:
 	var p: AudioStreamPlayer = _pool[_next]

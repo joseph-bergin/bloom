@@ -60,17 +60,36 @@ func test_luminance_is_the_sum_of_purchased_node_light() -> void:
 	Luminance.tick(s, 0.0)
 	near(s.luminance, n.lum * 3.0, 1e-4, "L = sum(node.lum * rank)")
 
-func test_shroud_reduces_luminance_but_never_to_zero() -> void:
+## Shroud hides your glow from the dark without blinding you. Cutting
+## s.luminance at the source did both, so sight shrank with it and the whole
+## branch scored below buying nothing.
+func test_shroud_hides_you_without_blinding_you() -> void:
 	var s := fresh()
 	own(s, &"burn_entry", 10)
 	Luminance.tick(s, 0.0)
 	var bright: float = s.luminance
+	var saw: float = Sight.radius(s)
+
 	own(s, &"shroud_baffle", 10)
 	Luminance.tick(s, 0.0)
-	ok(s.luminance < bright, "shroud reduces luminance")
-	ok(Constants.SHROUD_CAP < 1.0, "never fully dark")
-	near(s.luminance, (Stats.lum_from_tree) * (1.0 - Stats.shroud), 1e-4,
-		"L = tree light * (1 - shroud)")
+	ok(Stats.shroud > 0.0, "shroud is bought")
+	near(s.luminance, bright, 1e-4, "what you burn at is unchanged")
+	near(Sight.radius(s), saw, 1e-4, "and you see exactly as far as before")
+	ok(Luminance.effective(s) < s.luminance, "but less of you reaches the dark")
+	near(Luminance.effective(s), s.luminance * (1.0 - Stats.shroud), 1e-4,
+		"signature = light * (1 - shroud)")
+	ok(Constants.SHROUD_CAP < 1.0, "never fully hidden")
+
+## Douse is the one that does blind you — that is the trade.
+func test_dousing_cuts_both_readings() -> void:
+	var s := fresh()
+	own(s, &"burn_entry", 10)
+	Luminance.tick(s, 0.0)
+	var saw: float = Sight.radius(s)
+	var sig: float = Luminance.effective(s)
+	s.dousing = true
+	ok(Sight.radius(s) < saw, "hiding costs you sight")
+	ok(Luminance.effective(s) < sig, "and hides you")
 
 func test_shroud_is_hard_capped() -> void:
 	var s := fresh()
@@ -132,8 +151,12 @@ func test_hiding_slows_spawning_hard() -> void:
 
 func test_spawn_interval_shortens_with_luminance() -> void:
 	near(Spawning.spawn_interval(0.0), Constants.SPAWN_INTERVAL_BASE, 1e-4, "base interval")
-	near(Spawning.spawn_interval(50.0), Constants.SPAWN_INTERVAL_BASE / 2.0, 1e-4,
-		"L = 50 doubles the spawn rate")
+	# Derived, not hardcoded: this asserted "L = 50 doubles the rate", which
+	# was a restatement of SPAWN_LUM_SCALE = 50 and failed the moment the
+	# constant was tuned rather than catching anything.
+	var at: float = Constants.SPAWN_LUM_SCALE
+	near(Spawning.spawn_interval(at), Constants.SPAWN_INTERVAL_BASE / 2.0, 1e-4,
+		"one SPAWN_LUM_SCALE of light doubles the spawn rate")
 	ok(Spawning.spawn_interval(200.0) < Spawning.spawn_interval(100.0),
 		"brighter is always faster")
 
@@ -539,6 +562,25 @@ func test_the_intro_flag_round_trips() -> void:
 	ok(cfg.has_section("intro"), "the flag is written")
 	SettingsPanel.mark_intro_seen(was)
 
+## Buying a shield used to raise the cap without granting the shield, so
+## Root's defensive half was decoration and the HUD showed a pip that could
+## never be filled.
+func test_buying_a_shield_grants_it_now() -> void:
+	var s := fresh()
+	var before_max: int = Stats.max_shields
+	var before: int = s.shields
+	s.motes = 1e9
+	own(s, &"root_entry", 1)
+	ok(GameState.purchase(&"root_shield"), "bought a shield node")
+	ok(Stats.max_shields > before_max, "the cap went up")
+	ok(s.shields == before + (Stats.max_shields - before_max),
+		"and the shield is actually there (%d -> %d)" % [before, s.shields])
+	# A shield already spent stays spent.
+	s.shields -= 2
+	var held: int = s.shields
+	ok(GameState.purchase(&"root_entry"), "bought a non-shield node")
+	ok(s.shields == held, "an unrelated purchase refills nothing")
+
 func test_tree_is_the_right_size() -> void:
 	var n: int = TreeDB.nodes.size()
 	ok(n >= 125 and n <= 140, "~130 nodes (got %d)" % n)
@@ -678,16 +720,30 @@ func test_meeting_the_quota_summons_a_boss() -> void:
 	ok(b.radius > plain.radius * 2.0, "and is unmistakable on the field")
 	ok(b.motes() > plain.motes() * 5.0, "and worth killing")
 
-func test_nothing_new_spawns_during_a_boss_or_the_breather() -> void:
+## The boss fight used to be a safe phase, which is what made buying no
+## damage at all a viable run: chipping a boss down for a minute cost
+## nothing but time. The field keeps arriving now, only slower.
+func test_the_boss_fight_still_costs_you_time() -> void:
 	var s := fresh()
-	s.phase = GameStateData.Phase.BOSS
+	s.phase = GameStateData.Phase.FIGHTING
 	for _i in range(600):
 		Spawning.tick(s, 0.1)
-	ok(s.contacts.is_empty(), "the boss fight is not diluted with adds")
-	s.phase = GameStateData.Phase.UPGRADING
+	var fighting: int = s.contacts.size()
+	ok(fighting > 0, "the field arrives during a normal level")
+
+	var b := fresh()
+	b.phase = GameStateData.Phase.BOSS
 	for _i in range(600):
-		Spawning.tick(s, 0.1)
-	ok(s.contacts.is_empty(), "and nothing creeps in while the tree is open")
+		Spawning.tick(b, 0.1)
+	var boss: int = b.contacts.size()
+	ok(boss > 0, "and keeps arriving during the boss")
+	ok(boss < fighting, "but slower (%d vs %d)" % [boss, fighting])
+
+	var u := fresh()
+	u.phase = GameStateData.Phase.UPGRADING
+	for _i in range(600):
+		Spawning.tick(u, 0.1)
+	ok(u.contacts.is_empty(), "nothing creeps in while the tree is open")
 
 func test_killing_the_boss_clears_the_level_and_pays() -> void:
 	var s := fresh()

@@ -15,6 +15,11 @@ var contacts: Array[Contact] = []
 var projectiles: Array[Projectile] = []
 var purchased: Dictionary = {}          # node_id -> rank
 var total_motes_this_run: float = 0.0
+var run_kills: int = 0
+## The high-water mark, for the run summary. The modal used to print
+## s.luminance under a "peak luminance" label, which is whatever you
+## happened to be burning at the instant you died.
+var peak_luminance: float = 0.0
 
 # --- bookkeeping ---
 var purchase_version: int = 0

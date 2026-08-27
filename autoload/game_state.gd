@@ -6,6 +6,9 @@ var paused: bool = false
 var _hitstop: float = 0.0
 
 func _ready() -> void:
+	# A method, not a lambda: the sim runner reassigns GameState.s, and a
+	# lambda would have captured the state object this autoload started with.
+	EventBus.contact_killed.connect(_count_kill)
 	s.rng.randomize()
 	Stats.recompute(s)
 	s.shields = Stats.max_shields
@@ -36,6 +39,9 @@ func _process(_delta: float) -> void:
 	s.dousing = Input.is_action_pressed("douse") and not paused and not s.run_over
 
 # --- purchases -----------------------------------------------------------
+
+func _count_kill(_tier: int, _at: Vector2, _motes: float) -> void:
+	s.run_kills += 1
 
 func rank_of(id: StringName) -> int:
 	return int(s.purchased.get(String(id), 0))
@@ -72,7 +78,13 @@ func purchase(id: StringName) -> bool:
 	var rank: int = rank_of(id) + 1
 	s.purchased[String(id)] = rank
 	s.purchase_version += 1
+	# A bought shield has to arrive now. s.shields was only ever set at run
+	# start, so raising max_shields mid-run bought a pip you could never
+	# fill — the whole defensive half of Root did nothing. Granting the
+	# delta, not refilling: losing a shield is still permanent.
+	var before: int = Stats.max_shields
 	Stats.recompute(s)
+	s.shields += maxi(Stats.max_shields - before, 0)
 	EventBus.node_purchased.emit(id, rank)
 	return true
 
@@ -106,6 +118,8 @@ func restart_run() -> void:
 	s.purchased.clear()
 	s.motes = 0.0
 	s.total_motes_this_run = 0.0
+	s.run_kills = 0
+	s.peak_luminance = 0.0
 	s.contacts = [] as Array[Contact]
 	s.projectiles = [] as Array[Projectile]
 	s.wildfire_lum = 0.0

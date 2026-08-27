@@ -29,14 +29,17 @@ static func spawn_pressure(l: float) -> float:
 	return Constants.SPAWN_INTERVAL_BASE / iv
 
 static func tick(s: GameStateData, delta: float) -> void:
-	# The boss fight and the breather after it are the level's punctuation;
-	# nothing new wanders in during either.
-	if s.phase != GameStateData.Phase.FIGHTING:
+	# The upgrade break is the level's punctuation and stays quiet. The boss
+	# fight does not: the field keeps arriving at a reduced rate, so how long
+	# you take to kill a boss is a thing that costs you something.
+	if s.phase == GameStateData.Phase.UPGRADING:
 		return
 	var l: float = Luminance.effective(s)
 	var iv: float = spawn_interval(l)
 	if is_inf(iv):
 		return
+	if s.phase == GameStateData.Phase.BOSS:
+		iv *= Constants.BOSS_SPAWN_SLOW
 	s.spawn_timer -= delta
 	if s.spawn_timer > 0.0:
 		return

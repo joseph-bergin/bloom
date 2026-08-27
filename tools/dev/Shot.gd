@@ -15,6 +15,7 @@ var track_nearest: bool = false
 var show_title: bool = false
 var show_intro: bool = false
 var intro_beat: int = -1
+var show_runend: bool = false
 var start_level: int = 1
 var _n: int = 0
 var _seeded: bool = false
@@ -41,6 +42,7 @@ func _ready() -> void:
 			"title": show_title = int(kv[1]) != 0
 			"intro": show_intro = int(kv[1]) != 0
 			"beat": intro_beat = int(kv[1])
+			"runend": show_runend = int(kv[1]) != 0
 			"level": start_level = int(kv[1])
 	# Measure real headroom, not the refresh rate.
 	DisplayServer.window_set_vsync_mode(DisplayServer.VSYNC_DISABLED)
@@ -96,6 +98,16 @@ func _process(_delta: float) -> void:
 				mm.global_position = at
 				Input.parse_input_event(mm)
 				break
+	if show_runend and _n == 40:
+		var s2: GameStateData = GameState.s
+		s2.run_kills = 341
+		s2.total_motes_this_run = 48200.0
+		s2.peak_luminance = 137.4
+		s2.t = 641.0
+		s2.level = 11
+		s2.best_level = 9
+		get_node("Main/UILayer/Modals/RunEndModal").call(
+			"open_modal", "Something reached you at level 11.")
 	if _n >= frames:
 		var img: Image = get_viewport().get_texture().get_image()
 		img.save_png(out_path)

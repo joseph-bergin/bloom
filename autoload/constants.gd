@@ -7,7 +7,10 @@ extends Node
 var FIELD_RADIUS: float = 440.0
 
 var SPAWN_INTERVAL_BASE: float = 3.0
-var SPAWN_LUM_SCALE: float = 50.0
+## At 50 the spawn rate tripled by luminance 100, which on top of the tier
+## and drift penalties meant every point of light cost more than the power
+## it bought: burning hard scored below buying nothing at all.
+var SPAWN_LUM_SCALE: float = 120.0
 var TIER_LUM_STEP: float = 40.0
 var MAX_TIER: int = 7
 ## Hard ceiling on live contacts. Protects the frame rate, and stops a
@@ -61,6 +64,11 @@ var LEVEL_QUOTA_STEP: float = 0.04
 ## level, and out-earns everyone by never being pressured.
 var LEVEL_TIME_LIMIT: float = 1.7
 var LEVEL_SPAWN_SCALE: float = 0.06
+## The boss fight used to be a safe phase — nothing spawned, so taking a
+## minute to chip a boss down cost only time. That made buying no damage at
+## all a viable strategy. The field keeps arriving now, just slower, so a
+## long boss fight is a dangerous one.
+var BOSS_SPAWN_SLOW: float = 2.0
 var LEVEL_CLEAR_PAUSE: float = 2.6
 ## Tied to what the level actually contained rather than to the level
 ## number. An exponential in the level number runs away the moment the

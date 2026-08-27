@@ -189,8 +189,8 @@ func _buy_best(s: GameStateData, prefs: Dictionary, sinks: bool) -> bool:
 			best = n
 	if best == null:
 		return false
-	s.motes -= best_cost
-	s.purchased[String(best.id)] = int(s.purchased.get(String(best.id), 0)) + 1
-	s.purchase_version += 1
-	Stats.recompute(s)
-	return true
+	# The real path, not a copy of it. This used to mutate purchased/motes
+	# by hand and so never granted bought shields — the runner was balancing
+	# a game where Root's defensive half did nothing, which is not the game
+	# that ships.
+	return GameState.purchase(best.id)

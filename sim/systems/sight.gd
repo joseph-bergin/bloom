@@ -15,7 +15,7 @@ extends RefCounted
 
 static func radius(s: GameStateData) -> float:
 	var r: float = Constants.VISION_BASE \
-		+ sqrt(maxf(s.effective_luminance(), 0.0)) * Constants.VISION_LUM_SCALE \
+		+ sqrt(maxf(Luminance.visible(s), 0.0)) * Constants.VISION_LUM_SCALE \
 		+ Stats.vision_add
 	# Hiding pulls the light in hard. Safe and blind are the same act.
 	if s.is_dousing():

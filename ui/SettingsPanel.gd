@@ -37,13 +37,6 @@ func _ready() -> void:
 	col.add_child(rm)
 
 	col.add_child(UITheme.rule())
-	var replay := UITheme.button("Replay intro", UITheme.TEXT)
-	replay.pressed.connect(func():
-		mark_intro_seen(false)
-		GameState.paused = true
-		get_tree().change_scene_to_file("res://scenes/Intro.tscn"))
-	col.add_child(replay)
-
 	var wipe := UITheme.button("Erase save", UITheme.BAD)
 	wipe.custom_minimum_size = Vector2(0, 26)
 	wipe.pressed.connect(func():

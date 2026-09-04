@@ -581,6 +581,47 @@ func test_buying_a_shield_grants_it_now() -> void:
 	ok(GameState.purchase(&"root_entry"), "bought a non-shield node")
 	ok(s.shields == held, "an unrelated purchase refills nothing")
 
+## The ambient bed leaked broadband hiss through a single-pole filter and
+## was the "static" in the mix — five times the high-band content of any
+## music layer. Measured with four cascaded poles at 800 Hz; a single pole
+## is a 6 dB/oct tilt that scores a pure 200 Hz sine at 24% and measures
+## pitch rather than noise. The sine below is the calibration.
+func test_the_beds_are_not_hissy() -> void:
+	var sine := PackedFloat32Array()
+	sine.resize(Music.RATE)
+	for i in range(sine.size()):
+		sine[i] = sin(TAU * 200.0 * float(i) / float(Music.RATE)) * 0.5
+	var ref: float = _high_band(Synth._wav(sine, false, Music.RATE))
+	ok(ref < 0.02, "the measure passes a 200 Hz sine (%.3f)" % ref)
+	var layers := {"bed": Music.bed(), "pulse": Music.pulse(),
+		"tension": Music.tension(), "dread": Music.dread()}
+	for name in layers:
+		var got: float = _high_band(layers[name])
+		ok(got < 0.02, "music.%s is not hissy (%.4f)" % [name, got])
+	var amb: float = _high_band(Synth.ambient())
+	ok(amb < 0.01, "the ambient bed is not hissy (%.4f)" % amb)
+
+## Share of RMS above 800 Hz, via four cascaded one-pole highpasses.
+func _high_band(w: AudioStreamWAV) -> float:
+	var n: int = w.data.size() / 2
+	var rate: float = float(w.mix_rate)
+	var a: float = (1.0 / (TAU * 800.0)) / (1.0 / (TAU * 800.0) + 1.0 / rate)
+	var y := PackedFloat32Array(); y.resize(4)
+	var prev := PackedFloat32Array(); prev.resize(4)
+	var sum: float = 0.0
+	var hi: float = 0.0
+	for i in range(n):
+		var v: float = float(w.data.decode_s16(i * 2)) / 32767.0
+		sum += v * v
+		var x: float = v
+		for k in range(4):
+			var out: float = a * (y[k] + x - prev[k])
+			prev[k] = x
+			y[k] = out
+			x = out
+		hi += x * x
+	return sqrt(hi / float(n)) / maxf(sqrt(sum / float(n)), 1e-9)
+
 func test_tree_is_the_right_size() -> void:
 	var n: int = TreeDB.nodes.size()
 	ok(n >= 125 and n <= 140, "~130 nodes (got %d)" % n)

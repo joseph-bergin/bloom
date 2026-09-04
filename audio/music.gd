@@ -25,8 +25,8 @@ const BARS := 4
 ## fifth of full scale and clicked once every loop.
 const FOLD := 0.5            # seconds
 ## How much low wash sits under each drone.
-const BED_WASH := 2.2
-const DREAD_WASH := 1.0
+const BED_WASH := 1.5
+const DREAD_WASH := 0.7
 
 ## Sustained partials must complete a whole number of cycles inside the loop
 ## or the seam clicks. Snapping costs at most 1/24 Hz, which nobody can hear.

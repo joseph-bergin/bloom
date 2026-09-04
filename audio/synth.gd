@@ -180,17 +180,27 @@ static func ambient() -> AudioStreamWAV:
 	var buf := PackedFloat32Array(); buf.resize(n)
 	var rng := RandomNumberGenerator.new()
 	rng.seed = 20260825
-	var lp: float = 0.0
+	# Four cascaded poles, not one. A single pole is 6 dB/oct, so even with
+	# its corner down at 6 Hz it still leaked enough broadband energy to be
+	# audible hiss — this bed measured five times the high-band content of
+	# any music layer and was the static in the mix. The cascade keeps the
+	# slow wind and drops the top.
+	var lp := PackedFloat32Array(); lp.resize(4)
 	for i in range(n):
-		lp = lerpf(lp, rng.randf_range(-1.0, 1.0), 0.0016)
+		var x: float = rng.randf_range(-1.0, 1.0)
+		for k in range(4):
+			lp[k] = lerpf(lp[k], x, 0.0016)
+			x = lp[k]
 		var sway: float = sin(TAU * 0.037 * float(i) / RATE)
-		buf[i] = (lp * 6.0 + sin(TAU * 46.0 * float(i) / RATE) * 0.06) * (0.5 + 0.5 * sway) * 0.5
+		# The cascade costs a lot of amplitude; the gain makes it back.
+		buf[i] = (x * 260.0 + sin(TAU * 46.0 * float(i) / RATE) * 0.06) \
+			* (0.5 + 0.5 * sway) * 0.5
 	var fade: int = RATE / 2
 	for i in range(fade):
 		var g: float = float(i) / float(fade)
 		buf[i] *= g
 		buf[n - 1 - i] *= g
-	return _wav(buf, true)
+	return _wav(_normalise(buf, 0.18), true)
 
 ## Cursor crossing something you can press. Has to sit under everything —
 ## you hear a dozen of these a second sweeping across the tree.

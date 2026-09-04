@@ -5,14 +5,18 @@ extends RefCounted
 
 const RATE := 22050
 
-static func _wav(samples: PackedFloat32Array, loop: bool = false) -> AudioStreamWAV:
+## `rate` is a parameter because the music layers run at half rate: a dark
+## bed has nothing above 3 kHz and generating them at 22 kHz doubled the
+## startup cost for nothing.
+static func _wav(samples: PackedFloat32Array, loop: bool = false,
+		rate: int = RATE) -> AudioStreamWAV:
 	var bytes := PackedByteArray()
 	bytes.resize(samples.size() * 2)
 	for i in range(samples.size()):
 		bytes.encode_s16(i * 2, int(clampf(samples[i], -1.0, 1.0) * 32767.0))
 	var s := AudioStreamWAV.new()
 	s.format = AudioStreamWAV.FORMAT_16_BITS
-	s.mix_rate = RATE
+	s.mix_rate = rate
 	s.stereo = false
 	s.data = bytes
 	if loop:

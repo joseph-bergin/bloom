@@ -91,13 +91,17 @@ is never rewritten.
 ## Checking it
 
 ```bash
-# 353 assertions over the simulation, the tree, the audio and the save format
+# 365 assertions over the simulation, the tree, the audio and the save format
 godot --headless --script res://tests/test_runner.gd
 
 # scene wiring, checked against the real scenes — the suite above runs
 # synchronously and never gets a frame, so this is invisible to it
 godot --headless --script res://tools/dev/PauseProbe.gd
 godot --headless --script res://tools/dev/IntroProbe.gd
+godot --headless --script res://tools/dev/MusicProbe.gd
+
+# render the score to a .wav to listen to it outside the game
+godot --headless --script res://tools/dev/render_music.gd -- --out=/tmp/bloom.wav
 
 # balance: every build compared over a full run
 godot --headless --script res://tools/sim_runner.gd -- --minutes=45 --runs=3

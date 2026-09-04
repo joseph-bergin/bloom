@@ -16,6 +16,12 @@ var _ambient: AudioStreamPlayer
 var _douse: AudioStreamPlayer
 var _duck_until: float = 0.0
 var _streak: int = 0
+## Music is baked off-thread: the four layers take about two seconds to
+## generate, which as a startup block is a visible hang.
+var _music: Dictionary = {}      # layer -> AudioStreamPlayer
+var _gain: Dictionary = {}       # layer -> current linear gain
+var _baked: Dictionary = {}      # written by the thread, read after join
+var _bake: Thread = null
 var _last_kill: float = -99.0
 var _last_hit: float = -99.0
 var _last_hover: float = -99.0
@@ -73,8 +79,14 @@ func _ready() -> void:
 		play("breach", 0.0)
 		duck(Constants.BREACH_DUCK))
 
+	# Headless is the test suite and the balance runner. Neither listens,
+	# and baking there costs two seconds on every CI run.
+	if DisplayServer.get_name() != "headless":
+		_bake = Thread.new()
+		_bake.start(_bake_music)
+
 func _buses() -> void:
-	for name in [&"SFX", &"Ambient", &"UI"]:
+	for name in [&"SFX", &"Ambient", &"UI", &"Music"]:
 		if AudioServer.get_bus_index(name) != -1:
 			continue
 		var idx: int = AudioServer.bus_count
@@ -82,6 +94,7 @@ func _buses() -> void:
 		AudioServer.set_bus_name(idx, name)
 		AudioServer.set_bus_send(idx, &"Master")
 	AudioServer.set_bus_volume_db(AudioServer.get_bus_index(&"Ambient"), -12.0)
+	AudioServer.set_bus_volume_db(AudioServer.get_bus_index(&"Music"), -9.0)
 
 func play(key: String, db: float = -6.0, pitch: float = 1.0) -> void:
 	if not _streams.has(key):
@@ -122,8 +135,12 @@ func _on_hit(_at: Vector2, _dir: Vector2, crit: bool, lethal: bool) -> void:
 func _set_hidden(on: bool) -> void:
 	var sfx: int = AudioServer.get_bus_index(&"SFX")
 	var amb: int = AudioServer.get_bus_index(&"Ambient")
+	var mus: int = AudioServer.get_bus_index(&"Music")
 	AudioServer.set_bus_volume_db(sfx, -13.0 if on else 0.0)
 	AudioServer.set_bus_volume_db(amb, -22.0 if on else -12.0)
+	# The music goes with it. Holding your breath should sound like holding
+	# your breath, and half a mix carrying on regardless undoes that.
+	AudioServer.set_bus_volume_db(mus, -20.0 if on else -9.0)
 
 ## Rising pitch on kill streaks.
 func _on_kill(tier: int, _at: Vector2, _motes: float) -> void:
@@ -136,13 +153,13 @@ func _on_kill(tier: int, _at: Vector2, _motes: float) -> void:
 ## Silence lands harder than noise.
 func duck(seconds: float) -> void:
 	_duck_until = float(Time.get_ticks_msec()) / 1000.0 + seconds
-	for b in [&"SFX", &"Ambient"]:
+	for b in [&"SFX", &"Ambient", &"Music"]:
 		AudioServer.set_bus_mute(AudioServer.get_bus_index(b), true)
 
 func _process(_delta: float) -> void:
 	if _duck_until > 0.0 and float(Time.get_ticks_msec()) / 1000.0 >= _duck_until:
 		_duck_until = 0.0
-		for b in [&"SFX", &"Ambient"]:
+		for b in [&"SFX", &"Ambient", &"Music"]:
 			AudioServer.set_bus_mute(AudioServer.get_bus_index(b), false)
 	var want: bool = GameState.s.is_dousing()
 	if want and not _douse.playing:
@@ -150,6 +167,63 @@ func _process(_delta: float) -> void:
 	elif not want and _douse.playing:
 		_douse.stop()
 
+	if _bake != null and not _bake.is_alive():
+		_bake.wait_to_finish()
+		_bake = null
+		_start_music()
+	_mix_music(_delta)
+
 func set_master_volume(db: float) -> void:
 	master_db = db
 	AudioServer.set_bus_volume_db(AudioServer.get_bus_index(&"Master"), db)
+
+# --- music ---------------------------------------------------------------
+
+## Runs on the bake thread. Touches nothing but its own output; the join in
+## _process is what makes handing _baked over safe.
+func _bake_music() -> void:
+	_baked = {"bed": Music.bed(), "pulse": Music.pulse(),
+		"tension": Music.tension(), "dread": Music.dread()}
+
+## All four start in the same frame and never stop, so they stay in phase
+## for the life of the process and can be crossfaded without re-syncing.
+func _start_music() -> void:
+	for layer in _baked:
+		var p := AudioStreamPlayer.new()
+		p.bus = &"Music"
+		p.stream = _baked[layer]
+		p.volume_db = -80.0
+		add_child(p)
+		p.play()
+		_music[layer] = p
+		_gain[layer] = 0.0
+
+## What each layer should be doing right now. Tension is the interesting
+## one: it tracks the light you are giving off, so burning brighter is
+## audible as the music closing in before it is visible as anything else.
+func _music_mix() -> Dictionary:
+	var s: GameStateData = GameState.s
+	var live: bool = not GameState.paused and not s.run_over
+	var fighting: bool = live and s.phase != GameStateData.Phase.UPGRADING
+	var boss: bool = live and s.phase == GameStateData.Phase.BOSS
+	var lit: float = clampf(s.effective_luminance() / 140.0, 0.0, 1.0)
+	return {
+		"bed": 0.85,
+		"pulse": 0.75 if fighting else 0.0,
+		"tension": lit * 0.8 if fighting else 0.0,
+		"dread": 0.9 if boss else 0.0,
+	}
+
+func _mix_music(delta: float) -> void:
+	if _music.is_empty():
+		return
+	var want: Dictionary = _music_mix()
+	for layer in _music:
+		var target: float = want[layer]
+		# Toward silence faster than toward sound: a layer arriving should
+		# feel like something turning up, and a layer leaving should not
+		# hang around after the reason for it has gone.
+		var rate: float = 1.4 if target > _gain[layer] else 2.6
+		_gain[layer] = move_toward(_gain[layer], target, delta * rate)
+		var p: AudioStreamPlayer = _music[layer]
+		p.volume_db = -80.0 if _gain[layer] < 0.001 else linear_to_db(_gain[layer])

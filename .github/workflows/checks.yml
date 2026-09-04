@@ -29,3 +29,6 @@ jobs:
 
       - name: Intro routing probe
         run: timeout 300 godot --headless --script res://tools/dev/IntroProbe.gd
+
+      - name: Music probe
+        run: timeout 300 godot --headless --script res://tools/dev/MusicProbe.gd

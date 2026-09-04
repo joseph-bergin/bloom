@@ -24,6 +24,9 @@ const BARS := 4
 ## bed and dread layers is circularly smooth. Without it the seam jumped a
 ## fifth of full scale and clicked once every loop.
 const FOLD := 0.5            # seconds
+## How much low wash sits under each drone.
+const BED_WASH := 2.2
+const DREAD_WASH := 1.0
 
 ## Sustained partials must complete a whole number of cycles inside the loop
 ## or the seam clicks. Snapping costs at most 1/24 Hz, which nobody can hear.
@@ -86,7 +89,7 @@ static func bed() -> AudioStreamWAV:
 		# Two slow swells at different rates, so the bed never sits still.
 		v *= 0.70 + 0.20 * sin(s1 * t) + 0.10 * sin(s2 * t)
 		lp = lerpf(lp, rng.randf_range(-1.0, 1.0), 0.0015)
-		buf[i] = v + lp * 3.2
+		buf[i] = v + lp * BED_WASH
 	return Synth._wav(Synth._normalise(_fold(buf, n, f), 0.5), true, RATE)
 
 ## The run: a heartbeat on one and three, and the root under it.
@@ -107,7 +110,7 @@ static func pulse() -> AudioStreamWAV:
 					# Pitch drops through the hit: that is what makes it a
 					# heartbeat rather than a note.
 					var f: float = lerpf(96.0, 44.0, pow(x, 0.35))
-					return sin(TAU * f * t) * pow(1.0 - x, 2.6) * 0.85)
+					return sin(TAU * f * t) * _hit(x, 0.02, 2.6) * 0.85)
 	return Synth._wav(Synth._normalise(buf, 0.62), true, RATE)
 
 ## Rises with your light. Sixteenths on the chord, bell-ish and close, with
@@ -122,15 +125,18 @@ static func tension() -> AudioStreamWAV:
 	while t < LOOP - step:
 		var bar: int = clampi(int(t / BAR), 0, BARS - 1)
 		var voices: Array = VOICES[bar]
-		# Up and back down the chord, an octave up, so it sits above the bed.
+		# Up and back down the chord. This used to be shifted an octave up
+		# with a bright partial stack on top, which put 41% of the layer's
+		# energy above 800 Hz — as sixteenths under everything else that
+		# reads as static, and it is the layer that gets louder the better
+		# you are doing.
 		var idx: int = k % (voices.size() * 2 - 2)
 		if idx >= voices.size():
 			idx = voices.size() * 2 - 2 - idx
-		var f: float = float(voices[idx]) * 2.0
+		var f: float = float(voices[idx])
 		_place(buf, t, step * 1.6, func(x: float, tt: float) -> float:
-			var e: float = pow(1.0 - x, 3.2)
-			return (sin(TAU * f * tt) * 0.5 + sin(TAU * f * 2.0 * tt) * 0.12
-				+ sin(TAU * f * 3.01 * tt) * 0.05) * e)
+			var e: float = _hit(x, 0.05, 3.2)
+			return (sin(TAU * f * tt) * 0.5 + sin(TAU * f * 2.0 * tt) * 0.07) * e)
 		k += 1
 		t += step
 	return Synth._wav(Synth._normalise(buf, 0.5), true, RATE)
@@ -158,8 +164,14 @@ static func dread() -> AudioStreamWAV:
 		v *= 0.55 + 0.45 * sin(tr * t)
 		v *= 0.7 + 0.3 * sin(sw * t)
 		lp = lerpf(lp, rng.randf_range(-1.0, 1.0), 0.004)
-		buf[i] = v + lp * 1.4
+		buf[i] = v + lp * DREAD_WASH
 	return Synth._wav(Synth._normalise(_fold(buf, n, f), 0.72), true, RATE)
+
+## Attack then decay. Every note used to start at full amplitude — the decay
+## curve alone is 1.0 at x = 0 — so each one opened on a step discontinuity,
+## which is a click. Sixty-four per loop in the tension layer.
+static func _hit(x: float, attack: float, fall: float) -> float:
+	return minf(x / attack, 1.0) * pow(1.0 - x, fall)
 
 ## Writes one enveloped voice into the buffer at `at` seconds. `shape` gets
 ## the note's progress 0..1 and its own elapsed time, so it can hold a

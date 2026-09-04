@@ -93,8 +93,10 @@ func _buses() -> void:
 		AudioServer.add_bus(idx)
 		AudioServer.set_bus_name(idx, name)
 		AudioServer.set_bus_send(idx, &"Master")
-	AudioServer.set_bus_volume_db(AudioServer.get_bus_index(&"Ambient"), -12.0)
-	AudioServer.set_bus_volume_db(AudioServer.get_bus_index(&"Music"), -9.0)
+	# The ambient wash predates the score and was filling the same space.
+	# It steps back; the music comes up to where the wash used to sit.
+	AudioServer.set_bus_volume_db(AudioServer.get_bus_index(&"Ambient"), -20.0)
+	AudioServer.set_bus_volume_db(AudioServer.get_bus_index(&"Music"), -3.0)
 
 func play(key: String, db: float = -6.0, pitch: float = 1.0) -> void:
 	if not _streams.has(key):
@@ -137,10 +139,10 @@ func _set_hidden(on: bool) -> void:
 	var amb: int = AudioServer.get_bus_index(&"Ambient")
 	var mus: int = AudioServer.get_bus_index(&"Music")
 	AudioServer.set_bus_volume_db(sfx, -13.0 if on else 0.0)
-	AudioServer.set_bus_volume_db(amb, -22.0 if on else -12.0)
+	AudioServer.set_bus_volume_db(amb, -30.0 if on else -20.0)
 	# The music goes with it. Holding your breath should sound like holding
 	# your breath, and half a mix carrying on regardless undoes that.
-	AudioServer.set_bus_volume_db(mus, -20.0 if on else -9.0)
+	AudioServer.set_bus_volume_db(mus, -15.0 if on else -3.0)
 
 ## Rising pitch on kill streaks.
 func _on_kill(tier: int, _at: Vector2, _motes: float) -> void:

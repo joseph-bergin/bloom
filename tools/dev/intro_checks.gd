@@ -13,6 +13,18 @@ func run(tree: SceneTree) -> int:
 	SettingsPanel.mark_intro_seen(true)
 	_ok(_lands_on(tree) == "TitleScreen", "a returning player goes straight to the menu")
 
+	# Skipping used to throw: _finish() changed the scene and the next line
+	# called get_viewport() on a node that no longer had one.
+	SettingsPanel.mark_intro_seen(false)
+	var intro: Node = load("res://scenes/Intro.tscn").instantiate()
+	tree.root.add_child(intro)
+	var key := InputEventKey.new()
+	key.keycode = KEY_SPACE
+	key.pressed = true
+	intro.call("_unhandled_input", key)
+	_ok(bool(intro.get("_done")), "a keypress skips the cutscene")
+	intro.queue_free()
+
 	SettingsPanel.mark_intro_seen(was)
 	print("%d checks failed" % _fails)
 	return 1 if _fails > 0 else 0

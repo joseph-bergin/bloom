@@ -161,8 +161,10 @@ func _unhandled_input(event: InputEvent) -> void:
 	var pressed: bool = (event is InputEventKey and (event as InputEventKey).pressed) \
 		or (event is InputEventMouseButton and (event as InputEventMouseButton).pressed)
 	if pressed and not _done:
-		_finish()
+		# Marked handled first: _finish() swaps the scene, and by the next
+		# line get_viewport() is null. Skipping threw every time.
 		get_viewport().set_input_as_handled()
+		_finish()
 
 func _finish() -> void:
 	if _done:

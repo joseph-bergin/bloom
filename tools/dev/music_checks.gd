@@ -4,7 +4,7 @@ extends RefCounted
 
 var _fails: int = 0
 
-func run(tree: SceneTree) -> int:
+func run(_tree: SceneTree) -> int:
 	# Bake synchronously — the real path uses a thread, which is exactly the
 	# part a probe cannot wait on politely.
 	Audio.call("_bake_music")
@@ -44,11 +44,14 @@ func run(tree: SceneTree) -> int:
 	_ok(over["pulse"] == 0.0 and over["dread"] == 0.0, "everything stops when you do")
 	_ok(over["bed"] > 0.0, "except the dark")
 
-	# Ducking must not strand the bus muted.
+	# Ducking must not strand the bus muted. Pumped by hand rather than
+	# awaited: waiting on a timer and hoping Audio._process ran in between
+	# passed locally and raced in CI, which is not a test, it is a coin.
 	Audio.call("duck", 0.001)
 	_ok(AudioServer.is_bus_mute(AudioServer.get_bus_index(&"Music")),
 		"a breach mutes the music")
-	await tree.create_timer(0.2).timeout
+	OS.delay_msec(20)
+	Audio.call("_process", 0.0)
 	_ok(not AudioServer.is_bus_mute(AudioServer.get_bus_index(&"Music")),
 		"and it comes back")
 

@@ -16,8 +16,5 @@ func _process(_d: float) -> bool:
 		printerr("music_checks.gd failed to load")
 		quit(1)
 		return true
-	_go((script as GDScript).new())
-	return false
-
-func _go(checks: Object) -> void:
-	quit(int(await checks.call("run", self)))
+	quit(int((script as GDScript).new().call("run", self)))
+	return true
